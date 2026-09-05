@@ -9,26 +9,10 @@ export const metadata: Metadata = {
   keywords: ["AAKWHX", "AWWA", "software agency", "Next.js", "ERP", "client portal"],
 };
 
-const themeScript = `
-(function() {
-  try {
-    var stored = localStorage.getItem('awwa-theme');
-    var dark = stored ? stored === 'dark' : true;
-    document.documentElement.classList.toggle('dark', dark);
-    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-  } catch (e) {
-    document.documentElement.classList.add('dark');
-  }
-})();
-`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html suppressHydrationWarning className={fontVariables}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body>{children}</body>
+    <html lang="en" dir="ltr" className={fontVariables}>
+      <body className="bg-base text-ink-mid">{children}</body>
     </html>
   );
 }

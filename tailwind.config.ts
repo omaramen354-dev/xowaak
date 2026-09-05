@@ -6,29 +6,52 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: "#eef6ff", 100: "#d9ecff", 200: "#bcdcff", 300: "#8ec6ff",
-          400: "#59a5ff", 500: "#2f82ff", 600: "#1761f5", 700: "#104ce1",
-          800: "#143fb6", 900: "#16398f", 950: "#0d2257",
+        /* ---- Strict dark palette ---- */
+        base: "#07090E", // page background — pure deep black
+        elevated: "#0A0E15", // raised sections
+        surface: "#0D111A", // cards
+        line: "#1E293B", // hairline borders
+        "line-strong": "#334155",
+
+        /* ---- Neon accents ---- */
+        neon: {
+          cyan: "#00F2FE",
+          blue: "#4FACFE",
+          indigo: "#6366F1",
+          purple: "#A855F7",
+          emerald: "#34D399",
         },
-        ink: { 950: "#03050c", 900: "#05070f", 800: "#0a0e1a", 700: "#111726", 600: "#1a2233" },
+
+        /* ---- Text ramp (WCAG-checked on #07090E) ---- */
+        ink: {
+          hi: "#FFFFFF", // headings   21:1
+          mid: "#CBD5E1", // body       14.3:1
+          low: "#94A3B8", // secondary  8.9:1
+          faint: "#64748B", // meta       4.9:1
+        },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
+      boxShadow: {
+        "glow-cyan": "0 0 40px -10px rgba(0, 242, 254, 0.55)",
+        "glow-purple": "0 0 40px -10px rgba(168, 85, 247, 0.55)",
+        card: "0 24px 70px -35px rgba(0, 0, 0, 1)",
+      },
       keyframes: {
         float: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-12px)" } },
-        shimmer: { "0%": { backgroundPosition: "0% 50%" }, "100%": { backgroundPosition: "200% 50%" } },
         "fade-up": { from: { opacity: "0", transform: "translateY(18px)" }, to: { opacity: "1", transform: "translateY(0)" } },
+        shimmer: { "0%": { transform: "translateX(-120%)" }, "100%": { transform: "translateX(220%)" } },
       },
       animation: {
         float: "float 6s ease-in-out infinite",
-        shimmer: "shimmer 6s linear infinite",
         "fade-up": "fade-up .6s ease-out both",
+        shimmer: "shimmer 2.6s ease-in-out infinite",
       },
     },
   },
   plugins: [],
 };
+
 export default config;

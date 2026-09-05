@@ -46,7 +46,7 @@ export function ParticleField({ className, density = 60 }: { className?: string;
           vx: (Math.random() - 0.5) * 0.22,
           vy: (Math.random() - 0.5) * 0.22,
           r: Math.random() * 1.6 + 0.4,
-          hue: Math.random() > 0.5 ? 190 : 265,
+          hue: Math.random() > 0.5 ? 186 : 262,
         });
       }
     }
@@ -62,7 +62,7 @@ export function ParticleField({ className, density = 60 }: { className?: string;
 
         ctx!.beginPath();
         ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `hsla(${p.hue}, 90%, 70%, 0.75)`;
+        ctx!.fillStyle = `hsla(${p.hue}, 95%, 65%, 0.7)`;
         ctx!.fill();
       }
 
@@ -76,7 +76,7 @@ export function ParticleField({ className, density = 60 }: { className?: string;
             ctx!.beginPath();
             ctx!.moveTo(a.x, a.y);
             ctx!.lineTo(b.x, b.y);
-            ctx!.strokeStyle = `hsla(200, 90%, 70%, ${(1 - dist / 130) * 0.16})`;
+            ctx!.strokeStyle = `hsla(190, 95%, 65%, ${(1 - dist / 130) * 0.14})`;
             ctx!.lineWidth = 0.6;
             ctx!.stroke();
           }
@@ -113,15 +113,12 @@ export function ParticleField({ className, density = 60 }: { className?: string;
   return <canvas ref={canvasRef} aria-hidden className={clsx("pointer-events-none absolute inset-0", className)} />;
 }
 
-/** Animated mesh gradient + cyber grid backdrop for full sections. */
+/** Deep radial mesh + cyber grid backdrop for full sections. */
 export function MeshBackdrop({ className }: { className?: string }) {
   return (
     <div aria-hidden className={clsx("pointer-events-none absolute inset-0 overflow-hidden", className)}>
-      <div className="absolute inset-0 mesh-gradient opacity-70" />
-      <div className="absolute inset-0 cyber-grid opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_75%)]" />
-      <div className="absolute -top-40 start-1/4 h-[520px] w-[520px] rounded-full bg-cyan-500/20 blur-[140px]" />
-      <div className="absolute top-20 end-0 h-[460px] w-[460px] rounded-full bg-violet-600/20 blur-[150px]" />
-      <div className="absolute bottom-0 start-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px]" />
+      <div className="absolute inset-0 mesh-deep" />
+      <div className="absolute inset-0 cyber-grid opacity-[0.35] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_75%)]" />
     </div>
   );
 }
@@ -130,7 +127,7 @@ export function MeshBackdrop({ className }: { className?: string }) {
 export function BeamDivider() {
   return (
     <div aria-hidden className="relative h-px w-full overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
     </div>
   );
 }

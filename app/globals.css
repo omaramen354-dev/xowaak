@@ -8,48 +8,62 @@
 :root {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", var(--font-geist-mono), ui-monospace, monospace;
-  --glow-cyan: 34 211 238;
-  --glow-violet: 167 139 250;
-  --glow-emerald: 52 211 153;
+
+  /* Spacing scale — every section/card uses these, no ad-hoc values */
+  --section-y: 7rem;
+  --card-p: 1.75rem;
 }
 
-/* Arabic switches the whole stack to Cairo, which carries Latin glyphs too. */
-[dir="rtl"],
-[lang="ar"] {
+/* Arabic switches the sans stack to Cairo (it carries Latin glyphs too). */
+[dir="rtl"] {
   --font-sans: "Cairo Variable", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #07090e;
   }
+
   body {
     font-family: var(--font-sans);
-    @apply bg-slate-50 text-ink-900 antialiased transition-colors duration-500;
+    @apply bg-base text-ink-mid antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  .dark body {
-    @apply bg-ink-950 text-slate-100;
-  }
+
   ::selection {
-    @apply bg-cyan-400/30 text-white;
+    @apply bg-neon-cyan/25 text-white;
   }
-  h1, h2, h3, h4 {
+
+  /* Headings are pure white and heavy — maximum contrast. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-extrabold text-ink-hi;
     letter-spacing: -0.03em;
     text-wrap: balance;
   }
   [dir="rtl"] h1,
   [dir="rtl"] h2,
-  [dir="rtl"] h3 {
+  [dir="rtl"] h3,
+  [dir="rtl"] h4 {
     letter-spacing: 0;
   }
+
   p {
     text-wrap: pretty;
   }
+
   .tabular,
   .font-mono {
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-neon-cyan ring-offset-2 ring-offset-base;
   }
 }
 
@@ -58,132 +72,95 @@
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
   }
 
-  /* ---------- Glassmorphism surfaces ---------- */
-  .surface {
-    @apply relative rounded-2xl border border-slate-200/70 bg-white/70 backdrop-blur-xl;
+  .section-y {
+    padding-block: var(--section-y);
   }
-  .dark .surface {
-    @apply border-white/[0.08] bg-white/[0.025];
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-      0 24px 60px -30px rgba(0, 0, 0, 0.9);
+
+  /* ---------------- Cards ---------------- */
+  /* Single source of truth: #0D111A @ 60% + blur, hairline #1E293B border. */
+  .surface,
+  .glass-card {
+    @apply relative rounded-2xl border border-line bg-surface/60 backdrop-blur-md;
+    box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
   }
 
   .glass-card {
-    @apply relative overflow-hidden rounded-3xl border border-slate-200/70 bg-white/70 backdrop-blur-2xl transition-all duration-500;
-  }
-  .dark .glass-card {
-    @apply border-white/[0.08] bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent;
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-      0 30px 80px -40px rgba(0, 0, 0, 1);
-  }
-  .glass-card:hover {
-    @apply border-cyan-400/40;
-  }
-  .dark .glass-card:hover {
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-      0 0 0 1px rgba(34, 211, 238, 0.18),
-      0 40px 90px -40px rgba(34, 211, 238, 0.35);
+    @apply rounded-3xl transition-colors duration-300;
   }
 
-  /* Animated conic glow that traces the card edge */
-  .glow-ring::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-      from var(--angle, 0deg),
-      transparent 0%,
-      rgb(var(--glow-cyan) / 0.85) 12%,
-      rgb(var(--glow-violet) / 0.85) 25%,
-      transparent 40%
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    animation: spin-angle 4s linear infinite;
+  /* Neon glow border on hover */
+  .glow-hover {
+    @apply transition-all duration-300;
   }
-  .glow-ring:hover::before {
-    opacity: 1;
+  .glow-hover:hover {
+    @apply border-neon-cyan/45;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+      0 0 0 1px rgb(0 242 254 / 0.16),
+      0 22px 60px -28px rgb(0 242 254 / 0.42);
   }
 
   .glow-border {
-    @apply relative overflow-hidden rounded-3xl border border-slate-200/70;
-  }
-  .dark .glow-border {
-    @apply border-white/10;
+    @apply relative overflow-hidden rounded-3xl border border-line;
   }
 
-  /* ---------- Buttons ---------- */
+  /* ---------------- Buttons ---------------- */
   .btn {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold tracking-tight transition-all duration-300
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200;
   }
+
   .btn-primary {
-    @apply btn overflow-hidden bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 text-white;
-    box-shadow: 0 10px 40px -12px rgba(34, 211, 238, 0.7);
+    @apply btn overflow-hidden text-white;
+    background: linear-gradient(100deg, #00f2fe 0%, #4facfe 45%, #6366f1 100%);
+    box-shadow: 0 10px 34px -12px rgb(0 242 254 / 0.6);
   }
   .btn-primary:hover {
-    box-shadow: 0 14px 55px -10px rgba(139, 92, 246, 0.85);
-    transform: translateY(-1px);
+    box-shadow: 0 14px 46px -12px rgb(99 102 241 / 0.75);
   }
+  /* Shimmering sweep across the CTA */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.35) 50%, transparent 80%);
+    transform: translateX(-120%);
+    animation: sweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
   .btn-ghost {
-    @apply btn border border-slate-300/80 bg-white/50 text-slate-700 backdrop-blur hover:border-cyan-400 hover:text-cyan-600;
+    @apply btn border border-line-strong bg-white/[0.02] text-ink-mid;
   }
-  .dark .btn-ghost {
-    @apply border-white/[0.12] bg-white/[0.03] text-slate-200 hover:border-cyan-400/60 hover:text-cyan-300;
-  }
-  .dark .btn-ghost:hover {
-    box-shadow: 0 0 30px -8px rgba(34, 211, 238, 0.45);
+  .btn-ghost:hover {
+    @apply border-neon-cyan/50 bg-neon-cyan/[0.06] text-white;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/60 px-3 py-1 text-xs font-medium tracking-tight text-slate-600 backdrop-blur;
-  }
-  .dark .chip {
-    @apply border-white/[0.09] bg-white/[0.04] text-slate-300;
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white/[0.03]
+           px-3 py-1 text-xs font-medium tracking-tight text-ink-low;
   }
 
   .field {
-    @apply w-full rounded-xl border border-slate-300 bg-white/70 px-4 py-3 text-sm text-ink-900 backdrop-blur
-           outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/25;
-  }
-  .dark .field {
-    @apply border-white/[0.1] bg-white/[0.035] text-slate-100 placeholder:text-slate-500;
+    @apply w-full rounded-xl border border-line bg-white/[0.03] px-4 py-3 text-sm text-ink-hi
+           outline-none transition placeholder:text-ink-faint
+           focus:border-neon-cyan/60 focus:ring-2 focus:ring-neon-cyan/20;
   }
 
-  /* ---------- Backgrounds ---------- */
+  /* ---------------- Backgrounds ---------------- */
   .cyber-grid {
     background-image:
-      linear-gradient(to right, rgba(56, 189, 248, 0.09) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(56, 189, 248, 0.09) 1px, transparent 1px);
+      linear-gradient(to right, rgb(30 41 59 / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(30 41 59 / 0.55) 1px, transparent 1px);
     background-size: 56px 56px;
   }
-  .dark .cyber-grid {
-    background-image:
-      linear-gradient(to right, rgba(56, 189, 248, 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(56, 189, 248, 0.07) 1px, transparent 1px);
-  }
-  .grid-bg {
-    @apply cyber-grid;
-  }
 
-  .mesh-gradient {
+  /* Deep radial mesh — subtle, sits in the darkness, never silver. */
+  .mesh-deep {
     background-image:
-      radial-gradient(at 15% 12%, rgba(34, 211, 238, 0.22) 0px, transparent 55%),
-      radial-gradient(at 85% 8%, rgba(139, 92, 246, 0.2) 0px, transparent 50%),
-      radial-gradient(at 70% 75%, rgba(16, 185, 129, 0.16) 0px, transparent 55%),
-      radial-gradient(at 20% 85%, rgba(59, 130, 246, 0.18) 0px, transparent 50%);
-    animation: mesh-drift 22s ease-in-out infinite alternate;
+      radial-gradient(60rem 40rem at 12% -5%, rgb(0 242 254 / 0.10), transparent 60%),
+      radial-gradient(50rem 35rem at 88% 0%, rgb(99 102 241 / 0.11), transparent 62%),
+      radial-gradient(45rem 32rem at 70% 85%, rgb(168 85 247 / 0.07), transparent 60%);
   }
 
   .noise::after {
@@ -191,28 +168,32 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.035;
+    opacity: 0.028;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ---------- Text ---------- */
+  /* ---------------- Text ---------------- */
   .text-gradient {
-    @apply bg-gradient-to-r from-cyan-300 via-sky-300 to-violet-400 bg-clip-text text-transparent;
-  }
-  .text-gradient-emerald {
-    @apply bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-400 bg-clip-text text-transparent;
-  }
-  .text-gradient-hero {
-    background: linear-gradient(110deg, #67e8f9 0%, #a5b4fc 35%, #c084fc 60%, #34d399 100%);
-    background-size: 220% auto;
+    background: linear-gradient(100deg, #00f2fe 0%, #4facfe 55%, #a855f7 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: shimmer-text 8s linear infinite;
   }
+
+  .text-gradient-hero {
+    background: linear-gradient(100deg, #ffffff 0%, #00f2fe 40%, #4facfe 65%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
   .mono-label {
     font-family: var(--font-mono);
-    @apply text-[10px] uppercase tracking-[0.32em] text-cyan-500/80;
+    @apply text-[10px] font-semibold uppercase tracking-[0.28em] text-neon-cyan;
+  }
+
+  .lede {
+    @apply text-ink-low;
   }
 }
 
@@ -223,39 +204,26 @@
   .preserve-3d {
     transform-style: preserve-3d;
   }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
+  /* Logical transform origin — flips correctly under RTL */
+  .origin-inline-start {
+    transform-origin: left center;
+  }
+  [dir="rtl"] .origin-inline-start {
+    transform-origin: right center;
   }
 }
 
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-
-@keyframes shimmer-text {
-  to {
-    background-position: 220% center;
-  }
-}
-
-@keyframes mesh-drift {
-  0% {
-    transform: scale(1) translate3d(0, 0, 0);
+@keyframes sweep {
+  0%,
+  55% {
+    transform: translateX(-120%);
   }
   100% {
-    transform: scale(1.15) translate3d(2%, -2%, 0);
+    transform: translateX(220%);
   }
 }
 
-/* Directional icons mirror in RTL */
+/* Directional glyphs (arrows, quotes) mirror under RTL */
 [dir="rtl"] .flip-x {
   transform: scaleX(-1);
 }
@@ -265,11 +233,14 @@
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #07090e;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, rgba(34, 211, 238, 0.5), rgba(139, 92, 246, 0.5));
+  background: #1e293b;
   border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
 @media (prefers-reduced-motion: reduce) {

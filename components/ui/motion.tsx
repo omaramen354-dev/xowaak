@@ -178,7 +178,7 @@ export function TiltCard({
             background: useTransform(
               [glowX, glowY],
               ([gx, gy]) =>
-                `radial-gradient(360px circle at ${gx} ${gy}, rgba(34,211,238,0.14), transparent 65%)`,
+                `radial-gradient(340px circle at ${gx} ${gy}, rgba(0,242,254,0.12), transparent 65%)`,
             ),
           }}
         />
@@ -208,9 +208,21 @@ export function Spotlight({ className }: { className?: string }) {
       aria-hidden
       className={clsx("pointer-events-none absolute inset-0 transition-[background] duration-300", className)}
       style={{
-        background: `radial-gradient(700px circle at ${pos.x}% ${pos.y}%, rgba(34,211,238,0.09), transparent 55%)`,
+        background: `radial-gradient(700px circle at ${pos.x}% ${pos.y}%, rgba(0,242,254,0.07), transparent 55%)`,
       }}
     />
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Pressable — subtle bounce on tap for CTAs                           */
+/* ------------------------------------------------------------------ */
+
+export function Pressable({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <motion.div whileTap={{ scale: 0.98 }} whileHover={{ y: -2 }} className={clsx("inline-flex", className)}>
+      {children}
+    </motion.div>
   );
 }
 

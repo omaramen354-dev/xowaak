@@ -21,7 +21,7 @@ export function CmsStats() {
           <div>
             <h3 className="mono-label">CMS / METRICS</h3>
             <p className="mt-2 text-lg font-bold">{t.admin.tabs.cmsStats}</p>
-            <p className="mt-1 text-xs text-slate-500">{t.admin.cms.statsHint}</p>
+            <p className="mt-1 text-xs text-ink-low">{t.admin.cms.statsHint}</p>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={reset} className="btn-ghost !py-2 text-xs">
@@ -41,7 +41,7 @@ export function CmsStats() {
         <h4 className="mono-label">{t.admin.cms.livePreview}</h4>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.id} className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 text-center">
+            <div key={stat.id} className="rounded-2xl border border-line bg-white/[0.03] p-5 text-center">
               <p className="text-3xl font-black">
                 <AnimatedCounter
                   value={stat.value}
@@ -52,9 +52,9 @@ export function CmsStats() {
                   className="text-gradient"
                 />
               </p>
-              <p className="mono-label mt-2 !text-slate-500">{stat.label}</p>
+              <p className="mono-label mt-2 !text-ink-low">{stat.label}</p>
               {stat.growth !== 0 && (
-                <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400">
+                <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-neon-emerald">
                   <TrendingUp className="h-3 w-3" />
                   {stat.growth > 0 ? "+" : ""}
                   {stat.growth}%
@@ -122,7 +122,7 @@ export function CmsStats() {
                 type="button"
                 onClick={() => removeStat(stat.id)}
                 aria-label={t.admin.cms.delete}
-                className="grid h-10 w-10 place-items-center rounded-xl border border-rose-500/30 text-rose-400 transition hover:bg-rose-500/10"
+                className="grid h-10 w-10 place-items-center rounded-xl border border-rose-500/30 text-rose-300 transition hover:bg-rose-500/10"
               >
                 <Trash2 className="h-4 w-4" />
               </button>
@@ -137,7 +137,7 @@ export function CmsStats() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mono-label mb-1.5 block !text-slate-500">{label}</span>
+      <span className="mono-label mb-1.5 block !text-ink-low">{label}</span>
       {children}
     </label>
   );

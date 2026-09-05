@@ -20,19 +20,19 @@ const spans = [
 ];
 
 const accents = [
-  "from-cyan-500/20 to-blue-500/5 text-cyan-400",
-  "from-violet-500/20 to-fuchsia-500/5 text-violet-400",
-  "from-emerald-500/20 to-teal-500/5 text-emerald-400",
-  "from-blue-500/20 to-indigo-500/5 text-blue-400",
-  "from-fuchsia-500/20 to-pink-500/5 text-fuchsia-400",
-  "from-amber-500/20 to-orange-500/5 text-amber-400",
+  "from-neon-cyan/20 to-neon-blue/5 text-neon-cyan",
+  "from-neon-indigo/20 to-neon-purple/5 text-neon-purple",
+  "from-neon-emerald/20 to-teal-500/5 text-neon-emerald",
+  "from-neon-blue/20 to-neon-indigo/5 text-neon-blue",
+  "from-neon-purple/20 to-pink-500/5 text-neon-purple",
+  "from-amber-400/20 to-orange-500/5 text-amber-300",
 ];
 
 export function Services() {
   const { t } = useI18n();
 
   return (
-    <section id="services" className="relative overflow-hidden py-28">
+    <section id="services" className="relative overflow-hidden section-y">
       <Spotlight />
       <div className="container-x relative">
         <Reveal>
@@ -45,7 +45,7 @@ export function Services() {
             return (
               <StaggerItem key={service.title} className={spans[i % spans.length]}>
                 <TiltCard intensity={7} className="h-full">
-                  <article className="glass-card glow-ring group relative h-full overflow-hidden p-7">
+                  <article className="glass-card glow-hover group relative h-full overflow-hidden p-7">
                     <div
                       className={clsx(
                         "pointer-events-none absolute -end-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100",
@@ -62,7 +62,7 @@ export function Services() {
                     </span>
 
                     <h3 className="relative mt-6 text-lg font-bold tracking-tight">{service.title}</h3>
-                    <p className="relative mt-2.5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                    <p className="relative mt-2.5 text-sm leading-relaxed text-ink-low">
                       {service.desc}
                     </p>
 

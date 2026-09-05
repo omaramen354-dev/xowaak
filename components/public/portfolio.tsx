@@ -28,9 +28,9 @@ export function Portfolio() {
   );
 
   return (
-    <section id="portfolio" className="relative overflow-hidden py-28">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
-      <div className="pointer-events-none absolute start-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-violet-600/10 blur-[160px]" />
+    <section id="portfolio" className="relative overflow-hidden section-y">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
+      <div className="pointer-events-none absolute start-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-neon-indigo/10 blur-[160px]" />
 
       <div className="container-x relative">
         <Reveal>
@@ -47,7 +47,7 @@ export function Portfolio() {
                 {ind}
               </FilterPill>
             ))}
-            <span className="mx-2 hidden h-5 w-px bg-slate-300 sm:block dark:bg-white/10" />
+            <span className="mx-2 hidden h-5 w-px bg-line sm:block" />
             <FilterPill
               active={visibility === "public"}
               onClick={() => setVisibility(visibility === "public" ? "all" : "public")}
@@ -79,11 +79,11 @@ export function Portfolio() {
                   <button
                     type="button"
                     onClick={() => setActive(project)}
-                    className="glass-card glow-ring group h-full w-full overflow-hidden text-start"
+                    className="glass-card glow-hover group h-full w-full overflow-hidden text-start"
                   >
                     <div className={clsx("relative h-44 overflow-hidden bg-gradient-to-br", project.cover)}>
                       <div className="absolute inset-0 cyber-grid opacity-40" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-ink-950/70 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-base/80 via-transparent to-transparent" />
                       <span className="absolute inset-0 grid place-items-center text-6xl text-white/25 transition-transform duration-700 group-hover:scale-125 group-hover:text-white/40">
                         {project.icon}
                       </span>
@@ -108,9 +108,9 @@ export function Portfolio() {
                     <div className="p-6">
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="text-base font-bold leading-snug tracking-tight">{project.name}</h3>
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-slate-400 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-cyan-400" />
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-low transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-neon-cyan" />
                       </div>
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-low">
                         {project.summary}
                       </p>
 
@@ -124,7 +124,7 @@ export function Portfolio() {
 
                       <div className="mt-5 flex items-center gap-3">
                         <ProgressBar value={project.progress} className="!h-1" />
-                        <span className="tabular text-xs font-bold text-cyan-400">{project.progress}%</span>
+                        <span className="tabular text-xs font-bold text-neon-cyan">{project.progress}%</span>
                       </div>
                     </div>
                   </button>
@@ -135,7 +135,7 @@ export function Portfolio() {
         </motion.div>
 
         {filtered.length === 0 && (
-          <p className="mt-16 text-center text-sm text-slate-500">{t.common.empty}</p>
+          <p className="mt-16 text-center text-sm text-ink-low">{t.common.empty}</p>
         )}
 
         <AnimatePresence>
@@ -162,8 +162,8 @@ function FilterPill({
       className={clsx(
         "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs font-semibold tracking-tight transition-all duration-300",
         active
-          ? "border-cyan-400/60 bg-gradient-to-r from-cyan-500/20 to-violet-500/20 text-cyan-300 shadow-[0_0_25px_-8px_rgba(34,211,238,0.7)]"
-          : "border-slate-300 text-slate-600 hover:border-cyan-400/50 hover:text-cyan-500 dark:border-white/[0.09] dark:text-slate-400",
+          ? "border-neon-cyan/50 bg-gradient-to-r from-neon-cyan/20 to-neon-indigo/20 text-neon-cyan shadow-glow-cyan"
+          : "border-line-strong text-ink-low hover:border-neon-cyan/50 hover:text-neon-cyan",
       )}
     >
       {children}
@@ -180,7 +180,7 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] grid place-items-center bg-ink-950/80 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[60] grid place-items-center bg-base/85 p-4 backdrop-blur-md"
     >
       <button type="button" aria-label={t.common.close} className="absolute inset-0" onClick={onClose} />
       <motion.div
@@ -188,7 +188,7 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="glass-card relative z-10 max-h-[85vh] w-full max-w-2xl overflow-auto !bg-white/95 dark:!bg-ink-900/95"
+        className="glass-card relative z-10 max-h-[85vh] w-full max-w-2xl overflow-auto !bg-surface"
       >
         <div className={clsx("relative h-40 overflow-hidden bg-gradient-to-br", project.cover)}>
           <div className="absolute inset-0 cyber-grid opacity-40" />
@@ -208,14 +208,14 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
             <StatusBadge status={project.stage} label={t.status[project.stage]} />
             <span className="chip">{project.industry}</span>
             {isPrivate && (
-              <span className="chip border-rose-400/40 text-rose-400">
+              <span className="chip border-rose-400/40 text-rose-300">
                 <Lock className="h-3 w-3" /> {t.common.confidential}
               </span>
             )}
           </div>
 
           <h3 className="mt-5 text-2xl font-black tracking-tight">{project.name}</h3>
-          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{project.summary}</p>
+          <p className="mt-3 text-sm leading-relaxed text-ink-low">{project.summary}</p>
 
           <dl className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3">
             <Meta label={t.common.progress} value={`${project.progress}%`} />
@@ -251,7 +251,7 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
 function Meta({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="mono-label !text-slate-400">{label}</dt>
+      <dt className="mono-label !text-ink-low">{label}</dt>
       <dd className="mt-1.5 text-sm font-bold">{value}</dd>
     </div>
   );

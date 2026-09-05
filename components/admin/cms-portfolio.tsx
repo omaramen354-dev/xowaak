@@ -51,7 +51,7 @@ export function CmsPortfolio() {
         <div>
           <h3 className="mono-label">CMS / SHOWCASE</h3>
           <p className="mt-2 text-lg font-bold">{t.admin.tabs.cmsPortfolio}</p>
-          <p className="mt-1 text-xs text-slate-500">{t.admin.cms.portfolioHint}</p>
+          <p className="mt-1 text-xs text-ink-low">{t.admin.cms.portfolioHint}</p>
         </div>
         <button type="button" onClick={openNew} className="btn-primary !py-2 text-xs">
           <Plus className="h-4 w-4" />
@@ -66,7 +66,7 @@ export function CmsPortfolio() {
               <div className="absolute inset-0 cyber-grid opacity-40" />
               <span className="absolute inset-0 grid place-items-center text-3xl text-white/40">{project.icon}</span>
               {project.featured && (
-                <Star className="absolute top-2 end-2 h-4 w-4 fill-amber-400 text-amber-400" />
+                <Star className="absolute top-2 end-2 h-4 w-4 fill-amber-300 text-amber-300" />
               )}
             </div>
             <div className="p-5">
@@ -76,15 +76,15 @@ export function CmsPortfolio() {
                   className={clsx(
                     "shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase",
                     project.visibility === "private"
-                      ? "border-rose-400/40 text-rose-400"
-                      : "border-emerald-400/40 text-emerald-400",
+                      ? "border-rose-400/40 text-rose-300"
+                      : "border-emerald-400/40 text-neon-emerald",
                   )}
                 >
                   {project.visibility === "private" ? t.common.private : t.common.public}
                 </span>
               </div>
-              <p className="mt-2 line-clamp-2 text-xs text-slate-500">{project.summary}</p>
-              <div className="mt-3 flex items-center gap-2 text-[10px] text-slate-500">
+              <p className="mt-2 line-clamp-2 text-xs text-ink-low">{project.summary}</p>
+              <div className="mt-3 flex items-center gap-2 text-[10px] text-ink-low">
                 <span className="chip !px-2 !py-0.5 !text-[9px]">{project.industry}</span>
                 <span className="tabular">{project.progress}%</span>
               </div>
@@ -97,7 +97,7 @@ export function CmsPortfolio() {
                   type="button"
                   onClick={() => removeProject(project.id)}
                   aria-label={t.admin.cms.delete}
-                  className="grid h-8 w-8 place-items-center rounded-xl border border-rose-500/30 text-rose-400 transition hover:bg-rose-500/10"
+                  className="grid h-8 w-8 place-items-center rounded-xl border border-rose-500/30 text-rose-300 transition hover:bg-rose-500/10"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -113,14 +113,14 @@ export function CmsPortfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] grid place-items-center bg-ink-950/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-[70] grid place-items-center bg-base/85 p-4 backdrop-blur-md"
           >
             <button type="button" aria-label={t.common.cancel} className="absolute inset-0" onClick={() => setDraft(null)} />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              className="glass-card relative z-10 max-h-[88vh] w-full max-w-2xl overflow-auto !bg-white/95 p-7 dark:!bg-ink-900/95"
+              className="glass-card relative z-10 max-h-[88vh] w-full max-w-2xl overflow-auto !bg-surface p-7"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-black">{t.admin.cms.addProject}</h3>
@@ -128,7 +128,7 @@ export function CmsPortfolio() {
                   type="button"
                   onClick={() => setDraft(null)}
                   aria-label={t.common.close}
-                  className="rounded-full p-2 text-slate-400 hover:bg-white/5"
+                  className="rounded-full p-2 text-ink-low hover:bg-white/[0.06]"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -162,7 +162,7 @@ export function CmsPortfolio() {
                   </Labeled>
                   <Labeled label={t.admin.cms.previewUrl}>
                     <div className="relative">
-                      <Link2 className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 start-3" />
+                      <Link2 className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-ink-low start-3" />
                       <input
                         className="field ps-9"
                         placeholder="https://…"
@@ -192,7 +192,7 @@ export function CmsPortfolio() {
                       type="range"
                       min={0}
                       max={100}
-                      className="w-full accent-cyan-400"
+                      className="w-full accent-neon-cyan"
                       value={draft.progress}
                       onChange={(e) => setDraft({ ...draft, progress: Number(e.target.value) })}
                     />
@@ -218,8 +218,8 @@ export function CmsPortfolio() {
                         className={clsx(
                           "inline-flex flex-1 items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold transition",
                           draft.visibility === v
-                            ? "border-cyan-400/60 bg-cyan-400/10 text-cyan-300"
-                            : "border-slate-300 text-slate-500 dark:border-white/10",
+                            ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                            : "border-line-strong text-ink-low",
                         )}
                       >
                         {v === "private" ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
@@ -239,8 +239,8 @@ export function CmsPortfolio() {
                         className={clsx(
                           "grid h-10 w-10 place-items-center rounded-xl border text-lg transition",
                           draft.icon === icon
-                            ? "border-cyan-400/60 bg-cyan-400/10 text-cyan-300"
-                            : "border-slate-300 text-slate-500 dark:border-white/10",
+                            ? "border-neon-cyan/50 bg-neon-cyan/10 text-neon-cyan"
+                            : "border-line-strong text-ink-low",
                         )}
                       >
                         {icon}
@@ -260,7 +260,7 @@ export function CmsPortfolio() {
                         className={clsx(
                           "h-10 w-16 rounded-xl border bg-gradient-to-br transition",
                           cover,
-                          draft.cover === cover ? "border-cyan-400 ring-2 ring-cyan-400/40" : "border-white/10",
+                          draft.cover === cover ? "border-cyan-400 ring-2 ring-cyan-400/40" : "border-line",
                         )}
                       />
                     ))}
@@ -270,7 +270,7 @@ export function CmsPortfolio() {
                 <label className="flex cursor-pointer items-center gap-3">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 accent-cyan-400"
+                    className="h-4 w-4 accent-neon-cyan"
                     checked={draft.featured}
                     onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
                   />
@@ -298,7 +298,7 @@ export function CmsPortfolio() {
 function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mono-label mb-1.5 block !text-slate-500">{label}</span>
+      <span className="mono-label mb-1.5 block !text-ink-low">{label}</span>
       {children}
     </label>
   );

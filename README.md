@@ -24,18 +24,46 @@ then injected through `app/[locale]/layout.tsx`, which sets `dir` and `lang`.
 `super_admin`, `admin`, `pm`, `employee`, `client` — enforced in the UI by
 `lib/permissions.ts` and in the database by the RLS policies in `supabase/schema.sql`.
 
-## Design system
+## Design system — strict dark
 
-Ultra-modern high-tech aesthetic: glassmorphism surfaces, animated conic glow borders,
-mesh-gradient + cyber-grid backdrops, canvas particle constellations, cursor spotlights,
-3D tilt cards on a Bento grid, and a React Three Fiber hero core that tracks the pointer.
+Single-theme, high-contrast dark UI. There is no light mode and no `dark:` variant in the
+codebase; every colour comes from a token in `tailwind.config.ts`.
 
-- **Typography** — Geist Sans (Latin UI), Cairo Variable (Arabic UI), JetBrains Mono
-  Variable (numerals, code, mono labels). All self-hosted, zero external font requests.
-- **Motion** — Framer Motion scroll reveals with staggered fade-up, layout-animated
-  portfolio filtering, and `AnimatedCounter` count-ups triggered on viewport entry.
-- **Accessibility** — full `prefers-reduced-motion` support; the 3D canvas and particle
-  fields pause off-screen.
+| Token | Value | Use |
+| --- | --- | --- |
+| `base` | `#07090E` | page background (pure deep black) |
+| `surface` | `#0D111A` | cards, at 60% + `backdrop-blur-md` |
+| `line` / `line-strong` | `#1E293B` / `#334155` | hairline borders |
+| `ink-hi` | `#FFFFFF` | headings, extrabold — 21:1 contrast |
+| `ink-mid` | `#CBD5E1` | body — 14.3:1 |
+| `ink-low` | `#94A3B8` | secondary — 8.9:1 |
+| `neon-cyan → neon-purple` | `#00F2FE · #4FACFE · #6366F1 · #A855F7` | accents, gradients, glows |
+
+Depth comes only from `.mesh-deep` (deep radial gradients living inside the black) and
+`.cyber-grid` — never from silver or light-grey fills.
+
+## RTL / LTR correctness
+
+- Logical properties throughout (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`,
+  `text-start`) so Arabic mirrors automatically.
+- `.flip-x` mirrors directional glyphs (arrows, quote marks); `.origin-inline-start`
+  flips transform origins.
+- Technical strings are pinned with `dir="ltr"` so they never reorder inside Arabic text.
+- `shrink-0` on every icon and `whitespace-nowrap` on nav/CTA labels prevents the
+  icon-over-text overlap that flex shrinking used to cause.
+- Consistent spacing scale via `--section-y` / `.section-y` and `--card-p`.
+
+## 3D hero
+
+`components/public/hero-3d.tsx` — React Three Fiber scene loaded with
+`dynamic(..., { ssr: false })`:
+
+- wireframe icosahedron shell (cyan emissive)
+- inner flat-shaded core with purple emissive material and a breathing pulse
+- 900-point additive-blended holographic particle ring
+- three inclined orbit lines
+
+The whole rig eases toward the pointer (`MathUtils.lerp`) for a gyroscope-tilt feel.
 
 ## Dynamic CMS
 
