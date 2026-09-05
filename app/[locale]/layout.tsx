@@ -3,7 +3,6 @@ import { Providers } from "@/components/providers";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { fontVariables } from "@/lib/fonts";
-import { SceneMount } from "@/components/ui/scene-mount";
 import { CursorGlow, ScrollProgress } from "@/components/ui/chrome";
 import { AuroraBackdrop } from "@/components/ui/aurora-backdrop";
 import { getDir, isLocale, locales } from "@/lib/i18n";
@@ -33,11 +32,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
       <body className="bg-base text-ink-mid">
-        {/* One full-page aurora (react-bits shader) behind everything, plus
-            the persistent ambient 3D field. Both are fixed and never
-            interactive. */}
+        {/* The full-page shader backdrop: Aurora + MoltenMetal. Fixed and
+            never interactive. The old three.js ambient field used to render
+            on top of this at the same z-index and hid it, so it is gone. */}
         <AuroraBackdrop />
-        <SceneMount />
         <CursorGlow />
         <ScrollProgress />
 

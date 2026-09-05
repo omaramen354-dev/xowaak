@@ -57,7 +57,7 @@ export function AuroraBackdrop() {
           blend={0.5}
           amplitude={1.0}
           speed={0.5}
-          className="absolute inset-0 h-full w-full opacity-70"
+          className="absolute inset-0 h-full w-full"
         />
       )}
 
