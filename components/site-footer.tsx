@@ -9,7 +9,7 @@ export function SiteFooter() {
   const base = `/${locale}`;
 
   return (
-    <footer className="relative overflow-hidden border-t border-line bg-elevated">
+    <footer className="relative overflow-hidden border-t border-line bg-elevated/80 backdrop-blur-md">
       <div className="container-x grid gap-10 py-16 text-start md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">

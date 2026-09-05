@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { fontVariables } from "@/lib/fonts";
 import { defaultLocale, getDir, isLocale } from "@/lib/i18n";
+import { SceneMount } from "@/components/ui/scene-mount";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,7 +29,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
-      <body className="bg-base text-ink-mid">{children}</body>
+      <body className="bg-base text-ink-mid">
+        {/* Persistent ambient 3D field — fixed behind every page, always
+            moving, never interactive. */}
+        <SceneMount />
+        {children}
+      </body>
     </html>
   );
 }

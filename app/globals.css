@@ -232,6 +232,57 @@
     animation: ping-soft 1.9s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
+  /* Counter that keeps living after the count-up finishes. The digits are
+     final and exact; only the light moves. */
+  /* Composed with .text-gradient's own gradient-pan, so both run: the hue
+     keeps travelling AND the glow keeps pulsing. */
+  .counter-live {
+    animation:
+      gradient-pan 6s ease-in-out infinite,
+      counter-breathe 3.4s ease-in-out infinite;
+  }
+
+  /* ---------------- RGB halo field ---------------- */
+  /* Soft red/green/blue orbs that drift forever behind the content. They are
+     wide and heavily blurred, so they read as ambient light, not as shapes. */
+  .rgb-halo {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+  }
+  .halo-r {
+    background: radial-gradient(circle, rgb(236 72 153 / 0.5), transparent 70%);
+  }
+  .halo-g {
+    background: radial-gradient(circle, rgb(16 185 129 / 0.42), transparent 70%);
+  }
+  .halo-b {
+    background: radial-gradient(circle, rgb(0 210 255 / 0.5), transparent 70%);
+  }
+  .halo-v {
+    background: radial-gradient(circle, rgb(139 92 246 / 0.45), transparent 70%);
+  }
+
+  /* Slow conic RGB wash — the "calm" layer that stops the palette going flat. */
+  .rgb-wash {
+    position: absolute;
+    inset: -30%;
+    pointer-events: none;
+    opacity: 0.22;
+    filter: blur(120px);
+    background: conic-gradient(
+      from 0deg,
+      rgb(0 242 254 / 0.55),
+      rgb(139 92 246 / 0.5),
+      rgb(236 72 153 / 0.5),
+      rgb(16 185 129 / 0.45),
+      rgb(0 242 254 / 0.55)
+    );
+    animation: wash-spin 46s linear infinite;
+  }
+
   /* ---------------- Living light ---------------- */
   .aurora {
     position: absolute;
@@ -371,6 +422,25 @@
 @keyframes rotate-angle {
   to {
     --angle: 360deg;
+  }
+}
+
+/* Referenced from raw CSS only (.counter-live / .rgb-wash), so they must be
+   declared here — Tailwind only emits config keyframes for scanned
+   `animate-*` utilities. */
+@keyframes counter-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgb(0 242 254 / 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgb(217 70 239 / 0.65));
+  }
+}
+
+@keyframes wash-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

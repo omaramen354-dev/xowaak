@@ -37,6 +37,39 @@ export function Aurora({ className, variant = "full" }: { className?: string; va
       {!soft && (
         <div className="aurora aurora-emerald animate-drift-b h-[20rem] w-[20rem] opacity-40 bottom-[6%] start-[-4%] blur-[110px]" />
       )}
+
+      {/* ---- RGB halo layer ---- */}
+      {/* Red / green / blue orbs on unequal periods so the field never repeats
+          visibly. Screen-blended, so they add light instead of grey haze. */}
+      <div className="rgb-wash" />
+      <div
+        className={clsx(
+          "rgb-halo halo-r animate-drift-b",
+          soft ? "h-[20rem] w-[20rem] opacity-25" : "h-[28rem] w-[28rem] opacity-45",
+          "top-[30%] start-[-6%] blur-[130px]",
+        )}
+      />
+      <div
+        className={clsx(
+          "rgb-halo halo-g animate-drift-a",
+          soft ? "h-[18rem] w-[18rem] opacity-20" : "h-[24rem] w-[24rem] opacity-38",
+          "bottom-[12%] end-[10%] blur-[130px]",
+        )}
+      />
+      <div
+        className={clsx(
+          "rgb-halo halo-b animate-pulse-glow",
+          soft ? "h-[22rem] w-[22rem] opacity-25" : "h-[30rem] w-[30rem] opacity-45",
+          "top-[-6%] end-[26%] blur-[140px]",
+        )}
+      />
+      <div
+        className={clsx(
+          "rgb-halo halo-v animate-drift-b",
+          soft ? "h-[16rem] w-[16rem] opacity-20" : "h-[22rem] w-[22rem] opacity-35",
+          "bottom-[-6%] start-[28%] blur-[130px]",
+        )}
+      />
     </div>
   );
 }

@@ -100,6 +100,7 @@ export function AnimatedCounter({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
   const [display, setDisplay] = useState(0);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     if (!inView) return;
@@ -112,6 +113,7 @@ export function AnimatedCounter({
       const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       setDisplay(value * eased);
       if (progress < 1) frame = requestAnimationFrame(tick);
+      else setDone(true);
     };
 
     frame = requestAnimationFrame(tick);
@@ -119,7 +121,13 @@ export function AnimatedCounter({
   }, [inView, value, duration]);
 
   return (
-    <span ref={ref} className={clsx("tabular", className)}>
+    <span
+      ref={ref}
+      /* The NUMBER stays exact — only its light keeps moving. `counter-live`
+         re-pans the gradient and pulses the glow forever, so the stat never
+         looks frozen once the count-up lands. */
+      className={clsx("tabular", done && "counter-live", className)}
+    >
       {prefix}
       {display.toFixed(decimals)}
       {suffix}

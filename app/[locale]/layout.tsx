@@ -20,7 +20,8 @@ export default async function LocaleLayout({
 
   return (
     <Providers locale={locale}>
-      <div dir={getDir(locale)} lang={locale} className="min-h-screen flex flex-col">
+      {/* relative + z-content keeps every page above the fixed 3D field. */}
+      <div dir={getDir(locale)} lang={locale} className="relative z-content flex min-h-screen flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
