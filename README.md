@@ -122,12 +122,16 @@ supabase/schema.sql    tables, enums, triggers, RLS, storage policies
 ```bash
 npm install
 cp .env.example .env.local   # optional — the app runs with mock data without it
-npm run dev
+npm run dev                  # http://0.0.0.0:3000
+npm run build                # builds into .next-build, safe to run while dev is up
 ```
 
-Supabase credentials are optional: `lib/supabase/config.ts` falls back to safe
-placeholders and `isSupabaseConfigured` makes the app serve the bundled demo
-dataset, so the live preview never errors.
+> **Why two build directories?** `next dev` and `next build` both write to `.next` by
+> default. Running a build while the dev server is live overwrites the chunks it is
+> serving, and the dev server then crashes with
+> `TypeError: __webpack_modules__[moduleId] is not a function` /
+> `Cannot find module './vendor-chunks/*.js'`. `next.config.mjs` sends builds to
+> `.next-build` via the `BUILD_DIST` env var so the two can never collide.
 
 ## Database
 
