@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { fontVariables } from "@/lib/fonts";
 import { SceneMount } from "@/components/ui/scene-mount";
 import { CursorGlow, ScrollProgress } from "@/components/ui/chrome";
+import { AuroraBackdrop } from "@/components/ui/aurora-backdrop";
 import { getDir, isLocale, locales } from "@/lib/i18n";
 import "../globals.css";
 
@@ -32,8 +33,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
       <body className="bg-base text-ink-mid">
-        {/* Persistent ambient 3D field — fixed behind every page, always
-            moving, never interactive. */}
+        {/* One full-page aurora (react-bits shader) behind everything, plus
+            the persistent ambient 3D field. Both are fixed and never
+            interactive. */}
+        <AuroraBackdrop />
         <SceneMount />
         <CursorGlow />
         <ScrollProgress />

@@ -20,7 +20,6 @@ import {
   Upload,
 } from "lucide-react";
 import { useI18n } from "@/components/providers";
-import { Aurora } from "@/components/ui/aurora";
 import { ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import {
   getProfile,
@@ -92,7 +91,6 @@ export function PortalView() {
 
   return (
     <section className="relative py-12">
-      <Aurora variant="soft" />
       <div className="container-x relative z-content">
         <header className="glass-card flex flex-wrap items-center justify-between gap-5 p-6">
           <div>

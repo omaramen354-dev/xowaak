@@ -6,7 +6,6 @@ import { ArrowRight, Play, Sparkles, TrendingUp } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
-import { Aurora } from "@/components/ui/aurora";
 import { HeroConsole } from "@/components/public/hero-console";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,6 @@ export function Hero() {
   return (
     <section className="relative isolate overflow-hidden noise">
       {/* ---------- LAYER 0 — ambient depth only ---------- */}
-      <Aurora />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]"

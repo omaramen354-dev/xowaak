@@ -7,7 +7,6 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
 import { ParticleField } from "@/components/ui/backgrounds";
-import { Aurora } from "@/components/ui/aurora";
 import { testimonials } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +15,6 @@ export function Process() {
 
   return (
     <section id="process" className="relative overflow-hidden section-y">
-      <Aurora variant="soft" />
       <div className="container-x relative z-content">
         <Reveal>
           <SectionHeading eyebrow="03 / METHODOLOGY" title={t.process.title} subtitle={t.process.subtitle} />

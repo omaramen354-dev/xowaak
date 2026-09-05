@@ -6,7 +6,6 @@ import { CheckCircle2, Clock, Wallet } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { estimate, formatEUR, type FeatureKey, type ProjectType, type Speed } from "@/lib/pricing";
-import { Aurora } from "@/components/ui/aurora";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -33,7 +32,6 @@ export function QuoteWizard() {
 
   return (
     <section className="relative overflow-hidden section-y">
-      <Aurora variant="soft" />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-backdrop h-80 cyber-grid opacity-40 [mask-image:linear-gradient(black,transparent)]" />
       <div className="container-x relative z-content">
         <SectionHeading eyebrow={t.nav.quote} title={t.quote.title} subtitle={t.quote.subtitle} />

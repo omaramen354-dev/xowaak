@@ -6,7 +6,6 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
 import { Spotlight } from "@/components/ui/motion";
-import { Aurora } from "@/components/ui/aurora";
 
 const icons = [Blocks, Smartphone, BrainCircuit, Cloud, Palette, ShieldCheck];
 
@@ -34,7 +33,6 @@ export function Services() {
 
   return (
     <section id="services" className="relative overflow-hidden section-y">
-      <Aurora variant="soft" />
       <Spotlight />
       <div className="container-x relative z-content">
         <Reveal>

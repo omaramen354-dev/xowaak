@@ -8,7 +8,6 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading, ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import { Reveal, TiltCard } from "@/components/ui/motion";
 import { useContent, type ShowcaseProject } from "@/lib/content-store";
-import { Aurora } from "@/components/ui/aurora";
 import type { Visibility } from "@/lib/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -32,7 +31,6 @@ export function Portfolio() {
 
   return (
     <section id="portfolio" className="relative overflow-hidden section-y">
-      <Aurora variant="soft" />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-backdrop h-px bg-gradient-to-r from-transparent via-neon-cyan/50 to-transparent" />
 
       <div className="container-x relative z-content">
