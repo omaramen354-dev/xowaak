@@ -1,6 +1,7 @@
 const en = {
   brand: { name: "AAKWHX", product: "AWWA", tagline: "Engineering the digital edge." },
   nav: {
+    menu: "Menu",
     home: "Home",
     services: "Services",
     portfolio: "Portfolio",

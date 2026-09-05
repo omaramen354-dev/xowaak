@@ -2,7 +2,7 @@ import type { Dictionary } from "./en";
 
 const nl: Dictionary = {
   brand: { name: "AAKWHX", product: "AWWA", tagline: "Wij bouwen de digitale voorsprong." },
-  nav: { home: "Home", services: "Diensten", portfolio: "Portfolio", process: "Werkwijze", quote: "Offerte", portal: "Klantportaal", admin: "Beheer / ERP", contact: "Contact" },
+  nav: { menu: "Menu", home: "Home", services: "Diensten", portfolio: "Portfolio", process: "Werkwijze", quote: "Offerte", portal: "Klantportaal", admin: "Beheer / ERP", contact: "Contact" },
   common: {
     language: "Taal", theme: "Thema", dark: "Donker", light: "Licht", all: "Alles", public: "Openbaar", private: "Privé",
     viewCase: "Bekijk case study", learnMore: "Meer info", send: "Verzenden", cancel: "Annuleren", search: "Zoeken",

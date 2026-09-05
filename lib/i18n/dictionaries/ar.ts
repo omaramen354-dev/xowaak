@@ -3,6 +3,7 @@ import type { Dictionary } from "./en";
 const ar: Dictionary = {
   brand: { name: "أكوهكس", product: "أووا", tagline: "نهندس التفوّق الرقمي." },
   nav: {
+    menu: "القائمة",
     home: "الرئيسية",
     services: "الخدمات",
     portfolio: "أعمالنا",

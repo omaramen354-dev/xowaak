@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Hexagon, LayoutDashboard, Menu, UserCircle2, X } from "lucide-react";
+import { Hexagon, LayoutDashboard, Menu, UserCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { LanguageSwitcher } from "@/components/ui/switchers";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
@@ -107,39 +108,45 @@ export function SiteHeader() {
 
           <LanguageSwitcher />
 
-          <Button
-            variant="unstyled"
-            size="auto"
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Menu"
-            aria-expanded={open}
-            className="rounded-xl border border-line-strong bg-white/[0.02] p-2.5 text-ink-mid transition-colors hover:border-neon-cyan/50 hover:text-white lg:hidden"
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </Button>
+          {/* Radix Sheet: focus trap, scroll lock, Escape and focus restore,
+              none of which the previous conditional <div> had. */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="unstyled"
+                size="auto"
+                type="button"
+                aria-label="Menu"
+                className="rounded-xl border border-line-strong bg-white/[0.02] p-2.5 text-ink-mid transition-colors hover:border-neon-cyan/50 hover:text-white lg:hidden"
+              >
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="end" className="lg:hidden">
+              <SheetHeader>
+                <SheetTitle>{t.nav.menu}</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-1">
+                {[
+                  ...links,
+                  { href: `${base}/portal`, label: t.nav.portal },
+                  { href: `${base}/admin`, label: t.nav.admin },
+                ].map((l) => (
+                  <SheetClose asChild key={l.href}>
+                    <Link
+                      href={l.href}
+                      className="rounded-lg px-3 py-2.5 text-start text-sm font-medium text-ink-mid transition-colors hover:bg-white/[0.05] hover:text-white"
+                    >
+                      {l.label}
+                    </Link>
+                  </SheetClose>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
 
-      {open && (
-        <div className="border-t border-line bg-base/95 backdrop-blur-xl lg:hidden">
-          <nav className="container-x flex flex-col gap-1 py-4">
-            {[
-              ...links,
-              { href: `${base}/portal`, label: t.nav.portal },
-              { href: `${base}/admin`, label: t.nav.admin },
-            ].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="rounded-lg px-3 py-2.5 text-start text-sm font-medium text-ink-mid transition-colors hover:bg-white/[0.05] hover:text-white"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      )}
     </header>
   );
 }

@@ -2,7 +2,7 @@ import type { Dictionary } from "./en";
 
 const fr: Dictionary = {
   brand: { name: "AAKWHX", product: "AWWA", tagline: "Nous concevons l'avance numérique." },
-  nav: { home: "Accueil", services: "Services", portfolio: "Réalisations", process: "Méthode", quote: "Devis", portal: "Espace client", admin: "Administration / ERP", contact: "Contact" },
+  nav: { menu: "Menu", home: "Accueil", services: "Services", portfolio: "Réalisations", process: "Méthode", quote: "Devis", portal: "Espace client", admin: "Administration / ERP", contact: "Contact" },
   common: {
     language: "Langue", theme: "Thème", dark: "Sombre", light: "Clair", all: "Tout", public: "Public", private: "Privé",
     viewCase: "Voir l'étude de cas", learnMore: "En savoir plus", send: "Envoyer", cancel: "Annuler", search: "Rechercher",

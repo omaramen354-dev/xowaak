@@ -8,6 +8,7 @@ import { SectionHeading } from "@/components/ui/primitives";
 import { estimate, formatEUR, type FeatureKey, type ProjectType, type Speed } from "@/lib/pricing";
 import { Aurora } from "@/components/ui/aurora";
 import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -157,11 +158,7 @@ export function QuoteWizard() {
               <Button type="submit" variant="neon" className="w-full">
                 {t.quote.submit}
               </Button>
-              {submitted && (
-                <p className="rounded-xl border border-neon-emerald/30 bg-neon-emerald/10 px-4 py-3 text-sm font-medium text-neon-emerald">
-                  {t.quote.success}
-                </p>
-              )}
+              {submitted && <Alert variant="success">{t.quote.success}</Alert>}
             </form>
           </div>
 

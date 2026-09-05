@@ -2,7 +2,7 @@ import type { Dictionary } from "./en";
 
 const tr: Dictionary = {
   brand: { name: "AAKWHX", product: "AWWA", tagline: "Dijital üstünlüğü mühendislikle kuruyoruz." },
-  nav: { home: "Ana Sayfa", services: "Hizmetler", portfolio: "Portföy", process: "Süreç", quote: "Teklif Al", portal: "Müşteri Portalı", admin: "Yönetim / ERP", contact: "İletişim" },
+  nav: { menu: "Menü", home: "Ana Sayfa", services: "Hizmetler", portfolio: "Portföy", process: "Süreç", quote: "Teklif Al", portal: "Müşteri Portalı", admin: "Yönetim / ERP", contact: "İletişim" },
   common: {
     language: "Dil", theme: "Tema", dark: "Koyu", light: "Açık", all: "Tümü", public: "Genel", private: "Özel",
     viewCase: "Vaka çalışmasını gör", learnMore: "Daha fazla", send: "Gönder", cancel: "İptal", search: "Ara",
