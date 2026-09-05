@@ -6,32 +6,27 @@ import { ArrowRight, Play, Sparkles, TrendingUp } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
-import { HeroConsole } from "@/components/public/hero-console";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 
-// Heavy WebGL centrepiece — client-only and code-split so it never blocks
-// first paint of the copy column.
-const HeroOrb = dynamic(() => import("@/components/public/hero-orb"), {
+// react-bits Orb — client-only and code-split so it never blocks first paint.
+// Sits BEHIND the hero copy as a glow, not beside it.
+const Orb = dynamic(() => import("@/components/ui/orb").then((m) => m.Orb), {
   ssr: false,
-  // CSS stand-in so the column is never an empty hole while three.js loads.
-  loading: () => (
-    <div className="relative aspect-square w-full">
-      <div className="css-energy-core" aria-hidden />
-    </div>
-  ),
+  loading: () => null,
 });
 
 /**
- * Hero — strict two-column architecture.
+ * Hero — centred single column over a full-bleed Orb.
  *
  * Layer contract (see AGENTS.md):
- *   z-backdrop (0)  ambient light + cyber grid, pointer-events-none
- *   z-stage    (20) the console, scoped to its OWN grid cell
- *   z-copy     (30) all text, badge and CTAs
+ *   z-backdrop (0)  cyber grid, pointer-events-none
+ *   z-stage    (20) the react-bits Orb, pointer-events-none
+ *   z-copy     (30) all text, badge and CTAs — reads ON TOP of the Orb
  *
- * The console can never overlap the copy because they live in separate grid
- * tracks — this is structural, not a tuned offset.
+ * The Orb is aria-hidden and non-interactive, so putting the copy above it
+ * costs nothing in accessibility. The console that used to sit here now
+ * lives in the services section below.
  */
 export function Hero() {
   const { locale, t } = useI18n();
@@ -46,11 +41,20 @@ export function Hero() {
       />
 
       <div className="container-x relative section-y">
-        {/* Copy sits in track 1, console in track 2. On RTL the grid flows
-            right-to-left automatically, putting the copy on the right. */}
-        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:gap-12">
-          {/* ================= COPY COLUMN — z-copy (30) ================= */}
-          <div className="relative z-copy flex flex-col items-center text-center lg:items-start lg:text-start">
+        {/* Single centred column. The Orb is a backdrop behind the words,
+            so the copy reads on top of it rather than beside it. */}
+        <div className="relative">
+          {/* ---------- Orb — z-stage (20), behind the copy ---------- */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1/2 z-stage aspect-square w-[min(120vw,860px)]
+                       -translate-x-1/2 -translate-y-1/2 opacity-90"
+          >
+            <Orb hoverIntensity={5} rotateOnHover={false} hue={0} forceHoverState />
+          </div>
+
+          {/* ================= COPY — z-copy (30), centred ================= */}
+          <div className="relative z-copy flex min-h-[540px] flex-col items-center justify-center text-center">
             <motion.span
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -85,7 +89,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.32 }}
-              className="mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+              className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
               <motion.div whileTap={{ scale: 0.98 }} whileHover={{ y: -2 }}>
                 <Button asChild variant="neon" className="group">
@@ -106,18 +110,6 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* ============ VISUAL COLUMN — z-stage (20), isolated ============ */}
-          {/* Both the 3D orb and the console live here, so neither can ever
-              cross into the copy track. */}
-          <div className="relative isolate order-first w-full lg:order-none">
-            <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
-              <HeroOrb />
-              {/* Console overlaps the lower third of the orb for depth. */}
-              <div className="relative -mt-16 sm:-mt-20">
-                <HeroConsole />
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* ---------- Animated counters ---------- */}

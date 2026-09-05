@@ -41,7 +41,13 @@ export function AuroraBackdrop() {
       {/* Base wash stays even without WebGL, so the page is never flat black. */}
       <div className="absolute inset-0 mesh-deep" />
       <div className="starfield" />
-      {enabled && <AuroraGL className="absolute inset-0 h-full w-full opacity-70" />}
+      {enabled && <AuroraGL
+          colorStops={["#7cff67", "#B497CF", "#5227FF"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+          className="absolute inset-0 h-full w-full opacity-70"
+        />}
     </div>
   );
 }

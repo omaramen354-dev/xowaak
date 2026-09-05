@@ -6,6 +6,7 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
 import { Spotlight } from "@/components/ui/motion";
+import { HeroConsole } from "@/components/public/hero-console";
 
 const icons = [Blocks, Smartphone, BrainCircuit, Cloud, Palette, ShieldCheck];
 
@@ -35,6 +36,14 @@ export function Services() {
     <section id="services" className="relative overflow-hidden section-y">
       <Spotlight />
       <div className="container-x relative z-content">
+        {/* Live console — moved off the hero so the hero is just the Orb and
+            the headline. It opens this section instead. */}
+        <Reveal>
+          <div className="mx-auto mb-20 w-full max-w-[560px]">
+            <HeroConsole />
+          </div>
+        </Reveal>
+
         <Reveal>
           <SectionHeading eyebrow="01 / CAPABILITIES" title={t.services.title} subtitle={t.services.subtitle} />
         </Reveal>
