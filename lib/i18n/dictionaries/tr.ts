@@ -1,0 +1,77 @@
+import type { Dictionary } from "./en";
+
+const tr: Dictionary = {
+  brand: { name: "AAKWHX", product: "AWWA", tagline: "Dijital üstünlüğü mühendislikle kuruyoruz." },
+  nav: { home: "Ana Sayfa", services: "Hizmetler", portfolio: "Portföy", process: "Süreç", quote: "Teklif Al", portal: "Müşteri Portalı", admin: "Yönetim / ERP", contact: "İletişim" },
+  common: {
+    language: "Dil", theme: "Tema", dark: "Koyu", light: "Açık", all: "Tümü", public: "Genel", private: "Özel",
+    viewCase: "Vaka çalışmasını gör", learnMore: "Daha fazla", send: "Gönder", cancel: "İptal", search: "Ara",
+    status: "Durum", progress: "İlerleme", client: "Müşteri", budget: "Bütçe", deadline: "Son tarih", team: "Ekip",
+    open: "Aç", close: "Kapat", download: "İndir", upload: "Dosya yükle", back: "Geri",
+    loading: "Yükleniyor…", empty: "Henüz kayıt yok.", confidential: "Gizli — NDA ile korunmaktadır",
+  },
+  hero: {
+    badge: "Full-stack ürün stüdyosu · 2016'dan beri",
+    title: "Rakiplerinizin kopyalayacağı sistemleri kuruyoruz.",
+    subtitle: "AAKWHX; ortalama yazılımı kabul etmeyen ekipler için platformlar, yapay zekâ sistemleri ve marka kalitesinde arayüzler üreten ileri teknoloji ajansıdır.",
+    ctaPrimary: "Projeye başla", ctaSecondary: "İşlerimizi incele",
+    stats: [
+      { value: "180+", label: "Yayına alınan ürün" },
+      { value: "31", label: "Hizmet verilen ülke" },
+      { value: "%99,98", label: "Platform çalışma süresi" },
+      { value: "7", label: "Desteklenen dil" },
+    ],
+  },
+  services: {
+    title: "Yetkinlikler",
+    subtitle: "Tek ekip, tüm teslim zinciri — keşiften canlı ve izlenen üretim sistemine kadar.",
+    items: [
+      { title: "Ürün Mühendisliği", desc: "Next.js, TypeScript ve edge altyapısıyla web platformları, panolar ve SaaS.", tags: ["Next.js", "TypeScript", "Edge"] },
+      { title: "Mobil Uygulamalar", desc: "Ortak tasarım sistemi ve çevrimdışı senkronizasyonla native kalitede iOS ve Android.", tags: ["React Native", "Swift", "Kotlin"] },
+      { title: "Yapay Zekâ & Otomasyon", desc: "RAG asistanları, belge hatları ve mevcut yığınınıza bağlı iş akışı ajanları.", tags: ["LLM", "RAG", "Ajanlar"] },
+      { title: "Bulut & DevOps", desc: "Kod olarak altyapı, CI/CD, gözlemlenebilirlik ve AWS/Vercel maliyet optimizasyonu.", tags: ["Terraform", "K8s", "CI/CD"] },
+      { title: "Marka & Arayüz Sistemleri", desc: "Tasarım dilleri, hareket sistemleri ve 7 dilde erişilebilir bileşen kütüphaneleri.", tags: ["Tasarım sistemi", "Motion", "a11y"] },
+      { title: "Güvenlik & Uyumluluk", desc: "Tehdit modelleme, sızma testi, KVKK/GDPR ve ISO uyumlu veri yönetişimi.", tags: ["GDPR", "Pentest", "RLS"] },
+    ],
+  },
+  portfolio: { title: "Seçili işler", subtitle: "Sektöre göre filtreleyin. Özel projeler NDA kapsamında anonim özetlerle gösterilir.", filters: { industry: "Sektör", visibility: "Görünürlük" } },
+  process: {
+    title: "Nasıl teslim ediyoruz", subtitle: "Müşteri portalınıza canlı yansıyan, şeffaf beş aşamalı bir hat.",
+    steps: [
+      { title: "Planlama", desc: "Keşif atölyeleri, kapsam, mimari kararlar ve sabit yol haritası." },
+      { title: "Tasarım", desc: "Tel çerçeveler, tasarım sistemi, prototipler ve doğrulanmış kullanıcı akışları." },
+      { title: "Geliştirme", desc: "İki haftalık sprintler, haftalık demolar ve sürekli dağıtım." },
+      { title: "Test", desc: "Otomatik testler, yük testi, güvenlik incelemesi ve erişilebilirlik denetimi." },
+      { title: "İnceleme", desc: "Müşteri onayı, devir, dokümantasyon, eğitim ve destek başlangıcı." },
+    ],
+  },
+  quote: {
+    title: "Proje hesaplayıcı", subtitle: "Kapsamınızı oluşturun, bir dakikadan kısa sürede yaklaşık bütçe ve süre alın.",
+    fields: { name: "Ad soyad", email: "Kurumsal e-posta", company: "Şirket", type: "Proje türü", features: "Modüller ve özellikler", timeline: "Teslim hızı", budget: "Bütçe aralığı", notes: "Eklemek istediğiniz bir şey var mı?" },
+    types: { web: "Web platformu", mobile: "Mobil uygulama", ai: "Yapay zekâ sistemi", ecommerce: "E-ticaret", erp: "ERP / iç araçlar", brand: "Marka ve tasarım" },
+    speeds: { relaxed: "Esnek (en iyi fiyat)", standard: "Standart", rush: "Acil (+%40)" },
+    features: { auth: "Kimlik doğrulama ve roller", payments: "Ödeme ve faturalama", dashboard: "Analitik panosu", i18n: "Çok dillilik (7)", cms: "İçerik yönetimi", api: "Genel API", ai: "Yapay zekâ asistanı", realtime: "Gerçek zamanlı ve sohbet" },
+    estimate: "Yaklaşık tahmin", weeks: "hafta", submit: "Detaylı teklif iste",
+    success: "Talebiniz alındı. Ekibimiz bir iş günü içinde dönüş yapar.", disclaimer: "Tahminler yaklaşıktır ve keşif görüşmesinden sonra kesinleşir.",
+  },
+  portal: {
+    title: "Müşteri Portalı", welcome: "Tekrar hoş geldiniz",
+    tabs: { overview: "Genel bakış", files: "Teslimatlar", feedback: "Geri bildirim", messages: "Mesajlar" },
+    milestones: "Proje zaman çizelgesi", completion: "Tamamlanma", nextDelivery: "Sonraki teslimat",
+    filesTitle: "Güvenli dosya teslimi", filesSubtitle: "Tasarım kaynakları, belgeler ve sözleşmeler. Her indirme kayıt altındadır.",
+    feedbackTitle: "Revizyonlar ve geri bildirim", feedbackPlaceholder: "İstediğiniz değişikliği yazın…", postFeedback: "Geri bildirim gönder",
+    categories: { design: "Tasarım", content: "İçerik", bug: "Hata", scope: "Kapsam değişikliği" },
+  },
+  admin: {
+    title: "Operasyon & ERP",
+    tabs: { dashboard: "Panel", projects: "Projeler", tasks: "Görevler", team: "Ekip", clients: "Müşteriler" },
+    kpis: { revenue: "Gelir (YBY)", active: "Aktif projeler", utilisation: "Ekip doluluğu", overdue: "Geciken görevler" },
+    workflow: "Teslim akışı", assign: "Sorumlu", roleLabel: "Görüntüleme rolü",
+    roles: { super_admin: "Süper Yönetici", admin: "Yönetici", pm: "Proje Yöneticisi", employee: "Çalışan", client: "Müşteri" },
+    permissionDenied: "Rolünüzün bu modüle erişimi yok.", directory: "Müşteri rehberi",
+  },
+  status: { planning: "Planlama", design: "Tasarım", development: "Geliştirme", testing: "Test", review: "İnceleme", completed: "Tamamlandı", todo: "Yapılacak", in_progress: "Devam ediyor", blocked: "Engellendi", done: "Bitti" },
+  footer: { rights: "Tüm hakları saklıdır.", built: "AAKWHX tarafından tasarlandı ve geliştirildi.", offices: "Amsterdam · İstanbul · Riyad" },
+};
+
+export default tr;

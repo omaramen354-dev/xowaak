@@ -1,0 +1,353 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import clsx from "clsx";
+import {
+  AlertTriangle,
+  BarChart3,
+  Briefcase,
+  Building2,
+  Gauge,
+  KanbanSquare,
+  Lock,
+  Search,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { useI18n } from "@/components/providers";
+import { ProgressBar, StatusBadge } from "@/components/ui/primitives";
+import { canAccess, roleOrder, type AdminModule } from "@/lib/permissions";
+import { getProfile, getRole, kpis, profiles, projects, tasks, userRoles } from "@/lib/mock-data";
+import type { AppRole } from "@/lib/supabase/types";
+
+const modules: { key: AdminModule; icon: typeof Gauge }[] = [
+  { key: "dashboard", icon: Gauge },
+  { key: "projects", icon: Briefcase },
+  { key: "tasks", icon: KanbanSquare },
+  { key: "team", icon: Users },
+  { key: "clients", icon: Building2 },
+];
+
+const columns = ["todo", "in_progress", "blocked", "done"] as const;
+
+export function AdminView() {
+  const { t, locale } = useI18n();
+  const [role, setRole] = useState<AppRole>("super_admin");
+  const [module, setModule] = useState<AdminModule>("dashboard");
+  const [query, setQuery] = useState("");
+
+  const allowed = canAccess(role, module);
+
+  const filteredProjects = useMemo(
+    () => projects.filter((p) => p.name.toLowerCase().includes(query.toLowerCase())),
+    [query],
+  );
+
+  const money = (v: number) =>
+    new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
+
+  return (
+    <section className="py-12">
+      <div className="container-x">
+        <header className="surface flex flex-wrap items-center justify-between gap-5 p-6">
+          <div>
+            <span className="chip border-fuchsia-500/40 text-fuchsia-500">ERP</span>
+            <h1 className="mt-3 text-2xl font-black">{t.admin.title}</h1>
+          </div>
+          <label className="flex items-center gap-3">
+            <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">{t.admin.roleLabel}</span>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as AppRole)}
+              className="field !w-auto !py-2 text-sm"
+            >
+              {roleOrder.map((r) => (
+                <option key={r} value={r}>
+                  {t.admin.roles[r]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </header>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
+          <nav className="surface h-fit p-3">
+            <ul className="space-y-1">
+              {modules.map(({ key, icon: Icon }) => {
+                const can = canAccess(role, key);
+                return (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      onClick={() => setModule(key)}
+                      className={clsx(
+                        "flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition",
+                        module === key
+                          ? "bg-brand-500 text-white"
+                          : can
+                            ? "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
+                            : "text-slate-400 dark:text-slate-600",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="flex-1 text-start">{t.admin.tabs[key]}</span>
+                      {!can && <Lock className="h-3.5 w-3.5" />}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="space-y-5">
+            {!allowed ? (
+              <div className="surface flex items-center gap-3 p-8 text-sm font-semibold text-rose-500">
+                <AlertTriangle className="h-5 w-5" />
+                {t.admin.permissionDenied}
+              </div>
+            ) : module === "dashboard" ? (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  <Kpi label={t.admin.kpis.revenue} value={money(kpis.revenueYtd)} icon={TrendingUp} tone="emerald" />
+                  <Kpi label={t.admin.kpis.active} value={String(kpis.activeProjects)} icon={Briefcase} tone="brand" />
+                  <Kpi label={t.admin.kpis.utilisation} value={`${kpis.utilisation}%`} icon={Gauge} tone="violet" />
+                  <Kpi label={t.admin.kpis.overdue} value={String(kpis.overdueTasks)} icon={AlertTriangle} tone="rose" />
+                </div>
+
+                <div className="surface p-6">
+                  <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
+                    <BarChart3 className="h-4 w-4" /> {t.admin.kpis.revenue}
+                  </h3>
+                  <div className="mt-6 flex h-48 items-end gap-2">
+                    {kpis.revenueByMonth.map((m) => (
+                      <div key={m.month} className="flex flex-1 flex-col items-center gap-2">
+                        <div
+                          className="w-full rounded-t-lg bg-gradient-to-t from-brand-600 to-fuchsia-500 transition-all"
+                          style={{ height: `${(m.value / 500) * 100}%` }}
+                          title={`${m.value}k`}
+                        />
+                        <span className="text-[10px] font-semibold text-slate-500">{m.month}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="surface p-6">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.workflow}</h3>
+                  <ul className="mt-5 space-y-4">
+                    {projects
+                      .filter((p) => p.stage !== "completed")
+                      .map((p) => (
+                        <li key={p.id} className="flex flex-wrap items-center gap-4">
+                          <span className="w-52 shrink-0 truncate text-sm font-semibold">{p.name}</span>
+                          <ProgressBar value={p.progress} className="!h-2 flex-1" />
+                          <StatusBadge status={p.stage} label={t.status[p.stage]} />
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </>
+            ) : module === "projects" ? (
+              <div className="surface p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.tabs.projects}</h3>
+                  <label className="relative">
+                    <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 start-3" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder={t.common.search}
+                      className="field !w-56 !py-2 ps-9 text-sm"
+                    />
+                  </label>
+                </div>
+                <div className="mt-5 overflow-x-auto">
+                  <table className="w-full min-w-[720px] text-start text-sm">
+                    <thead>
+                      <tr className="border-b border-slate-200 text-[11px] uppercase tracking-widest text-slate-400 dark:border-white/10">
+                        <th className="py-3 text-start font-bold">{t.admin.tabs.projects}</th>
+                        <th className="py-3 text-start font-bold">{t.common.client}</th>
+                        <th className="py-3 text-start font-bold">{t.common.status}</th>
+                        <th className="py-3 text-start font-bold">{t.common.progress}</th>
+                        <th className="py-3 text-start font-bold">{t.common.budget}</th>
+                        <th className="py-3 text-start font-bold">{t.common.deadline}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200 dark:divide-white/10">
+                      {filteredProjects.map((p) => (
+                        <tr key={p.id}>
+                          <td className="py-3 pe-3">
+                            <span className="font-semibold">{p.name}</span>
+                            <span className="ms-2 text-[10px] uppercase text-slate-400">{p.industry}</span>
+                          </td>
+                          <td className="py-3 pe-3 text-slate-500">{getProfile(p.client_id)?.company}</td>
+                          <td className="py-3 pe-3">
+                            <StatusBadge status={p.stage} label={t.status[p.stage]} />
+                          </td>
+                          <td className="w-32 py-3 pe-3">
+                            <ProgressBar value={p.progress} className="!h-1.5" />
+                          </td>
+                          <td className="py-3 pe-3 tabular-nums text-slate-500">{money(p.budget)}</td>
+                          <td className="py-3 tabular-nums text-slate-500">{p.deadline}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : module === "tasks" ? (
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                {columns.map((col) => (
+                  <div key={col} className="surface p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t.status[col]}</h3>
+                      <span className="text-xs font-bold text-slate-400">
+                        {tasks.filter((task) => task.status === col).length}
+                      </span>
+                    </div>
+                    <ul className="mt-4 space-y-3">
+                      {tasks
+                        .filter((task) => task.status === col)
+                        .map((task) => {
+                          const assignee = getProfile(task.assignee_id);
+                          const project = projects.find((p) => p.id === task.project_id);
+                          return (
+                            <li
+                              key={task.id}
+                              className="rounded-xl border border-slate-200 p-3 dark:border-white/10"
+                            >
+                              <p className="text-sm font-semibold leading-snug">{task.title}</p>
+                              <p className="mt-1 text-[11px] text-slate-500">{project?.name}</p>
+                              <div className="mt-3 flex items-center justify-between">
+                                <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                                  <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-[10px] font-bold text-white">
+                                    {assignee?.full_name.charAt(0)}
+                                  </span>
+                                  {assignee?.full_name.split(" ")[0]}
+                                </span>
+                                <span
+                                  className={clsx(
+                                    "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase",
+                                    task.priority === "critical"
+                                      ? "bg-rose-500/15 text-rose-500"
+                                      : task.priority === "high"
+                                        ? "bg-amber-500/15 text-amber-500"
+                                        : "bg-slate-500/15 text-slate-400",
+                                  )}
+                                >
+                                  {task.priority}
+                                </span>
+                              </div>
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : module === "team" ? (
+              <div className="surface p-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.tabs.team}</h3>
+                <ul className="mt-5 grid gap-4 md:grid-cols-2">
+                  {profiles
+                    .filter((p) => userRoles.some((r) => r.user_id === p.id && r.role !== "client"))
+                    .map((member) => {
+                      const memberRole = getRole(member.id);
+                      const load = tasks.filter((task) => task.assignee_id === member.id);
+                      const hours = load.reduce((sum, task) => sum + task.hours, 0);
+                      return (
+                        <li key={member.id} className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
+                          <div className="flex items-center gap-3">
+                            <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-sm font-bold text-white">
+                              {member.full_name.charAt(0)}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-bold">{member.full_name}</p>
+                              <p className="text-xs text-slate-500">{member.title}</p>
+                            </div>
+                            <span className="ms-auto chip !text-[10px]">{t.admin.roles[memberRole]}</span>
+                          </div>
+                          <div className="mt-4">
+                            <div className="mb-1.5 flex justify-between text-[11px] text-slate-500">
+                              <span>{load.length} tasks</span>
+                              <span className="tabular-nums">{hours}h</span>
+                            </div>
+                            <ProgressBar value={Math.min(100, hours * 2)} className="!h-1.5" />
+                          </div>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            ) : (
+              <div className="surface p-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.directory}</h3>
+                <ul className="mt-5 space-y-3">
+                  {profiles
+                    .filter((p) => getRole(p.id) === "client")
+                    .map((clientProfile) => {
+                      const owned = projects.filter((p) => p.client_id === clientProfile.id);
+                      const value = owned.reduce((sum, p) => sum + p.budget, 0);
+                      return (
+                        <li
+                          key={clientProfile.id}
+                          className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 p-4 dark:border-white/10"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="grid h-11 w-11 place-items-center rounded-xl bg-brand-500/10 text-brand-500">
+                              <Building2 className="h-5 w-5" />
+                            </span>
+                            <div>
+                              <p className="text-sm font-bold">{clientProfile.company}</p>
+                              <p className="text-xs text-slate-500">
+                                {clientProfile.full_name} · {clientProfile.email}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-6 text-xs">
+                            <span className="text-slate-500">
+                              {owned.length} {t.admin.tabs.projects}
+                            </span>
+                            <span className="font-bold tabular-nums text-brand-500">{money(value)}</span>
+                          </div>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Kpi({
+  label,
+  value,
+  icon: Icon,
+  tone,
+}: {
+  label: string;
+  value: string;
+  icon: typeof Gauge;
+  tone: "emerald" | "brand" | "violet" | "rose";
+}) {
+  const tones = {
+    emerald: "text-emerald-500 bg-emerald-500/10",
+    brand: "text-brand-500 bg-brand-500/10",
+    violet: "text-violet-500 bg-violet-500/10",
+    rose: "text-rose-500 bg-rose-500/10",
+  } as const;
+
+  return (
+    <div className="surface p-5">
+      <span className={clsx("grid h-10 w-10 place-items-center rounded-xl", tones[tone])}>
+        <Icon className="h-5 w-5" />
+      </span>
+      <p className="mt-4 text-2xl font-black tabular-nums">{value}</p>
+      <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-500">{label}</p>
+    </div>
+  );
+}

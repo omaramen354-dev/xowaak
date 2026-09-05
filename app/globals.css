@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-ink-900 antialiased transition-colors duration-300;
+  }
+  .dark body {
+    @apply bg-ink-900 text-slate-100;
+  }
+  ::selection {
+    @apply bg-brand-500/40;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+  .surface {
+    @apply rounded-2xl border border-slate-200/80 bg-white/80 backdrop-blur;
+  }
+  .dark .surface {
+    @apply border-white/10 bg-white/[0.03];
+  }
+  .glow-border {
+    @apply relative overflow-hidden rounded-2xl border border-slate-200/80;
+  }
+  .dark .glow-border {
+    @apply border-white/10;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-600/25;
+  }
+  .btn-ghost {
+    @apply btn border border-slate-300 text-slate-700 hover:border-brand-500 hover:text-brand-600;
+  }
+  .dark .btn-ghost {
+    @apply border-white/15 text-slate-200 hover:border-brand-400 hover:text-brand-300;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600;
+  }
+  .dark .chip {
+    @apply border-white/10 bg-white/[0.04] text-slate-300;
+  }
+  .field {
+    @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-ink-900
+           outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30;
+  }
+  .dark .field {
+    @apply border-white/10 bg-white/[0.04] text-slate-100 placeholder:text-slate-500;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(120, 140, 190, 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(120, 140, 190, 0.14) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-400 via-sky-300 to-fuchsia-400 bg-clip-text text-transparent;
+  }
+}
+
+/* Logical-property helpers so RTL mirrors automatically */
+[dir="rtl"] .flip-x {
+  transform: scaleX(-1);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 140, 190, 0.35);
+  border-radius: 9999px;
+}

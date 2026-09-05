@@ -1,0 +1,77 @@
+import type { Dictionary } from "./en";
+
+const fr: Dictionary = {
+  brand: { name: "AAKWHX", product: "AWWA", tagline: "Nous concevons l'avance numérique." },
+  nav: { home: "Accueil", services: "Services", portfolio: "Réalisations", process: "Méthode", quote: "Devis", portal: "Espace client", admin: "Administration / ERP", contact: "Contact" },
+  common: {
+    language: "Langue", theme: "Thème", dark: "Sombre", light: "Clair", all: "Tout", public: "Public", private: "Privé",
+    viewCase: "Voir l'étude de cas", learnMore: "En savoir plus", send: "Envoyer", cancel: "Annuler", search: "Rechercher",
+    status: "Statut", progress: "Avancement", client: "Client", budget: "Budget", deadline: "Échéance", team: "Équipe",
+    open: "Ouvrir", close: "Fermer", download: "Télécharger", upload: "Téléverser un fichier", back: "Retour",
+    loading: "Chargement…", empty: "Aucun élément pour l'instant.", confidential: "Confidentiel — protégé par NDA",
+  },
+  hero: {
+    badge: "Studio produit full-stack · depuis 2016",
+    title: "Nous construisons les systèmes que vos concurrents copieront.",
+    subtitle: "AAKWHX est une agence high-tech qui livre des plateformes, des systèmes d'IA et des interfaces haut de gamme pour les équipes qui refusent le logiciel moyen.",
+    ctaPrimary: "Démarrer un projet", ctaSecondary: "Voir nos réalisations",
+    stats: [
+      { value: "180+", label: "Produits livrés" },
+      { value: "31", label: "Pays servis" },
+      { value: "99,98 %", label: "Disponibilité plateforme" },
+      { value: "7", label: "Langues prises en charge" },
+    ],
+  },
+  services: {
+    title: "Expertises",
+    subtitle: "Une seule équipe pour toute la chaîne de livraison — du cadrage au système de production supervisé.",
+    items: [
+      { title: "Ingénierie produit", desc: "Plateformes web, tableaux de bord et SaaS sur Next.js, TypeScript et infrastructure edge.", tags: ["Next.js", "TypeScript", "Edge"] },
+      { title: "Applications mobiles", desc: "Apps iOS et Android de qualité native, design system partagé et sync hors ligne.", tags: ["React Native", "Swift", "Kotlin"] },
+      { title: "IA & automatisation", desc: "Assistants RAG, pipelines documentaires et agents de workflow intégrés à votre stack.", tags: ["LLM", "RAG", "Agents"] },
+      { title: "Cloud & DevOps", desc: "Infrastructure as code, CI/CD, observabilité et optimisation des coûts sur AWS et Vercel.", tags: ["Terraform", "K8s", "CI/CD"] },
+      { title: "Marque & systèmes UI", desc: "Langages de design, systèmes de motion et bibliothèques accessibles en 7 langues.", tags: ["Design system", "Motion", "a11y"] },
+      { title: "Sécurité & conformité", desc: "Modélisation des menaces, tests d'intrusion, gouvernance RGPD et ISO.", tags: ["RGPD", "Pentest", "RLS"] },
+    ],
+  },
+  portfolio: { title: "Réalisations sélectionnées", subtitle: "Filtrez par secteur. Les missions privées sont présentées de façon anonymisée sous NDA.", filters: { industry: "Secteur", visibility: "Visibilité" } },
+  process: {
+    title: "Notre livraison", subtitle: "Un pipeline transparent en cinq étapes, reflété en direct dans votre espace client.",
+    steps: [
+      { title: "Planification", desc: "Ateliers de cadrage, périmètre, décisions d'architecture et feuille de route." },
+      { title: "Design", desc: "Wireframes, design system, prototypes et parcours utilisateurs validés." },
+      { title: "Développement", desc: "Sprints de deux semaines, démos hebdomadaires et déploiement continu." },
+      { title: "Tests", desc: "Suites automatisées, tests de charge, revue de sécurité et audits d'accessibilité." },
+      { title: "Revue", desc: "Validation client, transfert, documentation, formation et support." },
+    ],
+  },
+  quote: {
+    title: "Estimateur de projet", subtitle: "Composez votre périmètre et obtenez budget et délai indicatifs en moins d'une minute.",
+    fields: { name: "Nom complet", email: "E-mail professionnel", company: "Société", type: "Type de projet", features: "Modules et fonctionnalités", timeline: "Rythme de livraison", budget: "Fourchette budgétaire", notes: "Autre information utile ?" },
+    types: { web: "Plateforme web", mobile: "Application mobile", ai: "Système d'IA", ecommerce: "E-commerce", erp: "ERP / outils internes", brand: "Marque et design" },
+    speeds: { relaxed: "Souple (meilleur prix)", standard: "Standard", rush: "Urgent (+40 %)" },
+    features: { auth: "Authentification et rôles", payments: "Paiements et facturation", dashboard: "Tableau de bord analytique", i18n: "Multilingue (7)", cms: "Gestion de contenu", api: "API publique", ai: "Assistant IA", realtime: "Temps réel et chat" },
+    estimate: "Estimation indicative", weeks: "semaines", submit: "Demander une proposition détaillée",
+    success: "Demande reçue. Notre équipe répond sous un jour ouvré.", disclaimer: "Les estimations sont indicatives et confirmées après un appel de cadrage.",
+  },
+  portal: {
+    title: "Espace client", welcome: "Bon retour",
+    tabs: { overview: "Aperçu", files: "Livrables", feedback: "Retours", messages: "Messages" },
+    milestones: "Calendrier du projet", completion: "Avancement", nextDelivery: "Prochaine livraison",
+    filesTitle: "Livraison sécurisée des fichiers", filesSubtitle: "Sources de design, documents et contrats. Chaque téléchargement est journalisé.",
+    feedbackTitle: "Révisions et retours", feedbackPlaceholder: "Décrivez la modification souhaitée…", postFeedback: "Publier le retour",
+    categories: { design: "Design", content: "Contenu", bug: "Anomalie", scope: "Changement de périmètre" },
+  },
+  admin: {
+    title: "Opérations & ERP",
+    tabs: { dashboard: "Tableau de bord", projects: "Projets", tasks: "Tâches", team: "Équipe", clients: "Clients" },
+    kpis: { revenue: "Chiffre d'affaires (YTD)", active: "Projets actifs", utilisation: "Taux d'occupation", overdue: "Tâches en retard" },
+    workflow: "Flux de livraison", assign: "Responsable", roleLabel: "Vue en tant que",
+    roles: { super_admin: "Super administrateur", admin: "Administrateur", pm: "Chef de projet", employee: "Employé", client: "Client" },
+    permissionDenied: "Votre rôle n'a pas accès à ce module.", directory: "Annuaire clients",
+  },
+  status: { planning: "Planification", design: "Design", development: "Développement", testing: "Tests", review: "Revue", completed: "Terminé", todo: "À faire", in_progress: "En cours", blocked: "Bloqué", done: "Fait" },
+  footer: { rights: "Tous droits réservés.", built: "Conçu et développé par AAKWHX.", offices: "Amsterdam · Istanbul · Riyad" },
+};
+
+export default fr;
