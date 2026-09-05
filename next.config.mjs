@@ -20,12 +20,18 @@ const nextConfig = {
    * Builds are redirected to .next-build via BUILD_DIST=1 (see package.json).
    */
   distDir: process.env.BUILD_DIST ? ".next-build" : ".next",
-  eslint: { ignoreDuringBuilds: true },
+
   turbopack: {
     resolveAlias: {
       "@/*": "./*",
     },
   },
+
+  /**
+   * Kept for the webpack path (`next build --webpack`). The `@/*` alias in
+   * tsconfig.json alone is not enough in this project — without this the
+   * build fails with "Can't resolve '@/components/...'".
+   */
   webpack(config) {
     config.resolve.alias = { ...(config.resolve.alias || {}), "@": dirname };
     return config;

@@ -11,9 +11,9 @@
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Framework | **Next.js 15.5.25**, App Router | Server Components by default |
+| Framework | **Next.js 16.3.4**, App Router | Server Components by default |
 | Language | **TypeScript 5.9** | do not upgrade to 7.x — Next rejects it |
-| Styling | **Tailwind CSS 3.4** | `darkMode: "class"`, dark-only in practice |
+| Styling | **Tailwind CSS 4.3** | `darkMode: "class"`, dark-only in practice |
 | Animation | **Framer Motion 13** | reveals, stagger, counters, tilt |
 | 3D | **three 0.185** + **@react-three/fiber 9** + **drei 10** | both canvases dynamically imported |
 | Backend | **Supabase** (`@supabase/ssr`) | runs on mock data with no credentials |
@@ -30,11 +30,11 @@ Storybook. Everything is hand-rolled.
 ```
 xowaak/
 ├── app/
-│   ├── layout.tsx              root: <html lang/dir> resolved SERVER-side, mounts <SceneMount/>
+│   ├── layout.tsx              pass-through root (metadata + viewport only)
 │   ├── globals.css             622 lines — design system lives here
 │   ├── not-found.tsx
 │   └── [locale]/
-│       ├── layout.tsx          Providers + SiteHeader + SiteFooter, generateStaticParams
+│       ├── layout.tsx          owns <html lang/dir>, chrome, Providers, header/footer
 │       ├── page.tsx            Hero → Services → Portfolio → Process → CallToAction
 │       ├── quote/page.tsx      QuoteWizard
 │       ├── portal/page.tsx     PortalView
@@ -88,7 +88,7 @@ xowaak/
 │   └── fonts.ts
 │
 ├── supabase/schema.sql         487 ln — tables, enums, RLS policies
-├── middleware.ts               locale redirect + sets x-pathname header
+├── proxy.ts                    locale redirect (Next 16 renamed middleware -> proxy)
 ├── next.config.mjs             webpack alias + BUILD_DIST distDir switch
 ├── tailwind.config.ts          design tokens
 ├── AGENTS.md                   ← rules for AI agents; READ THIS

@@ -13,6 +13,18 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  /**
+   * Close the mobile menu on navigation by DERIVING it during render rather
+   * than firing an effect. The effect version rendered the open menu on the
+   * new route first and closed it on a second pass; this closes it in the
+   * same commit and costs no extra render.
+   */
+  const [lastPath, setLastPath] = useState(pathname);
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setOpen(false);
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
@@ -20,7 +32,6 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
 
   const base = `/${locale}`;
   const links = [

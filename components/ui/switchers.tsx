@@ -31,6 +31,9 @@ export function LanguageSwitcher() {
   function switchTo(next: Locale) {
     const segments = pathname.split("/");
     segments[1] = next;
+    // Assigning document.cookie is a browser API call, not a mutation of a
+    // React value; the compiler cannot distinguish the two.
+    // eslint-disable-next-line react-hooks/immutability
     document.cookie = `awwa-locale=${next}; path=/; max-age=31536000; samesite=lax`;
     setOpen(false);
     router.push(segments.join("/") || `/${next}`);

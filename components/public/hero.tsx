@@ -14,7 +14,12 @@ import dynamic from "next/dynamic";
 // first paint of the copy column.
 const HeroOrb = dynamic(() => import("@/components/public/hero-orb"), {
   ssr: false,
-  loading: () => <div className="aspect-square w-full" />,
+  // CSS stand-in so the column is never an empty hole while three.js loads.
+  loading: () => (
+    <div className="relative aspect-square w-full">
+      <div className="css-energy-core" aria-hidden />
+    </div>
+  ),
 });
 
 /**

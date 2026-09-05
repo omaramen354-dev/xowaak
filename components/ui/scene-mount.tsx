@@ -1,32 +1,39 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 /**
- * Mounts the global 3D field lazily on the client.
+ * Gates the global 3D field behind a capability check.
  *
- * Split out from scene-3d.tsx so the three.js bundle is never part of the
- * initial payload: it loads after first paint, and not at all for users who
- * asked for reduced motion or are on a small/low-power screen.
+ * Uses useSyncExternalStore rather than a one-shot useEffect so the decision
+ * REACTS to changes: rotate a tablet or toggle "reduce motion" and the scene
+ * appears or disappears accordingly, instead of being frozen at first paint.
+ * (This pattern came from the uploaded design pass — it is a genuine
+ * improvement over the previous effect-based version.)
  */
 const Scene3D = dynamic(() => import("@/components/ui/scene-3d"), { ssr: false, loading: () => null });
 
+function subscribe(callback: () => void) {
+  const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  window.addEventListener("resize", callback, { passive: true });
+  motion.addEventListener("change", callback);
+  return () => {
+    window.removeEventListener("resize", callback);
+    motion.removeEventListener("change", callback);
+  };
+}
+
+function snapshot() {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cores = navigator.hardwareConcurrency ?? 4;
+  // Phones keep the CSS aurora only — a WebGL canvas is not worth the battery.
+  return !reduced && window.innerWidth >= 768 && cores >= 4;
+}
+
 export function SceneMount() {
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Phones get the CSS aurora only — a WebGL canvas is not worth the battery.
-    const small = window.matchMedia("(max-width: 767px)").matches;
-    const cores = navigator.hardwareConcurrency ?? 4;
-    if (reduced || small || cores < 4) return;
-
-    // Defer past first paint so the hero text is never blocked.
-    const id = window.setTimeout(() => setEnabled(true), 350);
-    return () => window.clearTimeout(id);
-  }, []);
-
+  // Server snapshot is `false`, so nothing renders until the client decides.
+  const enabled = useSyncExternalStore(subscribe, snapshot, () => false);
   if (!enabled) return null;
   return <Scene3D />;
 }

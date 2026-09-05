@@ -1,40 +1,30 @@
-import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { fontVariables } from "@/lib/fonts";
-import { defaultLocale, getDir, isLocale } from "@/lib/i18n";
-import { SceneMount } from "@/components/ui/scene-mount";
-import "./globals.css";
+import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://awwa.studio"),
   title: "AWWA — AAKWHX Digital Agency Platform",
   description:
     "AAKWHX builds platforms, AI systems and brand-grade interfaces. AWWA is our delivery platform: public site, client portal and internal ERP.",
   keywords: ["AAKWHX", "AWWA", "software agency", "Next.js", "ERP", "client portal"],
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#05070E",
+  colorScheme: "dark",
+};
+
 /**
- * Resolve the active locale from the request path so `<html lang/dir>` is
- * correct in the SERVER-rendered markup. Setting it only in a client effect
- * makes Arabic ship as LTR and then snap to RTL on hydration.
+ * Pass-through root.
+ *
+ * The real <html> element is rendered by app/[locale]/layout.tsx, which knows
+ * the locale from its route params. Resolving it here instead would require
+ * headers(), which opts every route into dynamic rendering and destroys
+ * static generation — while rendering it in the locale layout keeps BOTH
+ * server-correct lang/dir and 29 prerendered pages.
  */
-async function resolveLocale() {
-  const h = await headers();
-  const path = h.get("x-invoke-path") ?? h.get("x-matched-path") ?? h.get("x-pathname") ?? "";
-  const seg = path.split("/").filter(Boolean)[0];
-  return isLocale(seg) ? seg : defaultLocale;
-}
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await resolveLocale();
-
-  return (
-    <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
-      <body className="bg-base text-ink-mid">
-        {/* Persistent ambient 3D field — fixed behind every page, always
-            moving, never interactive. */}
-        <SceneMount />
-        {children}
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return children;
 }

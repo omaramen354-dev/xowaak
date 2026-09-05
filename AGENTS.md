@@ -4,7 +4,7 @@ Read this before editing. It records constraints discovered the hard way.
 
 ## Stack
 
-Next.js 15.5.25 (App Router) · TypeScript 5 · Tailwind CSS · Framer Motion · React Three Fiber
+Next.js 16.3.4 (App Router) · TypeScript 5.9 · Tailwind CSS 4 · Framer Motion · React Three Fiber
 Supabase-ready (runs on mock data without any credentials).
 
 ## Commands
@@ -27,8 +27,27 @@ Adding `baseUrl` or deleting `.next` does not substitute for it.
 
 ### 2. Do not upgrade TypeScript past 5.x
 
-`typescript@7.x` is rejected by Next 15.5.25:
-"native compiler does not provide the JavaScript compiler API".
+`typescript@7.x` was rejected by Next; stay on 5.9.x.
+
+### 2b. Tailwind v4 specifics
+
+- `globals.css` uses `@import "tailwindcss"` plus `@config "../tailwind.config.ts"`.
+  The JS config stays the single source of truth for colours, the z-scale and
+  keyframes — do not duplicate them into `@theme`.
+- **`@apply` can no longer reference another custom component class.**
+  `@apply btn ...` fails with "Cannot apply unknown utility class `btn`";
+  repeat the base declarations instead.
+- PostCSS uses `@tailwindcss/postcss`; autoprefixer is built in.
+
+### 2c. Next 16 specifics
+
+- `middleware.ts` is now **`proxy.ts`** with a `default` export named `proxy`.
+- `<html>` is rendered by `app/[locale]/layout.tsx`, NOT the root layout.
+  Resolving the locale in the root would need `headers()`, which forces every
+  route dynamic and loses all 29 prerendered pages. Do not move it back.
+- React Compiler lint rules are active. `react-hooks/purity` and
+  `react-hooks/immutability` are disabled **only** for the two WebGL scenes
+  (see `eslint.config.mjs`) because `useFrame` runs outside React render.
 
 ### 3. Never use `next/font/google`
 

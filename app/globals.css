@@ -1,9 +1,13 @@
 @import "@fontsource-variable/cairo";
 @import "@fontsource-variable/jetbrains-mono";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4: a single @import replaces the three @tailwind directives. */
+@import "tailwindcss";
+
+/* Keep the JS config as the single source of truth for the design tokens
+   (colours, the z-scale, keyframes) instead of duplicating them into @theme.
+   v4 reads it through this bridge. */
+@config "../tailwind.config.ts";
 
 :root {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -125,7 +129,11 @@
   }
 
   .btn-primary {
-    @apply btn overflow-hidden text-white;
+    /* Tailwind v4 cannot @apply another custom component class, so the base
+       button rules are repeated here instead of `@apply btn`. */
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200
+           overflow-hidden text-white;
     background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 30%, #8b5cf6 70%, #d946ef 100%);
     background-size: 180% auto;
     animation: gradient-pan 5s ease-in-out infinite;
@@ -146,7 +154,9 @@
   }
 
   .btn-ghost {
-    @apply btn border border-line-strong bg-white/[0.02] text-ink-mid;
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200
+           border border-line-strong bg-white/[0.02] text-ink-mid;
   }
   .btn-ghost:hover {
     @apply border-neon-cyan/50 bg-neon-cyan/[0.06] text-white;
@@ -425,6 +435,83 @@
     color: transparent;
   }
 
+  /* ---------------- Page chrome (ported design pass) ---------------- */
+  /* Scroll depth bar. transform-origin follows the reading direction so the
+     bar grows from the side the user starts reading on. */
+  .scroll-progress {
+    position: fixed;
+    z-index: 61;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, #00f2fe, #8b5cf6, #d946ef);
+    box-shadow: 0 0 18px rgb(0 242 254 / 0.8);
+    transform-origin: left center;
+  }
+  [dir="rtl"] .scroll-progress {
+    transform-origin: right center;
+  }
+
+  .cursor-glow {
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 360px;
+    height: 360px;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0.17;
+    background: radial-gradient(circle, rgb(0 242 254 / 0.32), rgb(139 92 246 / 0.07) 42%, transparent 72%);
+    filter: blur(8px);
+    mix-blend-mode: screen;
+  }
+
+  /* CSS stand-in for the WebGL orb: shown while the canvas loads and kept as
+     the permanent visual on devices where 3D is switched off. */
+  .css-energy-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(190px, 27vw, 390px);
+    aspect-ratio: 1;
+    border: 1px solid rgb(0 242 254 / 0.48);
+    border-radius: 38% 62% 54% 46%;
+    background:
+      radial-gradient(circle at 38% 30%, rgb(255 255 255 / 0.24), transparent 8%),
+      radial-gradient(circle, rgb(17 72 88 / 0.82), #070d16 53%, rgb(8 10 20 / 0.92) 68%);
+    box-shadow:
+      inset -24px -20px 70px rgb(139 92 246 / 0.26),
+      inset 18px 12px 45px rgb(0 242 254 / 0.18),
+      0 0 70px rgb(0 242 254 / 0.12),
+      0 0 140px rgb(139 92 246 / 0.14);
+    /* Centring uses the `translate` property (not `transform`) because
+       core-float animates that same property — setting both would stack and
+       offset the orb twice. */
+    translate: -50% -50%;
+    animation:
+      core-morph 9s ease-in-out infinite,
+      core-float 5s ease-in-out infinite;
+  }
+  .css-energy-core::before,
+  .css-energy-core::after {
+    position: absolute;
+    inset: -27%;
+    content: "";
+    border: 1px solid rgb(0 242 254 / 0.42);
+    border-radius: 50%;
+    transform: rotateX(66deg) rotateZ(12deg);
+    animation: orbit-spin 8s linear infinite;
+  }
+  .css-energy-core::after {
+    inset: -40%;
+    border-color: rgb(139 92 246 / 0.3);
+    transform: rotateY(70deg) rotateZ(35deg);
+    animation-direction: reverse;
+    animation-duration: 12s;
+  }
+
   .mono-label {
     font-family: var(--font-mono);
     @apply text-[10px] font-semibold uppercase tracking-[0.28em] text-neon-cyan;
@@ -569,6 +656,36 @@
 
 /* Used by .live-dot::after in raw CSS — must be declared here, not in the
    Tailwind config, since no `animate-ping-soft` class is ever scanned. */
+/* Ported with the .css-energy-core fallback. */
+@keyframes core-morph {
+  0%,
+  100% {
+    border-radius: 38% 62% 54% 46%;
+  }
+  33% {
+    border-radius: 56% 44% 38% 62%;
+  }
+  66% {
+    border-radius: 44% 56% 62% 38%;
+  }
+}
+
+@keyframes core-float {
+  0%,
+  100% {
+    translate: -50% -50%;
+  }
+  50% {
+    translate: -50% calc(-50% - 14px);
+  }
+}
+
+@keyframes orbit-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
 @keyframes ping-soft {
   0% {
     transform: scale(1);

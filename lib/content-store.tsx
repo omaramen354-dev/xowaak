@@ -93,11 +93,20 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
   const [showcase, setShowcase] = useState<ShowcaseProject[]>(defaultProjects);
   const [hydrated, setHydrated] = useState(false);
 
+  /**
+   * Stored content is applied AFTER mount, deliberately.
+   *
+   * A lazy useState initialiser reading localStorage would make the first
+   * client render differ from the server HTML and produce a hydration
+   * mismatch. React's compiler lints this as "setState in effect", but the
+   * post-mount read is the correct trade-off for SSR-safe persistence.
+   */
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as { stats?: StatItem[]; showcase?: ShowcaseProject[] };
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- see note above: reading storage during render would break hydration
         if (Array.isArray(parsed.stats) && parsed.stats.length) setStats(parsed.stats);
         if (Array.isArray(parsed.showcase) && parsed.showcase.length) setShowcase(parsed.showcase);
       }
