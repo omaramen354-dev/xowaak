@@ -7,6 +7,10 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { estimate, formatEUR, type FeatureKey, type ProjectType, type Speed } from "@/lib/pricing";
 import { Aurora } from "@/components/ui/aurora";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const projectTypes: ProjectType[] = ["web", "mobile", "ai", "ecommerce", "erp", "brand"];
 const featureKeys: FeatureKey[] = ["auth", "payments", "dashboard", "i18n", "cms", "api", "ai", "realtime"];
@@ -39,7 +43,7 @@ export function QuoteWizard() {
               <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.quote.fields.type}</h3>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {projectTypes.map((key) => (
-                  <button
+                  <Button variant="unstyled" size="auto"
                     key={key}
                     type="button"
                     onClick={() => setType(key)}
@@ -51,7 +55,7 @@ export function QuoteWizard() {
                     )}
                   >
                     {t.quote.types[key]}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -62,7 +66,7 @@ export function QuoteWizard() {
                 {featureKeys.map((key) => {
                   const on = features.includes(key);
                   return (
-                    <button
+                    <Button variant="unstyled" size="auto"
                       key={key}
                       type="button"
                       onClick={() => toggleFeature(key)}
@@ -78,7 +82,7 @@ export function QuoteWizard() {
                       <CheckCircle2
                         className={clsx("h-4 w-4 shrink-0", on ? "text-neon-cyan" : "text-ink-mid")}
                       />
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -88,7 +92,7 @@ export function QuoteWizard() {
               <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.quote.fields.timeline}</h3>
               <div className="mt-4 grid gap-3 sm:grid-cols-3">
                 {speeds.map((key) => (
-                  <button
+                  <Button variant="unstyled" size="auto"
                     key={key}
                     type="button"
                     onClick={() => setSpeed(key)}
@@ -100,7 +104,7 @@ export function QuoteWizard() {
                     )}
                   >
                     {t.quote.speeds[key]}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -113,46 +117,46 @@ export function QuoteWizard() {
               }}
             >
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block">
-                  <span className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.name}</span>
-                  <input
+                <div className="block">
+                  <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.name}</Label>
+                  <Input
                     required
                     className="field"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                   />
-                </label>
-                <label className="block">
-                  <span className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.email}</span>
-                  <input
+                </div>
+                <div className="block">
+                  <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.email}</Label>
+                  <Input
                     required
                     type="email"
                     className="field"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                   />
-                </label>
+                </div>
               </div>
-              <label className="block">
-                <span className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.company}</span>
-                <input
+              <div className="block">
+                <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.company}</Label>
+                <Input
                   className="field"
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
                 />
-              </label>
-              <label className="block">
-                <span className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.notes}</span>
-                <textarea
+              </div>
+              <div className="block">
+                <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.notes}</Label>
+                <Textarea
                   rows={4}
                   className="field resize-none"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
                 />
-              </label>
-              <button type="submit" className="btn-primary w-full">
+              </div>
+              <Button type="submit" variant="neon" className="w-full">
                 {t.quote.submit}
-              </button>
+              </Button>
               {submitted && (
                 <p className="rounded-xl border border-neon-emerald/30 bg-neon-emerald/10 px-4 py-3 text-sm font-medium text-neon-emerald">
                   {t.quote.success}

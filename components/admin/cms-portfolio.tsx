@@ -13,6 +13,12 @@ import {
   type ShowcaseProject,
 } from "@/lib/content-store";
 import type { ProjectStage, Visibility } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const stages: ProjectStage[] = ["planning", "design", "development", "testing", "review", "completed"];
 
@@ -53,10 +59,10 @@ export function CmsPortfolio() {
           <p className="mt-2 text-lg font-bold">{t.admin.tabs.cmsPortfolio}</p>
           <p className="mt-1 text-xs text-ink-low">{t.admin.cms.portfolioHint}</p>
         </div>
-        <button type="button" onClick={openNew} className="btn-primary !py-2 text-xs">
+        <Button type="button" onClick={openNew} variant="neon" className="!py-2 text-xs">
           <Plus className="h-4 w-4" />
           {t.admin.cms.addProject}
-        </button>
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -89,54 +95,37 @@ export function CmsPortfolio() {
                 <span className="tabular">{project.progress}%</span>
               </div>
               <div className="mt-4 flex gap-2">
-                <button type="button" onClick={() => openEdit(project)} className="btn-ghost flex-1 !py-1.5 !text-[11px]">
+                <Button type="button" onClick={() => openEdit(project)} variant="ghostNeon" className="flex-1 !py-1.5 !text-[11px]">
                   <Pencil className="h-3.5 w-3.5" />
                   {t.admin.cms.edit}
-                </button>
-                <button
+                </Button>
+                <Button variant="unstyled" size="auto"
                   type="button"
                   onClick={() => removeProject(project.id)}
                   aria-label={t.admin.cms.delete}
                   className="grid h-8 w-8 place-items-center rounded-xl border border-rose-500/30 text-rose-300 transition hover:bg-rose-500/10"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      <AnimatePresence>
-        {draft && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-overlay grid place-items-center bg-base/85 p-4 backdrop-blur-md"
-          >
-            <button type="button" aria-label={t.common.cancel} className="absolute inset-0" onClick={() => setDraft(null)} />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              className="glass-card relative z-10 max-h-[88vh] w-full max-w-2xl overflow-auto !bg-surface p-7"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-black">{t.admin.cms.addProject}</h3>
-                <button
-                  type="button"
-                  onClick={() => setDraft(null)}
-                  aria-label={t.common.close}
-                  className="rounded-full p-2 text-ink-low hover:bg-white/[0.06]"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+      {/* Radix Dialog: focus trap, focus restore, Escape and aria wiring that
+          the previous hand-rolled overlay did not have. */}
+      <Dialog open={!!draft} onOpenChange={(o) => !o && setDraft(null)}>
+        <DialogContent className="max-w-2xl p-7">
+          {draft && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{t.admin.cms.addProject}</DialogTitle>
+              </DialogHeader>
 
               <div className="mt-6 space-y-4">
                 <Labeled label={t.admin.cms.projectName}>
-                  <input
+                  <Input
                     className="field"
                     value={draft.name}
                     onChange={(e) => setDraft({ ...draft, name: e.target.value })}
@@ -144,7 +133,7 @@ export function CmsPortfolio() {
                 </Labeled>
 
                 <Labeled label={t.admin.cms.description}>
-                  <textarea
+                  <Textarea
                     rows={3}
                     className="field resize-none"
                     value={draft.summary}
@@ -154,7 +143,7 @@ export function CmsPortfolio() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Labeled label={t.admin.cms.category}>
-                    <input
+                    <Input
                       className="field"
                       value={draft.industry}
                       onChange={(e) => setDraft({ ...draft, industry: e.target.value })}
@@ -163,7 +152,7 @@ export function CmsPortfolio() {
                   <Labeled label={t.admin.cms.previewUrl}>
                     <div className="relative">
                       <Link2 className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-ink-low start-3" />
-                      <input
+                      <Input
                         className="field ps-9"
                         placeholder="https://…"
                         value={draft.url}
@@ -175,20 +164,24 @@ export function CmsPortfolio() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Labeled label={t.common.status}>
-                    <select
-                      className="field"
+                    <Select
                       value={draft.stage}
-                      onChange={(e) => setDraft({ ...draft, stage: e.target.value as ProjectStage })}
+                      onValueChange={(v) => setDraft({ ...draft, stage: v as ProjectStage })}
                     >
-                      {stages.map((s) => (
-                        <option key={s} value={s}>
-                          {t.status[s]}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {stages.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {t.status[s]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </Labeled>
                   <Labeled label={`${t.common.progress} — ${draft.progress}%`}>
-                    <input
+                    <Input
                       type="range"
                       min={0}
                       max={100}
@@ -200,7 +193,7 @@ export function CmsPortfolio() {
                 </div>
 
                 <Labeled label={t.admin.cms.tech}>
-                  <input
+                  <Input
                     className="field font-mono text-xs"
                     placeholder="Next.js, Supabase, Terraform"
                     value={techInput}
@@ -211,7 +204,7 @@ export function CmsPortfolio() {
                 <Labeled label={t.admin.cms.visibility}>
                   <div className="flex gap-2">
                     {(["public", "private"] as Visibility[]).map((v) => (
-                      <button
+                      <Button variant="unstyled" size="auto"
                         key={v}
                         type="button"
                         onClick={() => setDraft({ ...draft, visibility: v })}
@@ -224,7 +217,7 @@ export function CmsPortfolio() {
                       >
                         {v === "private" ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
                         {v === "private" ? t.common.private : t.common.public}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </Labeled>
@@ -232,7 +225,7 @@ export function CmsPortfolio() {
                 <Labeled label={t.admin.cms.icon}>
                   <div className="flex flex-wrap gap-2">
                     {iconPresets.map((icon) => (
-                      <button
+                      <Button variant="unstyled" size="auto"
                         key={icon}
                         type="button"
                         onClick={() => setDraft({ ...draft, icon })}
@@ -244,7 +237,7 @@ export function CmsPortfolio() {
                         )}
                       >
                         {icon}
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </Labeled>
@@ -252,7 +245,7 @@ export function CmsPortfolio() {
                 <Labeled label={t.admin.cms.cover}>
                   <div className="flex flex-wrap gap-2">
                     {gradientPresets.map((cover) => (
-                      <button
+                      <Button variant="unstyled" size="auto"
                         key={cover}
                         type="button"
                         onClick={() => setDraft({ ...draft, cover })}
@@ -267,39 +260,39 @@ export function CmsPortfolio() {
                   </div>
                 </Labeled>
 
-                <label className="flex cursor-pointer items-center gap-3">
-                  <input
+                <Label className="flex cursor-pointer items-center gap-3">
+                  <Input
                     type="checkbox"
                     className="h-4 w-4 accent-neon-cyan"
                     checked={draft.featured}
                     onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
                   />
                   <span className="text-sm font-medium">{t.admin.cms.featured}</span>
-                </label>
+                </Label>
               </div>
 
-              <div className="mt-7 flex justify-end gap-3">
-                <button type="button" onClick={() => setDraft(null)} className="btn-ghost">
+              <DialogFooter className="mt-7 gap-3">
+                <Button type="button" onClick={() => setDraft(null)} variant="ghostNeon">
                   {t.common.cancel}
-                </button>
-                <button type="button" onClick={save} className="btn-primary">
+                </Button>
+                <Button type="button" onClick={save} variant="neon">
                   <Check className="h-4 w-4" />
                   {t.admin.cms.save}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
 function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block">
-      <span className="mono-label mb-1.5 block !text-ink-low">{label}</span>
+    <div className="block">
+      <Label className="mono-label mb-1.5 block !text-ink-low">{label}</Label>
       {children}
-    </label>
+    </div>
   );
 }

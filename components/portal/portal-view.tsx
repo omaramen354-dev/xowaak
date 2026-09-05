@@ -31,6 +31,8 @@ import {
   projects,
 } from "@/lib/mock-data";
 import type { Feedback, FeedbackCategory, FileCategory, ProjectStage } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 const STAGES: ProjectStage[] = ["planning", "design", "development", "testing", "review"];
 
@@ -108,7 +110,7 @@ export function PortalView() {
 
         <div className="mt-5 flex flex-wrap gap-2">
           {clientProjects.map((p) => (
-            <button
+            <Button variant="unstyled" size="auto"
               key={p.id}
               type="button"
               onClick={() => selectProject(p.id)}
@@ -120,7 +122,7 @@ export function PortalView() {
               )}
             >
               {p.name}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -181,7 +183,7 @@ export function PortalView() {
             <div className="glass-card p-2">
               <nav className="flex flex-wrap gap-1">
                 {(["overview", "files", "feedback", "messages"] as const).map((key) => (
-                  <button
+                  <Button variant="unstyled" size="auto"
                     key={key}
                     type="button"
                     onClick={() => setTab(key)}
@@ -193,7 +195,7 @@ export function PortalView() {
                     )}
                   >
                     {t.portal.tabs[key]}
-                  </button>
+                  </Button>
                 ))}
               </nav>
             </div>
@@ -230,10 +232,10 @@ export function PortalView() {
                     <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.portal.filesTitle}</h3>
                     <p className="mt-1 text-xs text-ink-low">{t.portal.filesSubtitle}</p>
                   </div>
-                  <button type="button" className="btn-ghost !py-2 text-xs">
+                  <Button type="button" variant="ghostNeon" className="!py-2 text-xs">
                     <Upload className="h-4 w-4" />
                     {t.common.upload}
-                  </button>
+                  </Button>
                 </div>
                 <ul className="mt-5 divide-y divide-line">
                   {files.map((f) => {
@@ -252,10 +254,10 @@ export function PortalView() {
                             </p>
                           </div>
                         </div>
-                        <button type="button" className="btn-ghost !px-3 !py-2 text-xs">
+                        <Button type="button" variant="ghostNeon" className="!px-3 !py-2 text-xs">
                           <Download className="h-4 w-4" />
                           {t.common.download}
-                        </button>
+                        </Button>
                       </li>
                     );
                   })}
@@ -305,7 +307,7 @@ export function PortalView() {
                 <form onSubmit={submitFeedback} className="mt-6 space-y-3">
                   <div className="flex flex-wrap gap-2">
                     {(["design", "content", "bug", "scope"] as FeedbackCategory[]).map((c) => (
-                      <button
+                      <Button variant="unstyled" size="auto"
                         key={c}
                         type="button"
                         onClick={() => setCategory(c)}
@@ -317,20 +319,20 @@ export function PortalView() {
                         )}
                       >
                         {t.portal.categories[c]}
-                      </button>
+                      </Button>
                     ))}
                   </div>
-                  <textarea
+                  <Textarea
                     rows={3}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     placeholder={t.portal.feedbackPlaceholder}
                     className="field resize-none"
                   />
-                  <button type="submit" className="btn-primary">
+                  <Button type="submit" variant="neon">
                     <Send className="h-4 w-4 flip-x" />
                     {t.portal.postFeedback}
-                  </button>
+                  </Button>
                 </form>
               </div>
             )}

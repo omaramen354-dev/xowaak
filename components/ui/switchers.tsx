@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Check, Globe } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { localeMeta, locales, type Locale } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 export function LanguageSwitcher() {
   const { locale, t } = useI18n();
@@ -42,7 +43,7 @@ export function LanguageSwitcher() {
 
   return (
     <div ref={wrapRef} className="relative">
-      <button
+      <Button variant="unstyled" size="auto"
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={t.common.language}
@@ -54,7 +55,7 @@ export function LanguageSwitcher() {
         <Globe className="h-4 w-4 shrink-0" />
         <span className="hidden sm:inline">{localeMeta[locale].native}</span>
         <span className="font-mono text-xs sm:hidden">{locale.toUpperCase()}</span>
-      </button>
+      </Button>
 
       {open && (
         <ul
@@ -64,7 +65,7 @@ export function LanguageSwitcher() {
         >
           {locales.map((l) => (
             <li key={l}>
-              <button
+              <Button variant="unstyled" size="auto"
                 type="button"
                 role="option"
                 aria-selected={l === locale}
@@ -77,7 +78,7 @@ export function LanguageSwitcher() {
                   {localeMeta[l].native}
                 </span>
                 {l === locale && <Check className="h-4 w-4 shrink-0 text-neon-cyan" />}
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

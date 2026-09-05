@@ -39,6 +39,31 @@ Adding `baseUrl` or deleting `.next` does not substitute for it.
   repeat the base declarations instead.
 - PostCSS uses `@tailwindcss/postcss`; autoprefixer is built in.
 
+### 2d. shadcn/ui
+
+Components live in `components/ui/` (button, card, input, textarea, label,
+badge, separator, dialog, progress, select) and are wired to the AWWA palette
+via the `@theme inline` block in `globals.css` — do NOT re-run
+`npx shadcn init`, it would overwrite that file.
+
+- Native `<button>/<input>/<textarea>/<select>` are no longer used anywhere.
+- Buttons that carry their own complete styling (filter chips, selectable
+  cards) use `variant="unstyled" size="auto"`.
+- `.btn-primary` / `.btn-ghost` are reachable as `variant="neon"` /
+  `variant="ghostNeon"`.
+- Wrap links with `<Button asChild variant=...><Link/></Button>`; passing
+  `variant` straight to `<Link>` is a type error.
+- `cn()` from `@/lib/utils` uses tailwind-merge, so **conflicting utilities
+  are dropped, last one wins**. Adding `relative` next to `sticky` silently
+  removed `sticky` from the header — check the rendered class list after
+  editing shared className strings.
+
+### 2e. ESLint stays on 9.x
+
+`eslint@10` breaks `eslint-config-next@16`
+("contextOrFilename.getFilename is not a function") and linting fails
+outright. Do not upgrade until Next ships support.
+
 ### 2c. Next 16 specifics
 
 - `middleware.ts` is now **`proxy.ts`** with a `default` export named `proxy`.

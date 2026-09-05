@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { Hexagon, LayoutDashboard, Menu, UserCircle2, X } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { LanguageSwitcher } from "@/components/ui/switchers";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
   const { locale, t } = useI18n();
@@ -41,12 +43,27 @@ export function SiteHeader() {
     { href: `${base}/quote`, label: t.nav.quote },
   ];
 
+  // Always dark + frosted, never transparent: over the animated 3D field a
+  // transparent bar left the nav unreadable. Scrolling only deepens the tint
+  // and adds the shadow.
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
-        scrolled ? "border-line bg-base/80 backdrop-blur-xl" : "border-transparent bg-transparent"
-      }`}
+      className={cn(
+        // `sticky` already creates the positioning context for the hairline —
+        // adding `relative` here made tailwind-merge drop `sticky` entirely.
+        "sticky top-0 z-50 w-full border-b backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
+        "supports-[backdrop-filter]:bg-base/70",
+        scrolled
+          ? "border-line bg-base/90 shadow-[0_10px_40px_-24px_rgba(0,0,0,1)] supports-[backdrop-filter]:bg-base/85"
+          : "border-line/60 bg-base/80",
+      )}
     >
+      {/* Neon hairline along the bottom edge. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/45 to-transparent"
+      />
+
       <div className="container-x flex h-16 items-center gap-4">
         {/* Brand — logical margin so it hugs the inline start in both directions */}
         <Link href={base} className="flex shrink-0 items-center gap-2.5">
@@ -74,19 +91,25 @@ export function SiteHeader() {
 
         <div className="ms-auto flex shrink-0 items-center gap-2">
           <div className="hidden items-center gap-2 md:flex">
-            <Link href={`${base}/portal`} className="btn-ghost whitespace-nowrap !px-3 !py-2 !text-xs">
+            <Button asChild variant="ghostNeon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
+<Link href={`${base}/portal`}>
               <UserCircle2 className="h-4 w-4 shrink-0" />
               {t.nav.portal}
             </Link>
-            <Link href={`${base}/admin`} className="btn-ghost whitespace-nowrap !px-3 !py-2 !text-xs">
+</Button>
+            <Button asChild variant="ghostNeon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
+<Link href={`${base}/admin`}>
               <LayoutDashboard className="h-4 w-4 shrink-0" />
               {t.nav.admin}
             </Link>
+</Button>
           </div>
 
           <LanguageSwitcher />
 
-          <button
+          <Button
+            variant="unstyled"
+            size="auto"
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
@@ -94,7 +117,7 @@ export function SiteHeader() {
             className="rounded-xl border border-line-strong bg-white/[0.02] p-2.5 text-ink-mid transition-colors hover:border-neon-cyan/50 hover:text-white lg:hidden"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
+          </Button>
         </div>
       </div>
 

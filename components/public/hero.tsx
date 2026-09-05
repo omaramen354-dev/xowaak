@@ -9,6 +9,7 @@ import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components
 import { Aurora } from "@/components/ui/aurora";
 import { HeroConsole } from "@/components/public/hero-console";
 import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
 
 // Heavy WebGL centrepiece — client-only and code-split so it never blocks
 // first paint of the copy column.
@@ -89,16 +90,20 @@ export function Hero() {
               className="mt-9 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
             >
               <motion.div whileTap={{ scale: 0.98 }} whileHover={{ y: -2 }}>
-                <Link href={`/${locale}/quote`} className="btn-primary group">
+                <Button asChild variant="neon" className="group">
+<Link href={`/${locale}/quote`}>
                   <span className="relative z-10">{t.hero.ctaPrimary}</span>
                   <ArrowRight className="relative z-10 h-4 w-4 shrink-0 flip-x transition-transform group-hover:translate-x-0.5" />
                 </Link>
+</Button>
               </motion.div>
               <motion.div whileTap={{ scale: 0.98 }} whileHover={{ y: -2 }}>
-                <Link href="#portfolio" className="btn-ghost group">
+                <Button asChild variant="ghostNeon" className="group">
+<Link href="#portfolio">
                   <Play className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
                   {t.hero.ctaSecondary}
                 </Link>
+</Button>
               </motion.div>
             </motion.div>
           </div>

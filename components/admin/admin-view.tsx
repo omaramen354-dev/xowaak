@@ -25,6 +25,10 @@ import { CmsPortfolio } from "@/components/admin/cms-portfolio";
 import { Reveal } from "@/components/ui/motion";
 import { getProfile, getRole, kpis, profiles, projects, tasks, userRoles } from "@/lib/mock-data";
 import type { AppRole } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const modules: { key: AdminModule; icon: typeof Gauge }[] = [
   { key: "dashboard", icon: Gauge },
@@ -63,20 +67,23 @@ export function AdminView() {
             <span className="mono-label rounded-full border border-violet-400/30 bg-violet-400/5 px-3 py-1.5">AAKWHX / ERP CORE</span>
             <h1 className="mt-3 text-3xl font-black tracking-tight"><span className="text-gradient">{t.admin.title}</span></h1>
           </div>
-          <label className="flex items-center gap-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-ink-low">{t.admin.roleLabel}</span>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as AppRole)}
-              className="field !w-auto !py-2 text-sm"
-            >
-              {roleOrder.map((r) => (
-                <option key={r} value={r}>
-                  {t.admin.roles[r]}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="flex items-center gap-3">
+            <Label htmlFor="role-switch" className="text-xs font-semibold uppercase tracking-widest text-ink-low">
+              {t.admin.roleLabel}
+            </Label>
+            <Select value={role} onValueChange={(v) => setRole(v as AppRole)}>
+              <SelectTrigger id="role-switch" className="!w-auto !py-2 text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {roleOrder.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {t.admin.roles[r]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </header>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
@@ -86,7 +93,7 @@ export function AdminView() {
                 const can = canAccess(role, key);
                 return (
                   <li key={key}>
-                    <button
+                    <Button variant="unstyled" size="auto"
                       type="button"
                       onClick={() => setModule(key)}
                       className={clsx(
@@ -101,7 +108,7 @@ export function AdminView() {
                       <Icon className="h-4 w-4" />
                       <span className="flex-1 text-start">{t.admin.tabs[key]}</span>
                       {!can && <Lock className="h-3.5 w-3.5" />}
-                    </button>
+                    </Button>
                   </li>
                 );
               })}
@@ -162,7 +169,7 @@ export function AdminView() {
                   <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.admin.tabs.projects}</h3>
                   <label className="relative">
                     <Search className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-y-1/2 text-ink-low start-3" />
-                    <input
+                    <Input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder={t.common.search}

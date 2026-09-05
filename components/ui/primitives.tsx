@@ -1,6 +1,17 @@
 "use client";
 
 import clsx from "clsx";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Card as ShadcnCard } from "@/components/ui/card";
+
+/**
+ * App-level primitives.
+ *
+ * ProgressBar / Card / StatusBadge are thin wrappers over the shadcn
+ * components so the ~10 existing call sites keep their API while the actual
+ * markup, a11y and styling come from one shared implementation.
+ */
 
 export function SectionHeading({
   eyebrow,
@@ -16,9 +27,9 @@ export function SectionHeading({
   return (
     <div className={clsx("max-w-3xl", align === "center" ? "mx-auto text-center" : "text-start")}>
       {eyebrow && (
-        <span className="mono-label inline-block rounded-full border border-neon-cyan/30 bg-neon-cyan/[0.06] px-3 py-1.5">
+        <Badge variant="neon" className="mono-label px-3 py-1.5">
           {eyebrow}
-        </span>
+        </Badge>
       )}
       <h2 className="mt-5 text-3xl sm:text-5xl">{title}</h2>
       {subtitle && <p className="mt-4 text-base leading-relaxed text-ink-low">{subtitle}</p>}
@@ -26,25 +37,13 @@ export function SectionHeading({
   );
 }
 
+/** Radix-backed progress bar (correct role + aria-valuenow come for free). */
 export function ProgressBar({ value, className }: { value: number; className?: string }) {
-  return (
-    <div
-      role="progressbar"
-      aria-valuenow={value}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      className={clsx("h-2 w-full overflow-hidden rounded-full bg-line", className)}
-    >
-      <div
-        className="h-full rounded-full bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-purple shadow-glow-cyan transition-[width] duration-1000 ease-out"
-        style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
-      />
-    </div>
-  );
+  return <Progress value={value} className={className} />;
 }
 
 export function Card({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={clsx("glass-card p-6", className)}>{children}</div>;
+  return <ShadcnCard className={clsx("p-6", className)}>{children}</ShadcnCard>;
 }
 
 const statusTone: Record<string, string> = {
@@ -62,13 +61,10 @@ const statusTone: Record<string, string> = {
 
 export function StatusBadge({ status, label }: { status: string; label: string }) {
   return (
-    <span
-      className={clsx(
-        "inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-tight backdrop-blur",
-        statusTone[status] ?? statusTone.todo,
-      )}
+    <Badge
+      className={clsx("px-2.5 py-1 text-[11px] font-semibold backdrop-blur", statusTone[status] ?? statusTone.todo)}
     >
       {label}
-    </span>
+    </Badge>
   );
 }

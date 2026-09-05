@@ -9,6 +9,7 @@ import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/mot
 import { ParticleField } from "@/components/ui/backgrounds";
 import { Aurora } from "@/components/ui/aurora";
 import { testimonials } from "@/lib/mock-data";
+import { Button } from "@/components/ui/button";
 
 export function Process() {
   const { t } = useI18n();
@@ -88,10 +89,12 @@ export function CallToAction() {
               {t.quote.subtitle}
             </p>
             <div className="relative mt-9 flex justify-center">
-              <Link href={`/${locale}/quote`} className="btn-primary group !px-7 !py-3.5 !text-base">
+              <Button asChild variant="neon" className="group !px-7 !py-3.5 !text-base">
+<Link href={`/${locale}/quote`}>
                 <span className="relative z-10">{t.hero.ctaPrimary}</span>
                 <ArrowRight className="relative z-10 h-4 w-4 shrink-0 flip-x transition-transform group-hover:translate-x-1" />
               </Link>
+</Button>
             </div>
           </div>
         </Reveal>

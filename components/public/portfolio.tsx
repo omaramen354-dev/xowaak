@@ -10,6 +10,8 @@ import { Reveal, TiltCard } from "@/components/ui/motion";
 import { useContent, type ShowcaseProject } from "@/lib/content-store";
 import { Aurora } from "@/components/ui/aurora";
 import type { Visibility } from "@/lib/supabase/types";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export function Portfolio() {
   const { t } = useI18n();
@@ -77,7 +79,7 @@ export function Portfolio() {
                 className={clsx(project.featured && "lg:col-span-1")}
               >
                 <TiltCard intensity={8} className="h-full">
-                  <button
+                  <Button variant="unstyled" size="auto"
                     type="button"
                     onClick={() => setActive(project)}
                     className="glass-card glow-hover neon-border group h-full w-full overflow-hidden text-start"
@@ -128,7 +130,7 @@ export function Portfolio() {
                         <span className="tabular text-xs font-bold text-neon-cyan">{project.progress}%</span>
                       </div>
                     </div>
-                  </button>
+                  </Button>
                 </TiltCard>
               </motion.div>
             ))}
@@ -157,7 +159,7 @@ function FilterPill({
   children: React.ReactNode;
 }) {
   return (
-    <button
+    <Button variant="unstyled" size="auto"
       type="button"
       onClick={onClick}
       className={clsx(
@@ -168,7 +170,7 @@ function FilterPill({
       )}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -177,31 +179,19 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
   const isPrivate = project.visibility === "private";
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-overlay grid place-items-center bg-base/85 p-4 backdrop-blur-md"
-    >
-      <button type="button" aria-label={t.common.close} className="absolute inset-0" onClick={onClose} />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.94, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="glass-card relative z-10 max-h-[85vh] w-full max-w-2xl overflow-auto !bg-surface"
-      >
+    // Radix Dialog supplies the focus trap, Escape handling and aria wiring
+    // the previous overlay lacked; the cover keeps its own close button.
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent showCloseButton={false} className="max-h-[85vh] max-w-2xl overflow-auto p-0">
         <div className={clsx("relative h-40 overflow-hidden bg-gradient-to-br", project.cover)}>
           <div className="absolute inset-0 cyber-grid opacity-40" />
           <span className="absolute inset-0 grid place-items-center text-7xl text-white/25">{project.icon}</span>
-          <button
-            type="button"
-            onClick={onClose}
+          <DialogClose
             aria-label={t.common.close}
             className="absolute top-3 end-3 rounded-full bg-black/30 p-2 text-white backdrop-blur transition hover:bg-black/50"
           >
             <X className="h-4 w-4" />
-          </button>
+          </DialogClose>
         </div>
 
         <div className="p-8">
@@ -215,8 +205,10 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
             )}
           </div>
 
-          <h3 className="mt-5 text-2xl font-black tracking-tight">{project.name}</h3>
-          <p className="mt-3 text-sm leading-relaxed text-ink-low">{project.summary}</p>
+          <DialogHeader>
+            <DialogTitle className="mt-5 text-2xl font-black tracking-tight">{project.name}</DialogTitle>
+            <DialogDescription className="mt-3 text-sm leading-relaxed">{project.summary}</DialogDescription>
+          </DialogHeader>
 
           <dl className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3">
             <Meta label={t.common.progress} value={`${project.progress}%`} />
@@ -234,18 +226,20 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
 
           <div className="mt-8 flex flex-wrap justify-end gap-3">
             {project.url && !isPrivate && (
-              <a href={project.url} target="_blank" rel="noreferrer" className="btn-primary">
+              <Button asChild variant="neon">
+<a href={project.url} target="_blank" rel="noreferrer">
                 <ExternalLink className="h-4 w-4" />
                 {t.common.viewCase}
               </a>
+</Button>
             )}
-            <button type="button" onClick={onClose} className="btn-ghost">
+            <Button type="button" onClick={onClose} variant="ghostNeon">
               {t.common.close}
-            </button>
+            </Button>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

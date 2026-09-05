@@ -4,6 +4,9 @@ import { Plus, RotateCcw, Trash2, TrendingUp } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { useContent } from "@/lib/content-store";
 import { AnimatedCounter } from "@/components/ui/motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 /**
  * CMS — Stats manager.
@@ -24,14 +27,14 @@ export function CmsStats() {
             <p className="mt-1 text-xs text-ink-low">{t.admin.cms.statsHint}</p>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={reset} className="btn-ghost !py-2 text-xs">
+            <Button type="button" onClick={reset} variant="ghostNeon" className="!py-2 text-xs">
               <RotateCcw className="h-4 w-4" />
               {t.admin.cms.reset}
-            </button>
-            <button type="button" onClick={addStat} className="btn-primary !py-2 text-xs">
+            </Button>
+            <Button type="button" onClick={addStat} variant="neon" className="!py-2 text-xs">
               <Plus className="h-4 w-4" />
               {t.admin.cms.addStat}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -70,14 +73,14 @@ export function CmsStats() {
           <div key={stat.id} className="glass-card p-5">
             <div className="grid gap-4 lg:grid-cols-[2fr_repeat(5,1fr)_auto] lg:items-end">
               <Field label={t.admin.cms.label}>
-                <input
+                <Input
                   className="field !py-2 text-sm"
                   value={stat.label}
                   onChange={(e) => updateStat(stat.id, { label: e.target.value })}
                 />
               </Field>
               <Field label={t.admin.cms.value}>
-                <input
+                <Input
                   type="number"
                   step="any"
                   className="field tabular !py-2 text-sm"
@@ -86,21 +89,21 @@ export function CmsStats() {
                 />
               </Field>
               <Field label={t.admin.cms.prefix}>
-                <input
+                <Input
                   className="field !py-2 text-sm"
                   value={stat.prefix}
                   onChange={(e) => updateStat(stat.id, { prefix: e.target.value })}
                 />
               </Field>
               <Field label={t.admin.cms.suffix}>
-                <input
+                <Input
                   className="field !py-2 text-sm"
                   value={stat.suffix}
                   onChange={(e) => updateStat(stat.id, { suffix: e.target.value })}
                 />
               </Field>
               <Field label={t.admin.cms.decimals}>
-                <input
+                <Input
                   type="number"
                   min={0}
                   max={3}
@@ -110,7 +113,7 @@ export function CmsStats() {
                 />
               </Field>
               <Field label={t.admin.cms.growth}>
-                <input
+                <Input
                   type="number"
                   step="any"
                   className="field tabular !py-2 text-sm"
@@ -118,14 +121,14 @@ export function CmsStats() {
                   onChange={(e) => updateStat(stat.id, { growth: Number(e.target.value) })}
                 />
               </Field>
-              <button
+              <Button variant="unstyled" size="auto"
                 type="button"
                 onClick={() => removeStat(stat.id)}
                 aria-label={t.admin.cms.delete}
                 className="grid h-10 w-10 place-items-center rounded-xl border border-rose-500/30 text-rose-300 transition hover:bg-rose-500/10"
               >
                 <Trash2 className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -136,9 +139,9 @@ export function CmsStats() {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="block">
-      <span className="mono-label mb-1.5 block !text-ink-low">{label}</span>
+    <div className="block">
+      <Label className="mono-label mb-1.5 block !text-ink-low">{label}</Label>
       {children}
-    </label>
+    </div>
   );
 }
