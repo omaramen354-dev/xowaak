@@ -51,7 +51,7 @@ export function Hero() {
             className="pointer-events-none absolute left-1/2 top-1/2 z-stage aspect-square w-[min(120vw,860px)]
                        -translate-x-1/2 -translate-y-1/2 opacity-90"
           >
-            <Orb hoverIntensity={5} rotateOnHover={false} hue={0} forceHoverState />
+            <Orb hoverIntensity={0.5} rotateOnHover hue={0} forceHoverState={false} />
           </div>
 
           {/* ================= COPY — z-copy (30), centred ================= */}

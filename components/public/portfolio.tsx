@@ -108,10 +108,10 @@ export function Portfolio() {
 
                     <div className="p-6">
                       <div className="flex items-start justify-between gap-3">
-                        <h3 className="text-base font-bold leading-snug tracking-tight">{project.name}</h3>
+                        <h3 className="text-base font-bold leading-snug tracking-tight text-ink-hi">{project.name}</h3>
                         <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-low transition-all duration-300 group-hover:-translate-y-1 group-hover:text-neon-cyan" />
                       </div>
-                      <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-low">
+                      <p dir="auto" className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-low">
                         {project.summary}
                       </p>
 
@@ -204,8 +204,8 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
           </div>
 
           <DialogHeader>
-            <DialogTitle className="mt-5 text-2xl font-black tracking-tight">{project.name}</DialogTitle>
-            <DialogDescription className="mt-3 text-sm leading-relaxed">{project.summary}</DialogDescription>
+            <DialogTitle dir="auto" className="mt-5 text-2xl font-black tracking-tight">{project.name}</DialogTitle>
+            <DialogDescription dir="auto" className="mt-3 text-sm leading-relaxed">{project.summary}</DialogDescription>
           </DialogHeader>
 
           <dl className="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3">
