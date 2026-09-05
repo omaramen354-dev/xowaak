@@ -38,6 +38,11 @@ export function Aurora({ className, variant = "full" }: { className?: string; va
         <div className="aurora aurora-emerald animate-drift-b h-[20rem] w-[20rem] opacity-40 bottom-[6%] start-[-4%] blur-[110px]" />
       )}
 
+      {/* Starfield + scanning beam. On phones WebGL is disabled, so these
+          carry the whole "alive" impression on their own. */}
+      <div className="starfield" />
+      {!soft && <div className="beam-sweep" />}
+
       {/* ---- RGB halo layer ---- */}
       {/* Red / green / blue orbs on unequal periods so the field never repeats
           visibly. Screen-blended, so they add light instead of grey haze. */}

@@ -8,6 +8,14 @@ import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { Aurora } from "@/components/ui/aurora";
 import { HeroConsole } from "@/components/public/hero-console";
+import dynamic from "next/dynamic";
+
+// Heavy WebGL centrepiece — client-only and code-split so it never blocks
+// first paint of the copy column.
+const HeroOrb = dynamic(() => import("@/components/public/hero-orb"), {
+  ssr: false,
+  loading: () => <div className="aspect-square w-full" />,
+});
 
 /**
  * Hero — strict two-column architecture.
@@ -90,9 +98,17 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* ============ CONSOLE COLUMN — z-stage (20), isolated ============ */}
+          {/* ============ VISUAL COLUMN — z-stage (20), isolated ============ */}
+          {/* Both the 3D orb and the console live here, so neither can ever
+              cross into the copy track. */}
           <div className="relative isolate order-first w-full lg:order-none">
-            <HeroConsole />
+            <div className="relative mx-auto w-full max-w-[440px] lg:max-w-none">
+              <HeroOrb />
+              {/* Console overlaps the lower third of the orb for depth. */}
+              <div className="relative -mt-16 sm:-mt-20">
+                <HeroConsole />
+              </div>
+            </div>
           </div>
         </div>
 
