@@ -26,7 +26,13 @@ export function middleware(req: NextRequest) {
   }
 
   const hasLocale = locales.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
-  if (hasLocale) return NextResponse.next();
+  if (hasLocale) {
+    // Expose the path to the root layout so it can render <html lang/dir>
+    // correctly on the SERVER. Next's internal x-invoke-path is not reliable.
+    const headers = new Headers(req.headers);
+    headers.set("x-pathname", pathname);
+    return NextResponse.next({ request: { headers } });
+  }
 
   const locale = detectLocale(req);
   const url = req.nextUrl.clone();

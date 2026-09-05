@@ -15,6 +15,15 @@ const de: Dictionary = {
     title: "Wir bauen die Systeme, die Ihre Wettbewerber kopieren werden.",
     subtitle: "AAKWHX ist eine High-Tech-Agentur für Plattformen, KI-Systeme und markenstarke Interfaces — für Teams, die keine durchschnittliche Software akzeptieren.",
     ctaPrimary: "Projekt starten", ctaSecondary: "Arbeiten ansehen",
+    console: {
+      live: "LIVE",
+      throughput: "Durchsatz / 24 Std.",
+      dbLink: "Neon-Cloud-Datenbank",
+      latency: "18 ms",
+      portal: { label: "Kundenportal", value: "42", meta: "aktive Kunden" },
+      erp: { label: "ERP Shield", value: "5", meta: "Berechtigungsstufen" },
+      db: { label: "Neon-Datenbank", value: "OK", meta: "Verbindungspool" },
+    },
     stats: [
       { value: "180+", label: "Ausgelieferte Produkte" },
       { value: "31", label: "Belieferte Länder" },

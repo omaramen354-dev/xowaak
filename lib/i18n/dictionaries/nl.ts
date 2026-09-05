@@ -15,6 +15,15 @@ const nl: Dictionary = {
     title: "Wij bouwen de systemen die uw concurrenten gaan kopiëren.",
     subtitle: "AAKWHX is een hightech agency dat platformen, AI-systemen en premium interfaces levert voor teams die geen genoegen nemen met middelmatige software.",
     ctaPrimary: "Start een project", ctaSecondary: "Bekijk ons werk",
+    console: {
+      live: "LIVE",
+      throughput: "doorvoer / 24 u",
+      dbLink: "Neon-clouddatabase",
+      latency: "18 ms",
+      portal: { label: "Klantenportaal", value: "42", meta: "actieve klanten" },
+      erp: { label: "ERP Shield", value: "5", meta: "rechtenniveaus" },
+      db: { label: "Neon-database", value: "OK", meta: "verbindingspool" },
+    },
     stats: [
       { value: "180+", label: "Opgeleverde producten" },
       { value: "31", label: "Landen bediend" },

@@ -7,8 +7,8 @@ const config: Config = {
     extend: {
       colors: {
         /* ---- Strict dark palette ---- */
-        base: "#07090E", // page background — pure deep black
-        elevated: "#0A0E15", // raised sections
+        base: "#05070E", // page background — pure deep black
+        elevated: "#080C15", // raised sections
         surface: "#0D111A", // cards
         line: "#1E293B", // hairline borders
         "line-strong": "#334155",
@@ -16,11 +16,13 @@ const config: Config = {
         /* ---- Vibrant neon accents ---- */
         neon: {
           cyan: "#00F2FE",
+          teal: "#06B6D4",
           sky: "#00D2FF",
           blue: "#4FACFE",
           indigo: "#8B5CF6",
           purple: "#8B5CF6",
           magenta: "#D946EF",
+          pink: "#EC4899",
           emerald: "#10B981",
         },
 
@@ -34,8 +36,9 @@ const config: Config = {
       },
       zIndex: {
         backdrop: "0",
-        stage: "10",
+        stage: "20",
         content: "20",
+        copy: "30",
         overlay: "60",
       },
       fontFamily: {
@@ -72,6 +75,24 @@ const config: Config = {
           "50%": { transform: "scale(1.09)", filter: "drop-shadow(0 0 7px rgba(0,242,254,0.85))" },
         },
         "gradient-pan": { "0%,100%": { backgroundPosition: "0% 50%" }, "50%": { backgroundPosition: "100% 50%" } },
+        /* Console panel bobbing — slow, never distracting. */
+        bob: {
+          "0%,100%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-14px) rotate(-0.35deg)" },
+        },
+        /* Live DB link indicator. */
+        "blink-soft": { "0%,100%": { opacity: "1" }, "50%": { opacity: "0.25" } },
+        /* Vertical scan line sweeping the console. */
+        "scan-y": {
+          "0%": { transform: "translateY(-100%)", opacity: "0" },
+          "12%,88%": { opacity: "1" },
+          "100%": { transform: "translateY(1200%)", opacity: "0" },
+        },
+        /* Data bars in the console idling. */
+        "bar-idle": {
+          "0%,100%": { transform: "scaleY(0.45)" },
+          "50%": { transform: "scaleY(1)" },
+        },
       },
       animation: {
         float: "float 6s ease-in-out infinite",
@@ -84,6 +105,10 @@ const config: Config = {
         "float-y": "float-y 4.5s ease-in-out infinite",
         "icon-pulse": "icon-pulse 3.2s ease-in-out infinite",
         "gradient-pan": "gradient-pan 6s ease-in-out infinite",
+        bob: "bob 7s ease-in-out infinite",
+        "blink-soft": "blink-soft 1.8s ease-in-out infinite",
+        "scan-y": "scan-y 5.5s linear infinite",
+        "bar-idle": "bar-idle 2.4s ease-in-out infinite",
       },
     },
   },

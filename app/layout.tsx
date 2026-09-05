@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { fontVariables } from "@/lib/fonts";
+import { defaultLocale, getDir, isLocale } from "@/lib/i18n";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,9 +11,23 @@ export const metadata: Metadata = {
   keywords: ["AAKWHX", "AWWA", "software agency", "Next.js", "ERP", "client portal"],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/**
+ * Resolve the active locale from the request path so `<html lang/dir>` is
+ * correct in the SERVER-rendered markup. Setting it only in a client effect
+ * makes Arabic ship as LTR and then snap to RTL on hydration.
+ */
+async function resolveLocale() {
+  const h = await headers();
+  const path = h.get("x-invoke-path") ?? h.get("x-matched-path") ?? h.get("x-pathname") ?? "";
+  const seg = path.split("/").filter(Boolean)[0];
+  return isLocale(seg) ? seg : defaultLocale;
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await resolveLocale();
+
   return (
-    <html lang="en" dir="ltr" className={fontVariables}>
+    <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
       <body className="bg-base text-ink-mid">{children}</body>
     </html>
   );

@@ -15,6 +15,15 @@ const fr: Dictionary = {
     title: "Nous construisons les systèmes que vos concurrents copieront.",
     subtitle: "AAKWHX est une agence high-tech qui livre des plateformes, des systèmes d'IA et des interfaces haut de gamme pour les équipes qui refusent le logiciel moyen.",
     ctaPrimary: "Démarrer un projet", ctaSecondary: "Voir nos réalisations",
+    console: {
+      live: "EN DIRECT",
+      throughput: "débit / 24 h",
+      dbLink: "Base de données Neon cloud",
+      latency: "18 ms",
+      portal: { label: "Portail client", value: "42", meta: "clients actifs" },
+      erp: { label: "ERP Shield", value: "5", meta: "niveaux d'autorisation" },
+      db: { label: "Base de données Neon", value: "OK", meta: "pool de connexions" },
+    },
     stats: [
       { value: "180+", label: "Produits livrés" },
       { value: "31", label: "Pays servis" },

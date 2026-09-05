@@ -15,6 +15,15 @@ const tr: Dictionary = {
     title: "Rakiplerinizin kopyalayacağı sistemleri kuruyoruz.",
     subtitle: "AAKWHX; ortalama yazılımı kabul etmeyen ekipler için platformlar, yapay zekâ sistemleri ve marka kalitesinde arayüzler üreten ileri teknoloji ajansıdır.",
     ctaPrimary: "Projeye başla", ctaSecondary: "İşlerimizi incele",
+    console: {
+      live: "CANLI",
+      throughput: "işlem hacmi / 24 sa",
+      dbLink: "Neon bulut veritabanı",
+      latency: "18 ms",
+      portal: { label: "Müşteri Portalı", value: "42", meta: "aktif müşteri" },
+      erp: { label: "ERP Kalkanı", value: "5", meta: "yetki seviyesi" },
+      db: { label: "Neon Veritabanı", value: "OK", meta: "bağlantı havuzu" },
+    },
     stats: [
       { value: "180+", label: "Yayına alınan ürün" },
       { value: "31", label: "Hizmet verilen ülke" },

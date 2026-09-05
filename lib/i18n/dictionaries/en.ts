@@ -45,6 +45,15 @@ const en = {
       "AAKWHX is a high-tech agency delivering platforms, AI systems and brand-grade interfaces for teams that refuse to ship average software.",
     ctaPrimary: "Start a project",
     ctaSecondary: "Explore our work",
+    console: {
+      live: "LIVE",
+      throughput: "throughput / 24h",
+      dbLink: "Neon cloud database",
+      latency: "18ms",
+      portal: { label: "Client Portal", value: "42", meta: "active clients" },
+      erp: { label: "ERP Shield", value: "5", meta: "permission tiers" },
+      db: { label: "Neon Database", value: "OK", meta: "connection pool" },
+    },
     stats: [
       { value: "180+", label: "Products shipped" },
       { value: "31", label: "Countries served" },

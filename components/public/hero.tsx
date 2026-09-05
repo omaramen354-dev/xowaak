@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles, TrendingUp } from "lucide-react";
@@ -8,42 +7,46 @@ import { useI18n } from "@/components/providers";
 import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { Aurora } from "@/components/ui/aurora";
+import { HeroConsole } from "@/components/public/hero-console";
 
-// Real 3D canvas — client-only, code-split so it never blocks first paint.
-const Hero3D = dynamic(() => import("@/components/public/hero-3d"), {
-  ssr: false,
-  loading: () => null,
-});
-
+/**
+ * Hero — strict two-column architecture.
+ *
+ * Layer contract (see AGENTS.md):
+ *   z-backdrop (0)  ambient light + cyber grid, pointer-events-none
+ *   z-stage    (20) the console, scoped to its OWN grid cell
+ *   z-copy     (30) all text, badge and CTAs
+ *
+ * The console can never overlap the copy because they live in separate grid
+ * tracks — this is structural, not a tuned offset.
+ */
 export function Hero() {
   const { locale, t } = useI18n();
   const { stats } = useContent();
 
   return (
     <section className="relative isolate overflow-hidden noise">
-      {/* LAYER 0 — ambient light only */}
+      {/* ---------- LAYER 0 — ambient depth only ---------- */}
       <Aurora />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]"
       />
 
-      {/* LAYER 20 — content. The 3D lives in its own grid column, never behind text. */}
-      <div className="container-x relative z-content section-y">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-8">
-          {/* ---------- Copy column ---------- */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-start">
+      <div className="container-x relative section-y">
+        {/* Copy sits in track 1, console in track 2. On RTL the grid flows
+            right-to-left automatically, putting the copy on the right. */}
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:gap-12">
+          {/* ================= COPY COLUMN — z-copy (30) ================= */}
+          <div className="relative z-copy flex flex-col items-center text-center lg:items-start lg:text-start">
             <motion.span
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="neon-border inline-flex items-center gap-2 rounded-full border border-neon-cyan/30 bg-neon-cyan/[0.07]
-                         px-3.5 py-1.5 text-xs font-medium tracking-tight text-neon-cyan backdrop-blur-md"
+              className="neon-border inline-flex items-center gap-2 rounded-full border border-neon-cyan/35 bg-neon-cyan/[0.08]
+                         px-3.5 py-1.5 text-xs font-semibold tracking-tight text-neon-cyan backdrop-blur-md"
             >
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-neon-cyan opacity-80" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-neon-cyan shadow-glow-cyan" />
-              </span>
+              <span className="live-dot bg-neon-cyan shadow-glow-cyan" />
               <Sparkles className="h-3.5 w-3.5 shrink-0 animate-icon-pulse" />
               {t.hero.badge}
             </motion.span>
@@ -52,7 +55,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-7 text-4xl leading-[1.08] text-ink-hi sm:text-5xl lg:text-6xl"
+              className="mt-7 text-4xl font-black leading-[1.08] text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
             >
               {t.hero.title}
             </motion.h1>
@@ -61,7 +64,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-6 max-w-xl text-base leading-relaxed text-ink-low sm:text-lg"
+              className="mt-6 max-w-xl text-base leading-relaxed text-ink-mid sm:text-lg"
             >
               {t.hero.subtitle}
             </motion.p>
@@ -87,20 +90,14 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* ---------- 3D column (isolated, own stacking context) ---------- */}
-          <div className="relative order-first mx-auto aspect-square w-full max-w-[420px] lg:order-none lg:max-w-none">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-[12%] rounded-full bg-neon-cyan/15 blur-[80px] animate-pulse-glow"
-            />
-            <div className="absolute inset-0 z-stage">
-              <Hero3D />
-            </div>
+          {/* ============ CONSOLE COLUMN — z-stage (20), isolated ============ */}
+          <div className="relative isolate order-first w-full lg:order-none">
+            <HeroConsole />
           </div>
         </div>
 
         {/* ---------- Animated counters ---------- */}
-        <StaggerGroup className="mt-20 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StaggerGroup className="relative z-copy mt-20 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {stats.map((stat, i) => (
             <StaggerItem key={stat.id}>
               <motion.div
@@ -134,7 +131,7 @@ export function Hero() {
         </StaggerGroup>
 
         {/* ---------- Delivery pipeline ---------- */}
-        <Reveal className="mt-16" delay={0.1}>
+        <Reveal className="relative z-copy mt-16" delay={0.1}>
           <div className="glow-border neon-border bg-surface/70 p-1.5 backdrop-blur-md">
             <div className="rounded-[1.1rem] bg-base/70 p-5">
               <div className="flex items-center gap-1.5 pb-4">
