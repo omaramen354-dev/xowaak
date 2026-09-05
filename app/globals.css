@@ -14,10 +14,24 @@
   --card-p: 1.75rem;
 }
 
-/* Arabic switches the sans stack to Cairo (it carries Latin glyphs too). */
+/* Arabic switches the sans stack to Cairo (it carries Latin glyphs too).
+   Cairo needs more vertical room than Geist, so leading is opened up. */
 [dir="rtl"] {
   --font-sans: "Cairo Variable", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --leading-tight: 1.45;
+  --leading-body: 1.95;
 }
+
+[dir="rtl"] h1 { line-height: 1.3 !important; }
+[dir="rtl"] h2 { line-height: 1.35 !important; }
+[dir="rtl"] h3,
+[dir="rtl"] h4 { line-height: 1.45 !important; }
+[dir="rtl"] p,
+[dir="rtl"] li,
+[dir="rtl"] blockquote { line-height: var(--leading-body); }
+/* Cairo renders visually heavier — step weights down one notch. */
+[dir="rtl"] .font-black { font-weight: 800; }
+[dir="rtl"] .font-extrabold { font-weight: 700; }
 
 @layer base {
   html {
@@ -112,11 +126,13 @@
 
   .btn-primary {
     @apply btn overflow-hidden text-white;
-    background: linear-gradient(100deg, #00f2fe 0%, #4facfe 45%, #6366f1 100%);
-    box-shadow: 0 10px 34px -12px rgb(0 242 254 / 0.6);
+    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 30%, #8b5cf6 70%, #d946ef 100%);
+    background-size: 180% auto;
+    animation: gradient-pan 5s ease-in-out infinite;
+    box-shadow: 0 10px 38px -10px rgb(0 242 254 / 0.75);
   }
   .btn-primary:hover {
-    box-shadow: 0 14px 46px -12px rgb(99 102 241 / 0.75);
+    box-shadow: 0 16px 52px -10px rgb(217 70 239 / 0.85);
   }
   /* Shimmering sweep across the CTA */
   .btn-primary::after {
@@ -150,17 +166,81 @@
   /* ---------------- Backgrounds ---------------- */
   .cyber-grid {
     background-image:
-      linear-gradient(to right, rgb(30 41 59 / 0.55) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(30 41 59 / 0.55) 1px, transparent 1px);
+      linear-gradient(to right, rgb(0 242 254 / 0.10) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 242 254 / 0.10) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 
   /* Deep radial mesh — subtle, sits in the darkness, never silver. */
   .mesh-deep {
     background-image:
-      radial-gradient(60rem 40rem at 12% -5%, rgb(0 242 254 / 0.10), transparent 60%),
-      radial-gradient(50rem 35rem at 88% 0%, rgb(99 102 241 / 0.11), transparent 62%),
-      radial-gradient(45rem 32rem at 70% 85%, rgb(168 85 247 / 0.07), transparent 60%);
+      radial-gradient(60rem 40rem at 12% -5%, rgb(0 242 254 / 0.16), transparent 60%),
+      radial-gradient(50rem 35rem at 88% 0%, rgb(139 92 246 / 0.17), transparent 62%),
+      radial-gradient(45rem 32rem at 70% 85%, rgb(217 70 239 / 0.12), transparent 60%);
+  }
+
+  /* ---------------- Living light ---------------- */
+  .aurora {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  .aurora-cyan {
+    background: radial-gradient(circle, rgb(0 242 254 / 0.55), transparent 70%);
+  }
+  .aurora-magenta {
+    background: radial-gradient(circle, rgb(217 70 239 / 0.5), transparent 70%);
+  }
+  .aurora-purple {
+    background: radial-gradient(circle, rgb(139 92 246 / 0.5), transparent 70%);
+  }
+  .aurora-emerald {
+    background: radial-gradient(circle, rgb(16 185 129 / 0.42), transparent 70%);
+  }
+
+  /* Continuously rotating neon border (always on, not hover-only) */
+  .neon-border {
+    position: relative;
+  }
+  .neon-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      transparent 0deg,
+      #00f2fe 60deg,
+      #8b5cf6 120deg,
+      #d946ef 170deg,
+      transparent 240deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.55;
+    animation: rotate-angle 6s linear infinite;
+    pointer-events: none;
+  }
+  .neon-border:hover::before {
+    opacity: 1;
+  }
+
+  /* Readability plate behind copy that sits over the 3D stage */
+  .text-plate {
+    position: relative;
+  }
+  .text-plate::before {
+    content: "";
+    position: absolute;
+    inset: -12% -14%;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, rgb(7 9 14 / 0.92) 35%, rgb(7 9 14 / 0.55) 62%, transparent 78%);
+    pointer-events: none;
   }
 
   .noise::after {
@@ -174,14 +254,18 @@
 
   /* ---------------- Text ---------------- */
   .text-gradient {
-    background: linear-gradient(100deg, #00f2fe 0%, #4facfe 55%, #a855f7 100%);
+    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 35%, #8b5cf6 70%, #d946ef 100%);
+    background-size: 200% auto;
+    animation: gradient-pan 6s ease-in-out infinite;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .text-gradient-hero {
-    background: linear-gradient(100deg, #ffffff 0%, #00f2fe 40%, #4facfe 65%, #a855f7 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #00f2fe 32%, #00d2ff 50%, #8b5cf6 74%, #d946ef 100%);
+    background-size: 220% auto;
+    animation: gradient-pan 7s ease-in-out infinite;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -210,6 +294,30 @@
   }
   [dir="rtl"] .origin-inline-start {
     transform-origin: right center;
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Referenced directly by .text-gradient / .btn-primary, so it must live here:
+   Tailwind only emits config keyframes for `animate-*` utilities it finds. */
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes rotate-angle {
+  to {
+    --angle: 360deg;
   }
 }
 

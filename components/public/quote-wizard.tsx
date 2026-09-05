@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, Wallet } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { estimate, formatEUR, type FeatureKey, type ProjectType, type Speed } from "@/lib/pricing";
+import { Aurora } from "@/components/ui/aurora";
 
 const projectTypes: ProjectType[] = ["web", "mobile", "ai", "ecommerce", "erp", "brand"];
 const featureKeys: FeatureKey[] = ["auth", "payments", "dashboard", "i18n", "cms", "api", "ai", "realtime"];
@@ -27,9 +28,9 @@ export function QuoteWizard() {
 
   return (
     <section className="relative overflow-hidden section-y">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] mesh-deep opacity-50" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 cyber-grid opacity-40 [mask-image:linear-gradient(black,transparent)]" />
-      <div className="container-x relative">
+      <Aurora variant="soft" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-backdrop h-80 cyber-grid opacity-40 [mask-image:linear-gradient(black,transparent)]" />
+      <div className="container-x relative z-content">
         <SectionHeading eyebrow={t.nav.quote} title={t.quote.title} subtitle={t.quote.subtitle} />
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -161,7 +162,7 @@ export function QuoteWizard() {
           </div>
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="glow-border bg-gradient-to-br from-neon-cyan/[0.09] via-transparent to-neon-indigo/[0.09] p-7">
+            <div className="glow-border neon-border bg-gradient-to-br from-neon-cyan/[0.10] via-transparent to-neon-magenta/[0.10] p-7">
               <span className="mono-label rounded-full border border-neon-cyan/30 bg-neon-cyan/[0.06] px-3 py-1.5">{t.quote.estimate}</span>
               <p className="tabular mt-5 text-4xl font-black text-gradient">
                 {formatEUR(result.low, locale)}

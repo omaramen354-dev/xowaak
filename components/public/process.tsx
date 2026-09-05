@@ -7,6 +7,7 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
 import { ParticleField } from "@/components/ui/backgrounds";
+import { Aurora } from "@/components/ui/aurora";
 import { testimonials } from "@/lib/mock-data";
 
 export function Process() {
@@ -14,7 +15,8 @@ export function Process() {
 
   return (
     <section id="process" className="relative overflow-hidden section-y">
-      <div className="container-x relative">
+      <Aurora variant="soft" />
+      <div className="container-x relative z-content">
         <Reveal>
           <SectionHeading eyebrow="03 / METHODOLOGY" title={t.process.title} subtitle={t.process.subtitle} />
         </Reveal>
@@ -33,7 +35,7 @@ export function Process() {
             {t.process.steps.map((step, i) => (
               <StaggerItem key={step.title}>
                 <TiltCard intensity={6} className="h-full">
-                  <div className="glass-card glow-hover group relative h-full p-6 pt-9">
+                  <div className="glass-card glow-hover neon-border group relative h-full p-6 pt-9">
                     <span className="absolute -top-3 start-6 rounded-full bg-gradient-to-r from-neon-cyan to-neon-indigo px-3 py-1 font-mono text-[11px] font-black text-white shadow-glow-cyan">
                       0{i + 1}
                     </span>
@@ -49,7 +51,7 @@ export function Process() {
         <StaggerGroup className="mt-20 grid gap-5 md:grid-cols-3">
           {testimonials.map((item) => (
             <StaggerItem key={item.author}>
-              <figure className="glass-card h-full p-7">
+              <figure className="glass-card glow-hover h-full p-7">
                 <Quote className="h-7 w-7 text-neon-cyan/50 flip-x" />
                 <blockquote className="mt-4 text-sm leading-relaxed text-ink-mid">
                   “{item.quote}”
@@ -74,10 +76,10 @@ export function CallToAction() {
     <section className="pb-28">
       <div className="container-x">
         <Reveal>
-          <div className="glow-border noise relative overflow-hidden bg-gradient-to-br from-neon-cyan/[0.10] via-neon-indigo/[0.06] to-neon-purple/[0.08] p-12 text-center sm:p-20">
-            <ParticleField density={40} className="opacity-60" />
+          <div className="glow-border neon-border noise relative overflow-hidden bg-gradient-to-br from-neon-cyan/[0.12] via-neon-indigo/[0.08] to-neon-magenta/[0.12] p-12 text-center sm:p-20">
+            <ParticleField density={45} className="opacity-70" />
             <div className="absolute inset-0 cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
-            <div className="absolute -bottom-24 start-1/2 h-72 w-[600px] -translate-x-1/2 rounded-full bg-neon-cyan/15 blur-[120px]" />
+            <div className="aurora aurora-cyan animate-pulse-glow absolute -bottom-24 start-1/2 h-72 w-[600px] -translate-x-1/2 blur-[120px]" />
 
             <h2 className="relative text-3xl sm:text-5xl">
               <span className="text-gradient-hero">{t.quote.title}</span>
@@ -87,8 +89,8 @@ export function CallToAction() {
             </p>
             <div className="relative mt-9 flex justify-center">
               <Link href={`/${locale}/quote`} className="btn-primary group !px-7 !py-3.5 !text-base">
-                {t.hero.ctaPrimary}
-                <ArrowRight className="h-4 w-4 flip-x transition-transform group-hover:translate-x-1" />
+                <span className="relative z-10">{t.hero.ctaPrimary}</span>
+                <ArrowRight className="relative z-10 h-4 w-4 shrink-0 flip-x transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
           </div>

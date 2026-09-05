@@ -42,16 +42,40 @@ codebase; every colour comes from a token in `tailwind.config.ts`.
 Depth comes only from `.mesh-deep` (deep radial gradients living inside the black) and
 `.cyber-grid` — never from silver or light-grey fills.
 
-## RTL / LTR correctness
+## Layering contract
 
-- Logical properties throughout (`ms-*`, `me-*`, `ps-*`, `pe-*`, `start-*`, `end-*`,
-  `text-start`) so Arabic mirrors automatically.
-- `.flip-x` mirrors directional glyphs (arrows, quote marks); `.origin-inline-start`
-  flips transform origins.
-- Technical strings are pinned with `dir="ltr"` so they never reorder inside Arabic text.
-- `shrink-0` on every icon and `whitespace-nowrap` on nav/CTA labels prevents the
-  icon-over-text overlap that flex shrinking used to cause.
-- Consistent spacing scale via `--section-y` / `.section-y` and `--card-p`.
+Stacking is a named scale in `tailwind.config.ts` — never ad-hoc `z-[999]`:
+
+| Token | z-index | Holds |
+| --- | --- | --- |
+| `z-backdrop` | 0 | aurora orbs, mesh, cyber grid |
+| `z-stage` | 10 | the 3D canvas |
+| `z-content` | 20 | all copy, stats, CTAs |
+| `z-overlay` | 60 | modals |
+
+The hero is a **two-column grid**: copy on one side, the 3D canvas in its own cell
+(`absolute inset-0` scoped to that cell, not the section). Text and geometry occupy
+separate grid tracks, so overlap is impossible by construction rather than by tuning.
+`.text-plate` is available for any copy that must sit over live geometry.
+
+## Ambient motion
+
+Nothing is static after first paint:
+
+- **Aurora orbs** drift and pulse continuously (`drift-a`, `drift-b`, `pulse-glow`).
+- **Neon borders** (`.neon-border`) rotate a conic cyan→purple→magenta gradient via an
+  animated `@property --angle`.
+- **Icons** breathe with `animate-icon-pulse` / `animate-float-y`, staggered per card.
+- **Text and CTA gradients** pan with `gradient-pan`; the primary button also sweeps a
+  shimmer and presses to `scale: 0.98`.
+- The **3D rig** keeps an idle sine-orbit so it moves even when the pointer is still.
+
+## Arabic typography
+
+Cairo Variable is visually heavier and taller than Geist, so RTL gets its own metrics:
+`h1` 1.3, `h2` 1.35, `h3/h4` 1.45, body 1.95, letter-spacing reset to 0, and font
+weights stepped down one notch (`black→800`, `extrabold→700`). Words can no longer
+collide at display sizes.
 
 ## 3D hero
 

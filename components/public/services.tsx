@@ -6,6 +6,7 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
 import { Spotlight } from "@/components/ui/motion";
+import { Aurora } from "@/components/ui/aurora";
 
 const icons = [Blocks, Smartphone, BrainCircuit, Cloud, Palette, ShieldCheck];
 
@@ -33,8 +34,9 @@ export function Services() {
 
   return (
     <section id="services" className="relative overflow-hidden section-y">
+      <Aurora variant="soft" />
       <Spotlight />
-      <div className="container-x relative">
+      <div className="container-x relative z-content">
         <Reveal>
           <SectionHeading eyebrow="01 / CAPABILITIES" title={t.services.title} subtitle={t.services.subtitle} />
         </Reveal>
@@ -45,7 +47,7 @@ export function Services() {
             return (
               <StaggerItem key={service.title} className={spans[i % spans.length]}>
                 <TiltCard intensity={7} className="h-full">
-                  <article className="glass-card glow-hover group relative h-full overflow-hidden p-7">
+                  <article className="glass-card glow-hover neon-border group relative h-full overflow-hidden p-7">
                     <div
                       className={clsx(
                         "pointer-events-none absolute -end-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100",
@@ -54,11 +56,12 @@ export function Services() {
                     />
                     <span
                       className={clsx(
-                        "relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ring-1 ring-inset ring-white/10",
+                        "relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ring-1 ring-inset ring-white/10 animate-float-y",
                         accents[i % accents.length],
                       )}
+                      style={{ animationDelay: `${i * 0.35}s` }}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className="h-5 w-5 animate-icon-pulse" />
                     </span>
 
                     <h3 className="relative mt-6 text-lg font-bold tracking-tight">{service.title}</h3>
@@ -74,7 +77,7 @@ export function Services() {
                       ))}
                     </div>
 
-                    <span className="mono-label absolute bottom-5 end-6 opacity-40">
+                    <span className="mono-label absolute bottom-5 end-6 opacity-50">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </article>

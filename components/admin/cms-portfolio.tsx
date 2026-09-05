@@ -113,7 +113,7 @@ export function CmsPortfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] grid place-items-center bg-base/85 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-overlay grid place-items-center bg-base/85 p-4 backdrop-blur-md"
           >
             <button type="button" aria-label={t.common.cancel} className="absolute inset-0" onClick={() => setDraft(null)} />
             <motion.div

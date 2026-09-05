@@ -112,22 +112,3 @@ export function ParticleField({ className, density = 60 }: { className?: string;
 
   return <canvas ref={canvasRef} aria-hidden className={clsx("pointer-events-none absolute inset-0", className)} />;
 }
-
-/** Deep radial mesh + cyber grid backdrop for full sections. */
-export function MeshBackdrop({ className }: { className?: string }) {
-  return (
-    <div aria-hidden className={clsx("pointer-events-none absolute inset-0 overflow-hidden", className)}>
-      <div className="absolute inset-0 mesh-deep" />
-      <div className="absolute inset-0 cyber-grid opacity-[0.35] [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_75%)]" />
-    </div>
-  );
-}
-
-/** Thin animated scan-line beam, used as a section divider. */
-export function BeamDivider() {
-  return (
-    <div aria-hidden className="relative h-px w-full overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
-    </div>
-  );
-}

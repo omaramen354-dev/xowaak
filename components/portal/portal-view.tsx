@@ -20,6 +20,7 @@ import {
   Upload,
 } from "lucide-react";
 import { useI18n } from "@/components/providers";
+import { Aurora } from "@/components/ui/aurora";
 import { ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import {
   getProfile,
@@ -87,8 +88,8 @@ export function PortalView() {
 
   return (
     <section className="relative py-12">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 mesh-deep opacity-40" />
-      <div className="container-x relative">
+      <Aurora variant="soft" />
+      <div className="container-x relative z-content">
         <header className="glass-card flex flex-wrap items-center justify-between gap-5 p-6">
           <div>
             <span className="mono-label rounded-full border border-neon-cyan/30 bg-neon-cyan/[0.06] px-3 py-1.5">{t.portal.title}</span>

@@ -17,6 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import { useI18n } from "@/components/providers";
+import { Aurora } from "@/components/ui/aurora";
 import { ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import { canAccess, roleOrder, type AdminModule } from "@/lib/permissions";
 import { CmsStats } from "@/components/admin/cms-stats";
@@ -55,8 +56,8 @@ export function AdminView() {
 
   return (
     <section className="relative py-12">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 mesh-deep opacity-40" />
-      <div className="container-x relative">
+      <Aurora variant="soft" />
+      <div className="container-x relative z-content">
         <header className="glass-card flex flex-wrap items-center justify-between gap-5 p-6">
           <div>
             <span className="mono-label rounded-full border border-violet-400/30 bg-violet-400/5 px-3 py-1.5">AAKWHX / ERP CORE</span>

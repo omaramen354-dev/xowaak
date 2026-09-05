@@ -16,7 +16,7 @@ import { AdditiveBlending, MathUtils, type Group, type Mesh, type Points as Thre
  * The whole rig orbits toward the pointer with an eased lerp (gyroscope tilt).
  */
 
-function ParticleRing({ count = 900 }: { count?: number }) {
+function ParticleRing({ count = 1100 }: { count?: number }) {
   const ref = useRef<ThreePoints>(null);
 
   const positions = useMemo(() => {
@@ -44,11 +44,11 @@ function ParticleRing({ count = 900 }: { count?: number }) {
       <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
         <PointMaterial
           transparent
-          size={0.045}
+          size={0.055}
           sizeAttenuation
           depthWrite={false}
           color="#00F2FE"
-          opacity={0.9}
+          opacity={1}
           blending={AdditiveBlending}
         />
       </Points>
@@ -74,7 +74,7 @@ function OrbitLine({ radius, tilt, color, speed }: { radius: number; tilt: numbe
 
   return (
     <group ref={ref} rotation={[tilt, 0, tilt * 0.45]}>
-      <Line points={points} color={color} lineWidth={1} transparent opacity={0.35} />
+      <Line points={points} color={color} lineWidth={1} transparent opacity={0.7} />
     </group>
   );
 }
@@ -87,9 +87,13 @@ function TechCore() {
 
   useFrame((state, delta) => {
     if (rig.current) {
-      // Mouse orbit — eased so it glides rather than snaps.
-      rig.current.rotation.y = MathUtils.lerp(rig.current.rotation.y, pointer.x * 0.75, 0.055);
-      rig.current.rotation.x = MathUtils.lerp(rig.current.rotation.x, -pointer.y * 0.45, 0.055);
+      // Ambient idle orbit + eased mouse tracking layered on top, so the rig
+      // keeps breathing even when the pointer never moves.
+      const t = state.clock.elapsedTime;
+      const idleY = Math.sin(t * 0.22) * 0.34;
+      const idleX = Math.cos(t * 0.17) * 0.14;
+      rig.current.rotation.y = MathUtils.lerp(rig.current.rotation.y, idleY + pointer.x * 0.7, 0.05);
+      rig.current.rotation.x = MathUtils.lerp(rig.current.rotation.x, idleX - pointer.y * 0.4, 0.05);
     }
     if (shell.current) {
       shell.current.rotation.y += delta * 0.14;
@@ -104,20 +108,21 @@ function TechCore() {
 
   return (
     <group ref={rig}>
-      <Float speed={1.3} rotationIntensity={0.3} floatIntensity={0.85}>
+      <Float speed={1.8} rotationIntensity={0.55} floatIntensity={1.35}>
         {/* Outer wireframe shell */}
         <Icosahedron ref={shell} args={[2.25, 1]}>
-          <meshBasicMaterial wireframe color="#00F2FE" transparent opacity={0.42} />
+          <meshBasicMaterial wireframe color="#00F2FE" transparent opacity={0.85} toneMapped={false} />
         </Icosahedron>
 
         {/* Inner glowing core */}
         <Icosahedron ref={core} args={[1.15, 1]}>
           <meshStandardMaterial
-            color="#4FACFE"
-            emissive="#A855F7"
-            emissiveIntensity={1.5}
-            roughness={0.18}
-            metalness={0.9}
+            color="#00D2FF"
+            emissive="#D946EF"
+            emissiveIntensity={2.6}
+            roughness={0.12}
+            metalness={0.95}
+            toneMapped={false}
             flatShading
           />
         </Icosahedron>
@@ -125,8 +130,8 @@ function TechCore() {
         <ParticleRing />
 
         <OrbitLine radius={2.9} tilt={1.1} color="#00F2FE" speed={0.26} />
-        <OrbitLine radius={3.45} tilt={-0.65} color="#A855F7" speed={-0.19} />
-        <OrbitLine radius={2.6} tilt={0.32} color="#4FACFE" speed={0.36} />
+        <OrbitLine radius={3.45} tilt={-0.65} color="#D946EF" speed={-0.19} />
+        <OrbitLine radius={2.6} tilt={0.32} color="#8B5CF6" speed={0.36} />
       </Float>
     </group>
   );
@@ -141,9 +146,9 @@ export function Hero3D() {
     >
       <Suspense fallback={null}>
         <ambientLight intensity={0.55} />
-        <pointLight position={[6, 6, 6]} intensity={2.6} color="#00F2FE" />
-        <pointLight position={[-6, -3, 4]} intensity={2} color="#A855F7" />
-        <pointLight position={[0, 5, -6]} intensity={1.3} color="#4FACFE" />
+        <pointLight position={[6, 6, 6]} intensity={3.4} color="#00F2FE" />
+        <pointLight position={[-6, -3, 4]} intensity={2.8} color="#D946EF" />
+        <pointLight position={[0, 5, -6]} intensity={1.8} color="#8B5CF6" />
         <TechCore />
       </Suspense>
     </Canvas>

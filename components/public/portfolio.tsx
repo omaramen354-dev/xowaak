@@ -8,6 +8,7 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading, ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import { Reveal, TiltCard } from "@/components/ui/motion";
 import { useContent, type ShowcaseProject } from "@/lib/content-store";
+import { Aurora } from "@/components/ui/aurora";
 import type { Visibility } from "@/lib/supabase/types";
 
 export function Portfolio() {
@@ -29,10 +30,10 @@ export function Portfolio() {
 
   return (
     <section id="portfolio" className="relative overflow-hidden section-y">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-neon-cyan/40 to-transparent" />
-      <div className="pointer-events-none absolute start-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-neon-indigo/10 blur-[160px]" />
+      <Aurora variant="soft" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-backdrop h-px bg-gradient-to-r from-transparent via-neon-cyan/50 to-transparent" />
 
-      <div className="container-x relative">
+      <div className="container-x relative z-content">
         <Reveal>
           <SectionHeading eyebrow="02 / SELECTED WORK" title={t.portfolio.title} subtitle={t.portfolio.subtitle} />
         </Reveal>
@@ -79,12 +80,12 @@ export function Portfolio() {
                   <button
                     type="button"
                     onClick={() => setActive(project)}
-                    className="glass-card glow-hover group h-full w-full overflow-hidden text-start"
+                    className="glass-card glow-hover neon-border group h-full w-full overflow-hidden text-start"
                   >
                     <div className={clsx("relative h-44 overflow-hidden bg-gradient-to-br", project.cover)}>
                       <div className="absolute inset-0 cyber-grid opacity-40" />
                       <div className="absolute inset-0 bg-gradient-to-t from-base/80 via-transparent to-transparent" />
-                      <span className="absolute inset-0 grid place-items-center text-6xl text-white/25 transition-transform duration-700 group-hover:scale-125 group-hover:text-white/40">
+                      <span className="absolute inset-0 grid place-items-center text-6xl text-white/30 animate-float-y transition-transform duration-700 group-hover:scale-125 group-hover:text-white/50">
                         {project.icon}
                       </span>
 
@@ -108,7 +109,7 @@ export function Portfolio() {
                     <div className="p-6">
                       <div className="flex items-start justify-between gap-3">
                         <h3 className="text-base font-bold leading-snug tracking-tight">{project.name}</h3>
-                        <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-low transition-all duration-300 group-hover:-translate-y-0.5 group-hover:text-neon-cyan" />
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-low transition-all duration-300 group-hover:-translate-y-1 group-hover:text-neon-cyan" />
                       </div>
                       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-low">
                         {project.summary}
@@ -180,7 +181,7 @@ function CaseModal({ project, onClose }: { project: ShowcaseProject; onClose: ()
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] grid place-items-center bg-base/85 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-overlay grid place-items-center bg-base/85 p-4 backdrop-blur-md"
     >
       <button type="button" aria-label={t.common.close} className="absolute inset-0" onClick={onClose} />
       <motion.div
