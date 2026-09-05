@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const stages: ProjectStage[] = ["planning", "design", "development", "testing", "review", "completed"];
 
@@ -260,12 +261,11 @@ export function CmsPortfolio() {
                   </div>
                 </Labeled>
 
-                <Label className="flex cursor-pointer items-center gap-3">
-                  <Input
-                    type="checkbox"
-                    className="h-4 w-4 accent-neon-cyan"
+                <Label htmlFor="cms-featured" className="flex cursor-pointer items-center gap-3">
+                  <Checkbox
+                    id="cms-featured"
                     checked={draft.featured}
-                    onChange={(e) => setDraft({ ...draft, featured: e.target.checked })}
+                    onCheckedChange={(c) => setDraft({ ...draft, featured: c === true })}
                   />
                   <span className="text-sm font-medium">{t.admin.cms.featured}</span>
                 </Label>

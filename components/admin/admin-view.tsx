@@ -29,6 +29,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const modules: { key: AdminModule; icon: typeof Gauge }[] = [
   { key: "dashboard", icon: Gauge },
@@ -177,38 +179,38 @@ export function AdminView() {
                     />
                   </label>
                 </div>
-                <div className="mt-5 overflow-x-auto">
-                  <table className="w-full min-w-[720px] text-start text-sm">
-                    <thead>
-                      <tr className="border-b border-line text-[11px] uppercase tracking-widest text-ink-low">
-                        <th className="py-3 text-start font-bold">{t.admin.tabs.projects}</th>
-                        <th className="py-3 text-start font-bold">{t.common.client}</th>
-                        <th className="py-3 text-start font-bold">{t.common.status}</th>
-                        <th className="py-3 text-start font-bold">{t.common.progress}</th>
-                        <th className="py-3 text-start font-bold">{t.common.budget}</th>
-                        <th className="py-3 text-start font-bold">{t.common.deadline}</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-line">
+                <div className="mt-5">
+                  <Table className="min-w-[720px]">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>{t.admin.tabs.projects}</TableHead>
+                        <TableHead>{t.common.client}</TableHead>
+                        <TableHead>{t.common.status}</TableHead>
+                        <TableHead>{t.common.progress}</TableHead>
+                        <TableHead>{t.common.budget}</TableHead>
+                        <TableHead>{t.common.deadline}</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
                       {filteredProjects.map((p) => (
-                        <tr key={p.id}>
-                          <td className="py-3 pe-3">
+                        <TableRow key={p.id}>
+                          <TableCell>
                             <span className="font-semibold">{p.name}</span>
                             <span className="ms-2 text-[10px] uppercase text-ink-low">{p.industry}</span>
-                          </td>
-                          <td className="py-3 pe-3 text-ink-low">{getProfile(p.client_id)?.company}</td>
-                          <td className="py-3 pe-3">
+                          </TableCell>
+                          <TableCell className="text-ink-low">{getProfile(p.client_id)?.company}</TableCell>
+                          <TableCell>
                             <StatusBadge status={p.stage} label={t.status[p.stage]} />
-                          </td>
-                          <td className="w-32 py-3 pe-3">
+                          </TableCell>
+                          <TableCell className="w-32">
                             <ProgressBar value={p.progress} className="!h-1.5" />
-                          </td>
-                          <td className="py-3 pe-3 tabular-nums text-ink-low">{money(p.budget)}</td>
-                          <td className="py-3 tabular-nums text-ink-low">{p.deadline}</td>
-                        </tr>
+                          </TableCell>
+                          <TableCell className="tabular-nums text-ink-low">{money(p.budget)}</TableCell>
+                          <TableCell className="pe-0 tabular-nums text-ink-low">{p.deadline}</TableCell>
+                        </TableRow>
                       ))}
-                    </tbody>
-                  </table>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
             ) : module === "tasks" ? (
@@ -236,9 +238,11 @@ export function AdminView() {
                               <p className="mt-1 text-[11px] text-ink-low">{project?.name}</p>
                               <div className="mt-3 flex items-center justify-between">
                                 <span className="flex items-center gap-1.5 text-[11px] text-ink-low">
-                                  <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-neon-cyan to-neon-indigo text-[10px] font-bold text-white">
-                                    {assignee?.full_name.charAt(0)}
-                                  </span>
+                                  <Avatar className="size-6">
+                                    <AvatarFallback className="text-[10px]">
+                                      {assignee?.full_name.charAt(0)}
+                                    </AvatarFallback>
+                                  </Avatar>
                                   {assignee?.full_name.split(" ")[0]}
                                 </span>
                                 <span
@@ -274,9 +278,9 @@ export function AdminView() {
                       return (
                         <li key={member.id} className="rounded-xl border border-line p-4">
                           <div className="flex items-center gap-3">
-                            <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-neon-cyan to-neon-indigo text-sm font-bold text-white">
-                              {member.full_name.charAt(0)}
-                            </span>
+                            <Avatar className="size-11">
+                              <AvatarFallback className="text-sm">{member.full_name.charAt(0)}</AvatarFallback>
+                            </Avatar>
                             <div className="min-w-0">
                               <p className="truncate text-sm font-bold">{member.full_name}</p>
                               <p className="text-xs text-ink-low">{member.title}</p>

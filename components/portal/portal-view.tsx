@@ -33,6 +33,8 @@ import {
 import type { Feedback, FeedbackCategory, FileCategory, ProjectStage } from "@/lib/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const STAGES: ProjectStage[] = ["planning", "design", "development", "testing", "review"];
 
@@ -180,27 +182,18 @@ export function PortalView() {
               </ol>
             </div>
 
+            <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="contents">
             <div className="glass-card p-2">
-              <nav className="flex flex-wrap gap-1">
+              <TabsList>
                 {(["overview", "files", "feedback", "messages"] as const).map((key) => (
-                  <Button variant="unstyled" size="auto"
-                    key={key}
-                    type="button"
-                    onClick={() => setTab(key)}
-                    className={clsx(
-                      "rounded-lg px-4 py-2 text-sm font-semibold transition",
-                      tab === key
-                        ? "bg-gradient-to-r from-neon-cyan to-neon-indigo text-white"
-                        : "text-ink-low hover:bg-white/[0.05]",
-                    )}
-                  >
+                  <TabsTrigger key={key} value={key}>
                     {t.portal.tabs[key]}
-                  </Button>
+                  </TabsTrigger>
                 ))}
-              </nav>
+              </TabsList>
             </div>
 
-            {tab === "overview" && (
+            <TabsContent value="overview">
               <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.portal.milestones}</h3>
                 <ul className="mt-5 space-y-3">
@@ -223,9 +216,9 @@ export function PortalView() {
                   })}
                 </ul>
               </div>
-            )}
+            </TabsContent>
 
-            {tab === "files" && (
+            <TabsContent value="files">
               <div className="glass-card p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
@@ -264,9 +257,9 @@ export function PortalView() {
                   {files.length === 0 && <li className="py-6 text-sm text-ink-low">{t.common.empty}</li>}
                 </ul>
               </div>
-            )}
+            </TabsContent>
 
-            {tab === "feedback" && (
+            <TabsContent value="feedback">
               <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.portal.feedbackTitle}</h3>
 
@@ -276,9 +269,9 @@ export function PortalView() {
                     const isClient = item.author_id === CLIENT_ID;
                     return (
                       <li key={item.id} className={clsx("flex gap-3", isClient ? "flex-row-reverse" : "flex-row")}>
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-neon-cyan to-neon-indigo text-xs font-bold text-white">
-                          {(author?.full_name ?? "?").charAt(0)}
-                        </span>
+                        <Avatar>
+                          <AvatarFallback>{(author?.full_name ?? "?").charAt(0)}</AvatarFallback>
+                        </Avatar>
                         <div
                           className={clsx(
                             "max-w-xl rounded-2xl border p-4 text-start",
@@ -335,9 +328,9 @@ export function PortalView() {
                   </Button>
                 </form>
               </div>
-            )}
+            </TabsContent>
 
-            {tab === "messages" && (
+            <TabsContent value="messages">
               <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-ink-low">{t.portal.tabs.messages}</h3>
                 <ul className="mt-5 space-y-3">
@@ -361,7 +354,8 @@ export function PortalView() {
                   )}
                 </ul>
               </div>
-            )}
+            </TabsContent>
+            </Tabs>
           </div>
 
           <aside className="space-y-5">
@@ -392,9 +386,9 @@ export function PortalView() {
                   const member = getProfile(id)!;
                   return (
                     <li key={id} className="flex items-center gap-3">
-                      <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-neon-cyan to-neon-indigo text-xs font-bold text-white">
-                        {member.full_name.charAt(0)}
-                      </span>
+                      <Avatar>
+                        <AvatarFallback>{member.full_name.charAt(0)}</AvatarFallback>
+                      </Avatar>
                       <div>
                         <p className="text-sm font-semibold">{member.full_name}</p>
                         <p className="text-xs text-ink-low">{member.title}</p>
