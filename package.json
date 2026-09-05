@@ -1,49 +1,40 @@
 {
-  "name": "awwa-platform",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "nextjs-postgresql-template",
+  "private": true,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p 3000",
-    "build": "BUILD_DIST=1 next build",
-    "start": "BUILD_DIST=1 next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/omaramen354-dev/xowaak.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/omaramen354-dev/xowaak/issues"
-  },
-  "homepage": "https://github.com/omaramen354-dev/xowaak#readme",
   "dependencies": {
     "@fontsource-variable/cairo": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
-    "@supabase/ssr": "^0.12.6",
-    "@supabase/supabase-js": "^2.115.0",
-    "clsx": "^2.1.1",
+    "@types/three": "^0.185.4",
+    "dotenv": "17.3.1",
+    "drizzle-orm": "0.45.2",
     "framer-motion": "^13.2.0",
-    "geist": "^1.7.2",
     "lucide-react": "^1.41.0",
-    "next": "^15.5.25",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "next": "16.2.6",
+    "pg": "8.20.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "three": "^0.185.1"
   },
   "devDependencies": {
-    "@types/node": "^26.4.1",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
-    "@types/three": "^0.185.4",
-    "autoprefixer": "^10.5.5",
-    "postcss": "^8.5.28",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^5.9.3"
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "22.19.15",
+    "@types/pg": "8.18.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "drizzle-kit": "0.31.10",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "postcss": "8.5.8",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3"
   }
 }
