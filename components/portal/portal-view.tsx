@@ -86,12 +86,13 @@ export function PortalView() {
   const nextMilestone = milestones.find((m) => m.status !== "done");
 
   return (
-    <section className="py-12">
-      <div className="container-x">
-        <header className="surface flex flex-wrap items-center justify-between gap-5 p-6">
+    <section className="relative py-12">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 mesh-gradient opacity-40" />
+      <div className="container-x relative">
+        <header className="glass-card flex flex-wrap items-center justify-between gap-5 p-6">
           <div>
-            <span className="chip border-brand-500/40 text-brand-500">{t.portal.title}</span>
-            <h1 className="mt-3 text-2xl font-black">
+            <span className="mono-label rounded-full border border-cyan-400/30 bg-cyan-400/5 px-3 py-1.5">{t.portal.title}</span>
+            <h1 className="mt-3 text-3xl font-black tracking-tight text-gradient">
               {t.portal.welcome}, {client.full_name}
             </h1>
             <p className="mt-1 text-sm text-slate-500">
@@ -113,7 +114,7 @@ export function PortalView() {
               className={clsx(
                 "rounded-xl border px-4 py-2.5 text-sm font-semibold transition",
                 p.id === projectId
-                  ? "border-brand-500 bg-brand-500/10 text-brand-500"
+                  ? "border-cyan-400/60 bg-cyan-400/10 text-cyan-300 shadow-[0_0_25px_-10px_rgba(34,211,238,0.9)]"
                   : "border-slate-300 text-slate-600 hover:border-brand-400 dark:border-white/10 dark:text-slate-300",
               )}
             >
@@ -124,7 +125,7 @@ export function PortalView() {
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_320px]">
           <div className="space-y-5">
-            <div className="surface p-6">
+            <div className="glass-card p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-lg font-bold">{project.name}</h2>
                 <StatusBadge status={project.stage} label={t.status[project.stage]} />
@@ -134,7 +135,7 @@ export function PortalView() {
               <div className="mt-6">
                 <div className="mb-2 flex items-center justify-between text-xs font-semibold">
                   <span className="text-slate-500">{t.portal.completion}</span>
-                  <span className="tabular-nums text-brand-500">{project.progress}%</span>
+                  <span className="tabular-nums text-cyan-400">{project.progress}%</span>
                 </div>
                 <ProgressBar value={project.progress} />
               </div>
@@ -149,14 +150,14 @@ export function PortalView() {
                         {done ? (
                           <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                         ) : current ? (
-                          <CircleDot className="h-5 w-5 animate-pulse text-brand-500" />
+                          <CircleDot className="h-5 w-5 animate-pulse text-cyan-400" />
                         ) : (
                           <Circle className="h-5 w-5 text-slate-300 dark:text-white/20" />
                         )}
                         <span
                           className={clsx(
                             "text-xs font-bold",
-                            done ? "text-emerald-500" : current ? "text-brand-500" : "text-slate-400",
+                            done ? "text-emerald-500" : current ? "text-cyan-400" : "text-slate-400",
                           )}
                         >
                           {t.status[stage]}
@@ -166,7 +167,7 @@ export function PortalView() {
                         <div
                           className={clsx(
                             "h-full rounded-full",
-                            done ? "w-full bg-emerald-500" : current ? "w-1/2 bg-brand-500" : "w-0",
+                            done ? "w-full bg-emerald-500" : current ? "w-1/2 bg-cyan-400" : "w-0",
                           )}
                         />
                       </div>
@@ -176,7 +177,7 @@ export function PortalView() {
               </ol>
             </div>
 
-            <div className="surface p-2">
+            <div className="glass-card p-2">
               <nav className="flex flex-wrap gap-1">
                 {(["overview", "files", "feedback", "messages"] as const).map((key) => (
                   <button
@@ -186,7 +187,7 @@ export function PortalView() {
                     className={clsx(
                       "rounded-lg px-4 py-2 text-sm font-semibold transition",
                       tab === key
-                        ? "bg-brand-500 text-white"
+                        ? "bg-gradient-to-r from-cyan-500 to-violet-500 text-white"
                         : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5",
                     )}
                   >
@@ -197,7 +198,7 @@ export function PortalView() {
             </div>
 
             {tab === "overview" && (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.portal.milestones}</h3>
                 <ul className="mt-5 space-y-3">
                   {milestones.map((m) => {
@@ -222,7 +223,7 @@ export function PortalView() {
             )}
 
             {tab === "files" && (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.portal.filesTitle}</h3>
@@ -240,7 +241,7 @@ export function PortalView() {
                     return (
                       <li key={f.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                         <div className="flex min-w-0 items-center gap-3">
-                          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-500/10 text-brand-500">
+                          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-400/10 text-cyan-400">
                             <Icon className="h-5 w-5" />
                           </span>
                           <div className="min-w-0">
@@ -263,7 +264,7 @@ export function PortalView() {
             )}
 
             {tab === "feedback" && (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.portal.feedbackTitle}</h3>
 
                 <ul className="mt-5 space-y-4">
@@ -272,14 +273,14 @@ export function PortalView() {
                     const isClient = item.author_id === CLIENT_ID;
                     return (
                       <li key={item.id} className={clsx("flex gap-3", isClient && "flex-row-reverse text-end")}>
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-xs font-bold text-white">
+                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 text-xs font-bold text-white">
                           {(author?.full_name ?? "?").charAt(0)}
                         </span>
                         <div
                           className={clsx(
                             "max-w-xl rounded-2xl border p-4",
                             isClient
-                              ? "border-brand-500/30 bg-brand-500/10"
+                              ? "border-cyan-400/30 bg-cyan-400/10"
                               : "border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/[0.03]",
                           )}
                         >
@@ -310,7 +311,7 @@ export function PortalView() {
                         className={clsx(
                           "rounded-full border px-3 py-1.5 text-xs font-semibold transition",
                           category === c
-                            ? "border-brand-500 bg-brand-500 text-white"
+                            ? "border-brand-500 bg-cyan-400 text-white"
                             : "border-slate-300 text-slate-600 dark:border-white/10 dark:text-slate-300",
                         )}
                       >
@@ -334,7 +335,7 @@ export function PortalView() {
             )}
 
             {tab === "messages" && (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.portal.tabs.messages}</h3>
                 <ul className="mt-5 space-y-3">
                   {projectMessages(project.id).map((m) => {
@@ -342,7 +343,7 @@ export function PortalView() {
                     return (
                       <li key={m.id} className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
                         <div className="flex items-center gap-2">
-                          <MessageSquare className="h-3.5 w-3.5 text-brand-500" />
+                          <MessageSquare className="h-3.5 w-3.5 text-cyan-400" />
                           <span className="text-xs font-bold">{sender?.full_name}</span>
                           <span className="text-[11px] text-slate-400">
                             {new Date(m.created_at).toLocaleString(locale)}
@@ -361,7 +362,7 @@ export function PortalView() {
           </div>
 
           <aside className="space-y-5">
-            <div className="surface p-6">
+            <div className="glass-card p-6">
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t.portal.nextDelivery}</h3>
               {nextMilestone ? (
                 <>
@@ -381,14 +382,14 @@ export function PortalView() {
               )}
             </div>
 
-            <div className="surface p-6">
+            <div className="glass-card p-6">
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t.common.team}</h3>
               <ul className="mt-4 space-y-3">
                 {["u-003", "u-004", "u-005"].map((id) => {
                   const member = getProfile(id)!;
                   return (
                     <li key={id} className="flex items-center gap-3">
-                      <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-xs font-bold text-white">
+                      <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 text-xs font-bold text-white">
                         {member.full_name.charAt(0)}
                       </span>
                       <div>
@@ -401,9 +402,9 @@ export function PortalView() {
               </ul>
             </div>
 
-            <div className="surface p-6">
+            <div className="glass-card p-6">
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t.common.budget}</h3>
-              <p className="mt-3 text-2xl font-black tabular-nums text-gradient">
+              <p className="tabular mt-3 text-2xl font-black text-gradient">
                 {new Intl.NumberFormat(locale, { style: "currency", currency: project.currency, maximumFractionDigits: 0 }).format(
                   project.budget,
                 )}

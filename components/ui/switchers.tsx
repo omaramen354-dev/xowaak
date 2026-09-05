@@ -28,7 +28,7 @@ export function LanguageSwitcher() {
         onClick={() => setOpen((v) => !v)}
         aria-label={t.common.language}
         aria-expanded={open}
-        className="flex items-center gap-2 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-white/10 dark:text-slate-200 dark:hover:border-brand-400"
+        className="flex items-center gap-2 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-cyan-400 hover:text-cyan-500 dark:border-white/[0.1] dark:text-slate-200 dark:hover:border-cyan-400/60"
       >
         <Globe className="h-4 w-4" />
         <span className="hidden sm:inline">{localeMeta[locale].native}</span>
@@ -44,19 +44,19 @@ export function LanguageSwitcher() {
             className="fixed inset-0 z-40 cursor-default"
             onClick={() => setOpen(false)}
           />
-          <ul className="absolute z-50 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-2xl end-0 dark:border-white/10 dark:bg-ink-800">
+          <ul className="absolute z-50 mt-2 w-52 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-2xl end-0 dark:border-white/[0.08] dark:bg-ink-900/95 backdrop-blur-xl">
             {locales.map((l) => (
               <li key={l}>
                 <button
                   type="button"
                   onClick={() => switchTo(l)}
-                  className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-brand-50 dark:text-slate-200 dark:hover:bg-white/5"
+                  className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-cyan-400/10 dark:text-slate-200 dark:hover:bg-white/5"
                 >
                   <span className="flex items-center gap-2">
                     <span aria-hidden>{localeMeta[l].flag}</span>
                     {localeMeta[l].native}
                   </span>
-                  {l === locale && <Check className="h-4 w-4 text-brand-500" />}
+                  {l === locale && <Check className="h-4 w-4 text-cyan-400" />}
                 </button>
               </li>
             ))}
@@ -76,7 +76,7 @@ export function ThemeSwitcher() {
       type="button"
       onClick={toggle}
       aria-label={`${t.common.theme}: ${theme === "dark" ? t.common.dark : t.common.light}`}
-      className="rounded-xl border border-slate-300 p-2.5 text-slate-700 transition hover:border-brand-500 hover:text-brand-600 dark:border-white/10 dark:text-slate-200 dark:hover:border-brand-400"
+      className="rounded-xl border border-slate-300 p-2.5 text-slate-700 transition hover:border-cyan-400 hover:text-cyan-500 dark:border-white/[0.1] dark:text-slate-200 dark:hover:border-cyan-400/60"
     >
       {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </button>

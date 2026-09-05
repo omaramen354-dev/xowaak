@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { dictionaries, getDir, type Dictionary, type Locale } from "@/lib/i18n";
+import { ContentProvider } from "@/lib/content-store";
 
 interface I18nValue {
   locale: Locale;
@@ -60,7 +61,9 @@ export function Providers({ locale, children }: { locale: Locale; children: Reac
 
   return (
     <I18nContext.Provider value={i18n}>
-      <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>
+      <ThemeContext.Provider value={themeValue}>
+        <ContentProvider>{children}</ContentProvider>
+      </ThemeContext.Provider>
     </I18nContext.Provider>
   );
 }

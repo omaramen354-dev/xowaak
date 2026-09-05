@@ -34,18 +34,18 @@ export function SiteHeader() {
     <header
       className={`sticky top-0 z-50 w-full border-b transition-all ${
         scrolled
-          ? "border-slate-200/80 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-ink-900/80"
+          ? "border-slate-200/70 bg-white/70 backdrop-blur-2xl dark:border-white/[0.07] dark:bg-ink-950/70"
           : "border-transparent bg-transparent"
       }`}
     >
       <div className="container-x flex h-16 items-center justify-between gap-4">
         <Link href={base} className="flex items-center gap-2.5">
-          <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-fuchsia-500 text-white shadow-lg shadow-brand-600/30">
+          <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-500 text-white shadow-[0_0_25px_-6px_rgba(34,211,238,0.9)]">
             <Hexagon className="h-5 w-5" strokeWidth={2.5} />
           </span>
           <span className="leading-tight">
             <span className="block text-sm font-black tracking-widest">AAKWHX</span>
-            <span className="block text-[10px] font-medium uppercase tracking-[0.28em] text-brand-500">awwa</span>
+            <span className="mono-label block">awwa</span>
           </span>
         </Link>
 

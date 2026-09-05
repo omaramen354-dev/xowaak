@@ -8,15 +8,20 @@ import {
   Briefcase,
   Building2,
   Gauge,
+  Gem,
   KanbanSquare,
   Lock,
   Search,
+  Sparkles,
   TrendingUp,
   Users,
 } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import { canAccess, roleOrder, type AdminModule } from "@/lib/permissions";
+import { CmsStats } from "@/components/admin/cms-stats";
+import { CmsPortfolio } from "@/components/admin/cms-portfolio";
+import { Reveal } from "@/components/ui/motion";
 import { getProfile, getRole, kpis, profiles, projects, tasks, userRoles } from "@/lib/mock-data";
 import type { AppRole } from "@/lib/supabase/types";
 
@@ -26,6 +31,8 @@ const modules: { key: AdminModule; icon: typeof Gauge }[] = [
   { key: "tasks", icon: KanbanSquare },
   { key: "team", icon: Users },
   { key: "clients", icon: Building2 },
+  { key: "cmsStats", icon: Sparkles },
+  { key: "cmsPortfolio", icon: Gem },
 ];
 
 const columns = ["todo", "in_progress", "blocked", "done"] as const;
@@ -47,12 +54,13 @@ export function AdminView() {
     new Intl.NumberFormat(locale, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);
 
   return (
-    <section className="py-12">
-      <div className="container-x">
-        <header className="surface flex flex-wrap items-center justify-between gap-5 p-6">
+    <section className="relative py-12">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 mesh-gradient opacity-40" />
+      <div className="container-x relative">
+        <header className="glass-card flex flex-wrap items-center justify-between gap-5 p-6">
           <div>
-            <span className="chip border-fuchsia-500/40 text-fuchsia-500">ERP</span>
-            <h1 className="mt-3 text-2xl font-black">{t.admin.title}</h1>
+            <span className="mono-label rounded-full border border-violet-400/30 bg-violet-400/5 px-3 py-1.5">AAKWHX / ERP CORE</span>
+            <h1 className="mt-3 text-3xl font-black tracking-tight"><span className="text-gradient">{t.admin.title}</span></h1>
           </div>
           <label className="flex items-center gap-3">
             <span className="text-xs font-semibold uppercase tracking-widest text-slate-500">{t.admin.roleLabel}</span>
@@ -71,7 +79,7 @@ export function AdminView() {
         </header>
 
         <div className="mt-5 grid gap-5 lg:grid-cols-[220px_1fr]">
-          <nav className="surface h-fit p-3">
+          <nav className="glass-card sticky top-20 h-fit p-3">
             <ul className="space-y-1">
               {modules.map(({ key, icon: Icon }) => {
                 const can = canAccess(role, key);
@@ -83,7 +91,7 @@ export function AdminView() {
                       className={clsx(
                         "flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition",
                         module === key
-                          ? "bg-brand-500 text-white"
+                          ? "bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-[0_0_25px_-8px_rgba(34,211,238,0.9)]"
                           : can
                             ? "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
                             : "text-slate-400 dark:text-slate-600",
@@ -101,7 +109,7 @@ export function AdminView() {
 
           <div className="space-y-5">
             {!allowed ? (
-              <div className="surface flex items-center gap-3 p-8 text-sm font-semibold text-rose-500">
+              <div className="glass-card flex items-center gap-3 p-8 text-sm font-semibold text-rose-500">
                 <AlertTriangle className="h-5 w-5" />
                 {t.admin.permissionDenied}
               </div>
@@ -114,7 +122,7 @@ export function AdminView() {
                   <Kpi label={t.admin.kpis.overdue} value={String(kpis.overdueTasks)} icon={AlertTriangle} tone="rose" />
                 </div>
 
-                <div className="surface p-6">
+                <div className="glass-card p-6">
                   <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-500">
                     <BarChart3 className="h-4 w-4" /> {t.admin.kpis.revenue}
                   </h3>
@@ -122,7 +130,7 @@ export function AdminView() {
                     {kpis.revenueByMonth.map((m) => (
                       <div key={m.month} className="flex flex-1 flex-col items-center gap-2">
                         <div
-                          className="w-full rounded-t-lg bg-gradient-to-t from-brand-600 to-fuchsia-500 transition-all"
+                          className="w-full rounded-t-lg bg-gradient-to-t from-cyan-500 via-blue-500 to-violet-500 shadow-[0_0_20px_-6px_rgba(34,211,238,0.8)] transition-all"
                           style={{ height: `${(m.value / 500) * 100}%` }}
                           title={`${m.value}k`}
                         />
@@ -132,7 +140,7 @@ export function AdminView() {
                   </div>
                 </div>
 
-                <div className="surface p-6">
+                <div className="glass-card p-6">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.workflow}</h3>
                   <ul className="mt-5 space-y-4">
                     {projects
@@ -148,7 +156,7 @@ export function AdminView() {
                 </div>
               </>
             ) : module === "projects" ? (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.tabs.projects}</h3>
                   <label className="relative">
@@ -220,7 +228,7 @@ export function AdminView() {
                               <p className="mt-1 text-[11px] text-slate-500">{project?.name}</p>
                               <div className="mt-3 flex items-center justify-between">
                                 <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                                  <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-[10px] font-bold text-white">
+                                  <span className="grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 text-[10px] font-bold text-white">
                                     {assignee?.full_name.charAt(0)}
                                   </span>
                                   {assignee?.full_name.split(" ")[0]}
@@ -246,7 +254,7 @@ export function AdminView() {
                 ))}
               </div>
             ) : module === "team" ? (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.tabs.team}</h3>
                 <ul className="mt-5 grid gap-4 md:grid-cols-2">
                   {profiles
@@ -258,7 +266,7 @@ export function AdminView() {
                       return (
                         <li key={member.id} className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
                           <div className="flex items-center gap-3">
-                            <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-sm font-bold text-white">
+                            <span className="grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br from-cyan-500 to-violet-500 text-sm font-bold text-white">
                               {member.full_name.charAt(0)}
                             </span>
                             <div className="min-w-0">
@@ -279,8 +287,12 @@ export function AdminView() {
                     })}
                 </ul>
               </div>
+            ) : module === "cmsStats" ? (
+              <CmsStats />
+            ) : module === "cmsPortfolio" ? (
+              <CmsPortfolio />
             ) : (
-              <div className="surface p-6">
+              <div className="glass-card p-6">
                 <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500">{t.admin.directory}</h3>
                 <ul className="mt-5 space-y-3">
                   {profiles
@@ -308,7 +320,7 @@ export function AdminView() {
                             <span className="text-slate-500">
                               {owned.length} {t.admin.tabs.projects}
                             </span>
-                            <span className="font-bold tabular-nums text-brand-500">{money(value)}</span>
+                            <span className="tabular font-bold text-cyan-400">{money(value)}</span>
                           </div>
                         </li>
                       );
@@ -336,17 +348,17 @@ function Kpi({
 }) {
   const tones = {
     emerald: "text-emerald-500 bg-emerald-500/10",
-    brand: "text-brand-500 bg-brand-500/10",
+    brand: "text-cyan-400 bg-cyan-400/10",
     violet: "text-violet-500 bg-violet-500/10",
     rose: "text-rose-500 bg-rose-500/10",
   } as const;
 
   return (
-    <div className="surface p-5">
+    <div className="glass-card p-5">
       <span className={clsx("grid h-10 w-10 place-items-center rounded-xl", tones[tone])}>
         <Icon className="h-5 w-5" />
       </span>
-      <p className="mt-4 text-2xl font-black tabular-nums">{value}</p>
+      <p className="tabular mt-4 text-2xl font-black">{value}</p>
       <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-500">{label}</p>
     </div>
   );

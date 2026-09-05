@@ -9,11 +9,11 @@ export function SiteFooter() {
   const base = `/${locale}`;
 
   return (
-    <footer className="border-t border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-ink-800/60">
+    <footer className="relative overflow-hidden border-t border-slate-200 bg-slate-50 dark:border-white/[0.07] dark:bg-ink-950">
       <div className="container-x grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-fuchsia-500 text-white">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-500 text-white">
               <Hexagon className="h-5 w-5" strokeWidth={2.5} />
             </span>
             <span className="text-sm font-black tracking-widest">AAKWHX</span>
@@ -37,17 +37,17 @@ export function SiteFooter() {
           <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t.nav.contact}</h3>
           <ul className="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
             <li>
-              <Link href={`${base}/quote`} className="hover:text-brand-500">
+              <Link href={`${base}/quote`} className="hover:text-cyan-400">
                 {t.nav.quote}
               </Link>
             </li>
             <li>
-              <Link href={`${base}/portal`} className="hover:text-brand-500">
+              <Link href={`${base}/portal`} className="hover:text-cyan-400">
                 {t.nav.portal}
               </Link>
             </li>
             <li>
-              <Link href={`${base}/admin`} className="hover:text-brand-500">
+              <Link href={`${base}/admin`} className="hover:text-cyan-400">
                 {t.nav.admin}
               </Link>
             </li>

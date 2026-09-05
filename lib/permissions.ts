@@ -1,6 +1,6 @@
 import type { AppRole } from "./supabase/types";
 
-export type AdminModule = "dashboard" | "projects" | "tasks" | "team" | "clients";
+export type AdminModule = "dashboard" | "projects" | "tasks" | "team" | "clients" | "cmsStats" | "cmsPortfolio";
 
 /** Mirrors the RLS policies defined in schema.sql. */
 export const modulePermissions: Record<AdminModule, AppRole[]> = {
@@ -9,6 +9,8 @@ export const modulePermissions: Record<AdminModule, AppRole[]> = {
   tasks: ["super_admin", "admin", "pm", "employee"],
   team: ["super_admin", "admin", "pm"],
   clients: ["super_admin", "admin"],
+  cmsStats: ["super_admin", "admin"],
+  cmsPortfolio: ["super_admin", "admin", "pm"],
 };
 
 export function canAccess(role: AppRole, module: AdminModule): boolean {
