@@ -164,11 +164,27 @@
   }
 
   /* ---------------- Backgrounds ---------------- */
+  /* Cyber grid that crawls and pulses through the neon palette, so it never
+     sits as a flat static mesh. `--grid-hue` is animated by grid-hue below. */
   .cyber-grid {
+    --grid-hue: 0 242 254;
     background-image:
-      linear-gradient(to right, rgb(0 242 254 / 0.10) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(0 242 254 / 0.10) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--grid-hue) / 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--grid-hue) / 0.14) 1px, transparent 1px);
     background-size: 56px 56px;
+    animation:
+      grid-crawl 14s linear infinite,
+      grid-hue 24s ease-in-out infinite;
+  }
+
+  /* Neon bloom riding over the grid — a soft light that sweeps the plane. */
+  .cyber-grid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(38rem 26rem at 50% 40%, rgb(var(--grid-hue) / 0.16), transparent 70%);
+    animation: grid-bloom 11s ease-in-out infinite;
   }
 
   /* Deep radial mesh — subtle, sits in the darkness, never silver. */
@@ -441,6 +457,15 @@
   inherits: false;
 }
 
+/* Registered so the grid hue CROSSFADES. An unregistered custom property
+   animates in discrete jumps, which would make the grid flicker between
+   colours instead of gliding through them. */
+@property --grid-hue {
+  syntax: "<number>+";
+  initial-value: 0 242 254;
+  inherits: true;
+}
+
 /* Referenced directly by .text-gradient / .btn-primary, so it must live here:
    Tailwind only emits config keyframes for `animate-*` utilities it finds. */
 @keyframes gradient-pan {
@@ -475,6 +500,43 @@
 @keyframes wash-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Grid crawl + neon hue cycle + bloom. Raw-CSS refs, so declared here. */
+@keyframes grid-crawl {
+  to {
+    background-position:
+      56px 56px,
+      56px 56px;
+  }
+}
+
+@keyframes grid-hue {
+  0%,
+  100% {
+    --grid-hue: 0 242 254;
+  }
+  25% {
+    --grid-hue: 139 92 246;
+  }
+  50% {
+    --grid-hue: 236 72 153;
+  }
+  75% {
+    --grid-hue: 16 185 129;
+  }
+}
+
+@keyframes grid-bloom {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(6%, 4%, 0) scale(1.15);
   }
 }
 

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Sparkles, Trail } from "@react-three/drei";
 import * as THREE from "three";
+import { neonAt } from "@/lib/neon-cycle";
 
 /**
  * Hero centrepiece — a full 3D object living in the hero's visual column.
@@ -17,37 +18,99 @@ import * as THREE from "three";
  * on touch so it never steals a scroll gesture.
  */
 
-/* ---------------- Pulsing distorted core ---------------- */
+/* ---------------- Neon rim shader ---------------- */
+/**
+ * Fresnel rim light. The body stays pure black; brightness rises only at
+ * grazing angles, so we read a black silhouette wrapped in a neon halo.
+ * `uColor` is animated through the RGB palette on the CPU each frame.
+ */
+const rimVertex = /* glsl */ `
+  varying vec3 vNormal;
+  varying vec3 vView;
+  void main() {
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    vNormal = normalize(normalMatrix * normal);
+    vView = normalize(-mv.xyz);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+
+const rimFragment = /* glsl */ `
+  uniform vec3 uColor;
+  uniform float uPower;
+  uniform float uIntensity;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  void main() {
+    float f = 1.0 - abs(dot(normalize(vNormal), normalize(vView)));
+    f = pow(clamp(f, 0.0, 1.0), uPower) * uIntensity;
+    gl_FragColor = vec4(uColor * f, f);
+  }
+`;
+
+/* ---------------- Black core with a travelling neon halo ---------------- */
 function Core() {
-  const ref = useRef<THREE.Mesh>(null);
-  const light = useRef<THREE.PointLight>(null);
+  const body = useRef<THREE.Mesh>(null);
+  const rim = useRef<THREE.Mesh>(null);
+  const glowLight = useRef<THREE.PointLight>(null);
+
+  const rimMat = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        vertexShader: rimVertex,
+        fragmentShader: rimFragment,
+        uniforms: {
+          uColor: { value: new THREE.Color("#00F2FE") },
+          uPower: { value: 2.6 },
+          uIntensity: { value: 1.5 },
+        },
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.BackSide,
+      }),
+    [],
+  );
+
+  const scratch = useMemo(() => new THREE.Color(), []);
 
   useFrame((s) => {
     const t = s.clock.elapsedTime;
-    if (ref.current) {
-      ref.current.rotation.y = t * 0.22;
-      ref.current.rotation.x = Math.sin(t * 0.3) * 0.18;
+    neonAt(t, scratch);
+
+    if (body.current) {
+      body.current.rotation.y = t * 0.22;
+      body.current.rotation.x = Math.sin(t * 0.3) * 0.18;
     }
-    if (light.current) {
-      // Heartbeat — the core breathes light into the shells around it.
-      light.current.intensity = 5.5 + Math.sin(t * 1.6) * 2.4;
+    if (rim.current) {
+      rim.current.rotation.y = t * 0.22;
+      rim.current.rotation.x = Math.sin(t * 0.3) * 0.18;
+      // Halo breathes in and out around the silhouette.
+      rim.current.scale.setScalar(1.1 + Math.sin(t * 1.5) * 0.05);
+    }
+    rimMat.uniforms.uColor.value.copy(scratch);
+    rimMat.uniforms.uIntensity.value = 1.35 + Math.sin(t * 1.5) * 0.45;
+
+    if (glowLight.current) {
+      glowLight.current.color.copy(scratch);
+      glowLight.current.intensity = 5 + Math.sin(t * 1.5) * 2.2;
     }
   });
 
   return (
     <group>
-      <pointLight ref={light} position={[0, 0, 0]} color="#00F2FE" intensity={6} distance={9} />
-      <mesh ref={ref}>
+      {/* Casts the current neon colour onto the shells around it. */}
+      <pointLight ref={glowLight} position={[0, 0, 0]} color="#00F2FE" intensity={6} distance={10} />
+
+      {/* Pure black body — no emissive, so it reads as a silhouette. */}
+      <mesh ref={body}>
         <icosahedronGeometry args={[1.05, 12]} />
-        <MeshDistortMaterial
-          color="#0B1220"
-          emissive="#00F2FE"
-          emissiveIntensity={0.55}
-          roughness={0.18}
-          metalness={0.92}
-          distort={0.36}
-          speed={1.4}
-        />
+        <MeshDistortMaterial color="#000000" roughness={0.35} metalness={0.6} distort={0.36} speed={1.4} />
+      </mesh>
+
+      {/* Slightly larger back-faced hull carrying the fresnel halo. */}
+      <mesh ref={rim} material={rimMat}>
+        <icosahedronGeometry args={[1.05, 6]} />
       </mesh>
     </group>
   );
@@ -57,6 +120,9 @@ function Core() {
 function Shells() {
   const a = useRef<THREE.Mesh>(null);
   const b = useRef<THREE.Mesh>(null);
+  const matA = useRef<THREE.MeshBasicMaterial>(null);
+  const matB = useRef<THREE.MeshBasicMaterial>(null);
+  const scratch = useMemo(() => new THREE.Color(), []);
 
   useFrame((s) => {
     const t = s.clock.elapsedTime;
@@ -68,17 +134,26 @@ function Shells() {
       b.current.rotation.y = -t * 0.12;
       b.current.rotation.z = t * 0.08;
     }
+    // Offset phases so the two shells are never the same hue at once.
+    if (matA.current) {
+      neonAt(t, scratch);
+      matA.current.color.copy(scratch);
+    }
+    if (matB.current) {
+      neonAt(t + 9, scratch);
+      matB.current.color.copy(scratch);
+    }
   });
 
   return (
     <>
       <mesh ref={a}>
         <icosahedronGeometry args={[1.75, 1]} />
-        <meshBasicMaterial color="#00F2FE" wireframe transparent opacity={0.3} />
+        <meshBasicMaterial ref={matA} wireframe transparent opacity={0.32} />
       </mesh>
       <mesh ref={b}>
         <dodecahedronGeometry args={[2.25, 0]} />
-        <meshBasicMaterial color="#D946EF" wireframe transparent opacity={0.22} />
+        <meshBasicMaterial ref={matB} wireframe transparent opacity={0.24} />
       </mesh>
     </>
   );
@@ -87,16 +162,25 @@ function Shells() {
 /* ---------------- Equator ring ---------------- */
 function Equator() {
   const ref = useRef<THREE.Mesh>(null);
+  const mat = useRef<THREE.MeshBasicMaterial>(null);
+  const scratch = useMemo(() => new THREE.Color(), []);
+
   useFrame((s) => {
     const t = s.clock.elapsedTime;
-    if (!ref.current) return;
-    ref.current.rotation.z = t * 0.3;
-    ref.current.rotation.x = Math.PI / 2 + Math.sin(t * 0.4) * 0.22;
+    if (ref.current) {
+      ref.current.rotation.z = t * 0.3;
+      ref.current.rotation.x = Math.PI / 2 + Math.sin(t * 0.4) * 0.22;
+    }
+    if (mat.current) {
+      neonAt(t + 4.5, scratch);
+      mat.current.color.copy(scratch);
+    }
   });
+
   return (
     <mesh ref={ref}>
       <torusGeometry args={[2.7, 0.014, 8, 180]} />
-      <meshBasicMaterial color="#00F2FE" transparent opacity={0.5} blending={THREE.AdditiveBlending} />
+      <meshBasicMaterial ref={mat} transparent opacity={0.55} blending={THREE.AdditiveBlending} />
     </mesh>
   );
 }

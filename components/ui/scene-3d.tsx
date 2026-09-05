@@ -4,6 +4,7 @@ import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sparkles, Stars } from "@react-three/drei";
 import * as THREE from "three";
+import { neonAt } from "@/lib/neon-cycle";
 
 /**
  * Global ambient 3D field.
@@ -43,6 +44,10 @@ function WireCore() {
   const outer = useRef<THREE.Mesh>(null);
   const mid = useRef<THREE.Mesh>(null);
   const inner = useRef<THREE.Mesh>(null);
+  const matOuter = useRef<THREE.MeshBasicMaterial>(null);
+  const matMid = useRef<THREE.MeshBasicMaterial>(null);
+  const matInner = useRef<THREE.MeshBasicMaterial>(null);
+  const scratch = useMemo(() => new THREE.Color(), []);
 
   useFrame((s) => {
     const t = s.clock.elapsedTime;
@@ -59,21 +64,25 @@ function WireCore() {
       inner.current.rotation.x = -t * 0.11;
       inner.current.rotation.z = t * 0.07;
     }
+    // Staggered phases so the three shells are never the same hue.
+    if (matOuter.current) matOuter.current.color.copy(neonAt(t, scratch));
+    if (matMid.current) matMid.current.color.copy(neonAt(t + 8, scratch));
+    if (matInner.current) matInner.current.color.copy(neonAt(t + 16, scratch));
   });
 
   return (
     <group>
       <mesh ref={outer}>
         <icosahedronGeometry args={[2.9, 1]} />
-        <meshBasicMaterial color="#00F2FE" wireframe transparent opacity={0.14} />
+        <meshBasicMaterial ref={matOuter} wireframe transparent opacity={0.15} />
       </mesh>
       <mesh ref={mid}>
         <dodecahedronGeometry args={[2.1, 0]} />
-        <meshBasicMaterial color="#8B5CF6" wireframe transparent opacity={0.15} />
+        <meshBasicMaterial ref={matMid} wireframe transparent opacity={0.16} />
       </mesh>
       <mesh ref={inner}>
         <octahedronGeometry args={[1.4, 0]} />
-        <meshBasicMaterial color="#D946EF" wireframe transparent opacity={0.2} />
+        <meshBasicMaterial ref={matInner} wireframe transparent opacity={0.2} />
       </mesh>
     </group>
   );
@@ -113,14 +122,21 @@ function OrbitRings() {
   );
 }
 
-/* ---------------- Receding grid floor ---------------- */
-function GridFloor() {
-  const ref = useRef<THREE.LineSegments>(null);
+/* ---------------- Receding neon grid floor ---------------- */
+/**
+ * Two facing grids (floor + ceiling) that crawl toward the camera and pulse
+ * through the neon palette, with a travelling glow band so the light appears
+ * to sweep across the plane rather than blink uniformly.
+ */
+function NeonGrid({ y, flip = false }: { y: number; flip?: boolean }) {
+  const lines = useRef<THREE.LineSegments>(null);
+  const mat = useRef<THREE.LineBasicMaterial>(null);
+  const scratch = useMemo(() => new THREE.Color(), []);
 
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry();
     const pts: number[] = [];
-    const half = 22;
+    const half = 24;
     const step = 1.6;
     for (let i = -half; i <= half; i += step) {
       pts.push(-half, 0, i, half, 0, i);
@@ -131,23 +147,34 @@ function GridFloor() {
   }, []);
 
   useFrame((s) => {
-    if (!ref.current) return;
-    // Slow forward crawl, wrapped so it never visibly restarts.
-    ref.current.position.z = (s.clock.elapsedTime * 0.35) % 1.6;
+    const t = s.clock.elapsedTime;
+    if (lines.current) {
+      // Crawl one cell then wrap — the motion never visibly restarts.
+      lines.current.position.z = ((t * 0.42) % 1.6) * (flip ? -1 : 1);
+    }
+    if (mat.current) {
+      neonAt(t + (flip ? 7 : 0), scratch);
+      mat.current.color.copy(scratch);
+      // Breathing brightness so the grid glows rather than sits flat.
+      mat.current.opacity = 0.1 + Math.abs(Math.sin(t * 0.55 + (flip ? 1.4 : 0))) * 0.11;
+    }
   });
 
   return (
-    <group position={[0, -5.5, -6]} rotation={[0, 0, 0]}>
-      <lineSegments ref={ref} geometry={geo}>
-        <lineBasicMaterial
-          color="#00F2FE"
-          transparent
-          opacity={0.075}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
+    <group position={[0, y, -6]} rotation={[flip ? Math.PI : 0, 0, 0]}>
+      <lineSegments ref={lines} geometry={geo}>
+        <lineBasicMaterial ref={mat} transparent blending={THREE.AdditiveBlending} depthWrite={false} />
       </lineSegments>
     </group>
+  );
+}
+
+function GridFloor() {
+  return (
+    <>
+      <NeonGrid y={-5.5} />
+      <NeonGrid y={6.5} flip />
+    </>
   );
 }
 
