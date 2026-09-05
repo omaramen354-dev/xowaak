@@ -8,6 +8,7 @@ import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
+import { Shuffle } from "@/components/ui/shuffle";
 
 // react-bits Orb — client-only and code-split so it never blocks first paint.
 // Sits BEHIND the hero copy as a glow, not beside it.
@@ -67,14 +68,26 @@ export function Hero() {
               {t.hero.badge}
             </motion.span>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 26 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-7 text-4xl font-black leading-[1.08] text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
-            >
-              {t.hero.title}
-            </motion.h1>
+            {/* Shuffle rebuilds the text as per-character spans, which severs
+                Arabic letter joining — the component detects RTL and renders
+                plain text there, so the headline stays correct in all 7
+                locales. */}
+            <Shuffle
+              key={t.hero.title}
+              tag="h1"
+              text={t.hero.title}
+              shuffleDirection="right"
+              duration={0.35}
+              animationMode="evenodd"
+              shuffleTimes={1}
+              ease="power3.out"
+              stagger={0.03}
+              threshold={0.1}
+              triggerOnce
+              triggerOnHover
+              respectReducedMotion
+              className="mt-7 text-4xl font-black text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
+            />
 
             <motion.p
               initial={{ opacity: 0, y: 18 }}

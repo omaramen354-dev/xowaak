@@ -19,6 +19,11 @@ const AuroraGL = dynamic(() => import("@/components/ui/aurora-gl").then((m) => m
   loading: () => null,
 });
 
+const MoltenMetal = dynamic(() => import("@/components/ui/molten-metal").then((m) => m.MoltenMetal), {
+  ssr: false,
+  loading: () => null,
+});
+
 function subscribe(callback: () => void) {
   window.addEventListener("resize", callback, { passive: true });
   return () => window.removeEventListener("resize", callback);
