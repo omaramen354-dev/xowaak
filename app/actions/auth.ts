@@ -14,6 +14,7 @@ import { verificationEmail } from "@/lib/email/templates";
 import { getSiteUrl } from "@/lib/site-url";
 import { getDictionary, isLocale } from "@/lib/i18n";
 import { validateEmail, validatePhone } from "@/lib/validation/contact";
+import { requireEmailVerification } from "@/lib/auth/policy";
 
 export interface ActionState {
   ok: boolean;
@@ -149,7 +150,7 @@ export async function registerAction(
   if (existing) {
     // An unverified duplicate simply gets a fresh link instead of an error that
     // would leak nothing useful anyway.
-    if (!existing.emailVerified) {
+    if (!existing.emailVerified && requireEmailVerification) {
       await dispatchVerification(email, loc);
       return { ok: true, message: "", pendingEmail: email };
     }
@@ -171,7 +172,8 @@ export async function registerAction(
       phone: phoneE164,
       locale: loc,
       role: "client",
-      emailVerified: null,
+      // With confirmation switched off the account is usable immediately.
+      emailVerified: requireEmailVerification ? null : new Date(),
     })
     .returning({ id: users.id });
 
@@ -180,6 +182,14 @@ export async function registerAction(
     .update(leads)
     .set({ convertedUserId: created.id, status: "qualified" })
     .where(eq(leads.email, email));
+
+  // No sending domain yet: skip the email entirely and sign the client in, so
+  // signup is not silently broken for anyone who is not the Resend account
+  // owner. Everything is still recorded in `users` for the admin to review.
+  if (!requireEmailVerification) {
+    await signIn("credentials", { email, password, redirect: false });
+    redirect(`/${loc}/portal`);
+  }
 
   const sent = await dispatchVerification(email, loc);
   if (!sent) {
@@ -243,7 +253,14 @@ export async function loginAction(
   if (record?.passwordHash) {
     const correct = await bcrypt.compare(password, record.passwordHash);
     if (correct && !record.emailVerified) {
-      return { ok: false, message: t.verifyPending, unverifiedEmail: email };
+      if (requireEmailVerification) {
+        return { ok: false, message: t.verifyPending, unverifiedEmail: email };
+      }
+      // Confirmation is off: adopt the legacy account instead of locking it out.
+      await db
+        .update(users)
+        .set({ emailVerified: new Date() })
+        .where(eq(users.email, email));
     }
   }
 
@@ -303,3 +320,4 @@ export async function signOutAction(formData: FormData) {
   const locale = String(formData.get("locale") ?? "ar");
   await signOut({ redirectTo: `/${locale}` });
 }
+
