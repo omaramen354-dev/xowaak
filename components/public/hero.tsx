@@ -41,28 +41,29 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]"
       />
 
+      {/* ---------- Orb — z-stage (20), fills the hero ----------
+          Mounted at SECTION level, not inside .container-x: that wrapper is
+          max-w-7xl with padding, which capped how large the orb could ever
+          get. The shader derives the disc from min(width, height), so the
+          canvas is square, sized off the VIEWPORT WIDTH so it spans the hero
+          edge to edge. Width-based (not vmax) on purpose: the section is
+          overflow-hidden, and a vmax square on a short landscape window would
+          be taller than the hero and get its top and bottom sliced off. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 z-stage
+                   aspect-square w-[min(115vw,1500px)]
+                   -translate-x-1/2 -translate-y-1/2"
+      >
+        <Orb hoverIntensity={0.5} rotateOnHover hue={0} forceHoverState={false} />
+      </div>
+
       <div className="container-x relative section-y">
         {/* Single centred column. The Orb is a backdrop behind the words,
             so the copy reads on top of it rather than beside it. */}
         <div className="relative">
-          {/* ---------- Orb — z-stage (20), behind the copy ----------
-              Must ENCLOSE the whole copy block, not sit inside it.
-
-              The shader sizes the disc off min(width, height), so the SHORTER
-              side sets the diameter and any extra width is wasted. The canvas
-              is therefore kept square and driven by the larger of the two
-              axes: 130% of the copy height, floor 820px, cap 1150px. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 z-stage
-                       aspect-square h-[130%] min-h-[820px] max-h-[1150px]
-                       -translate-x-1/2 -translate-y-1/2"
-          >
-            <Orb hoverIntensity={0.5} rotateOnHover hue={0} forceHoverState={false} />
-          </div>
-
           {/* ================= COPY — z-copy (30), centred ================= */}
-          <div className="relative z-copy flex min-h-[600px] flex-col items-center justify-center px-4 text-center">
+          <div className="relative z-copy flex min-h-[clamp(600px,72vh,860px)] flex-col items-center justify-center px-4 text-center">
             <motion.span
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
