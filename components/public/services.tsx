@@ -1,0 +1,99 @@
+"use client";
+
+import clsx from "clsx";
+import { Blocks, BrainCircuit, Cloud, Palette, ShieldCheck, Smartphone } from "lucide-react";
+import { useI18n } from "@/components/providers";
+import { SectionHeading } from "@/components/ui/primitives";
+import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
+import { Spotlight } from "@/components/ui/motion";
+import { HeroConsole } from "@/components/public/hero-console";
+
+const icons = [Blocks, Smartphone, BrainCircuit, Cloud, Palette, ShieldCheck];
+
+/** Bento layout: first and fourth tiles span wider for editorial rhythm. */
+const spans = [
+  "lg:col-span-2 lg:row-span-1",
+  "lg:col-span-1",
+  "lg:col-span-1",
+  "lg:col-span-1",
+  "lg:col-span-1",
+  "lg:col-span-2",
+];
+
+const accents = [
+  "from-neon-cyan/20 to-neon-blue/5 text-neon-cyan",
+  "from-neon-indigo/20 to-neon-purple/5 text-neon-purple",
+  "from-neon-emerald/20 to-teal-500/5 text-neon-emerald",
+  "from-neon-blue/20 to-neon-indigo/5 text-neon-blue",
+  "from-neon-purple/20 to-pink-500/5 text-neon-purple",
+  "from-amber-400/20 to-orange-500/5 text-amber-300",
+];
+
+export function Services() {
+  const { t } = useI18n();
+
+  return (
+    <section id="services" className="relative overflow-hidden section-y">
+      <Spotlight />
+      <div className="container-x relative z-content">
+        {/* Live console — moved off the hero so the hero is just the Orb and
+            the headline. It opens this section instead. */}
+        <Reveal>
+          <div className="mx-auto mb-20 w-full max-w-[560px]">
+            <HeroConsole />
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <SectionHeading eyebrow="01 / CAPABILITIES" title={t.services.title} subtitle={t.services.subtitle} />
+        </Reveal>
+
+        <StaggerGroup className="mt-16 grid auto-rows-fr gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {t.services.items.map((service, i) => {
+            const Icon = icons[i % icons.length];
+            return (
+              <StaggerItem key={service.title} className={spans[i % spans.length]}>
+                <TiltCard intensity={7} className="h-full">
+                  <article className="glass-card glow-hover neon-border group relative h-full overflow-hidden p-7">
+                    <div
+                      className={clsx(
+                        "pointer-events-none absolute -end-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100",
+                        accents[i % accents.length],
+                      )}
+                    />
+                    <span
+                      className={clsx(
+                        "relative grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ring-1 ring-inset ring-white/10 animate-float-y",
+                        accents[i % accents.length],
+                      )}
+                      style={{ animationDelay: `${i * 0.35}s` }}
+                    >
+                      <Icon className="h-5 w-5 animate-icon-pulse" />
+                    </span>
+
+                    <h3 className="relative mt-6 text-lg font-bold tracking-tight">{service.title}</h3>
+                    <p className="relative mt-2.5 text-sm leading-relaxed text-ink-low">
+                      {service.desc}
+                    </p>
+
+                    <div className="relative mt-5 flex flex-wrap gap-2">
+                      {service.tags.map((tag) => (
+                        <span key={tag} className="chip font-mono !text-[10px] !tracking-tight">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <span className="mono-label absolute bottom-5 end-6 opacity-50">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                  </article>
+                </TiltCard>
+              </StaggerItem>
+            );
+          })}
+        </StaggerGroup>
+      </div>
+    </section>
+  );
+}

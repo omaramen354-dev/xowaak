@@ -1,0 +1,799 @@
+@import "@fontsource-variable/cairo";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* Tailwind v4: a single @import replaces the three @tailwind directives. */
+@import "tailwindcss";
+
+/* Keep the JS config as the single source of truth for the design tokens
+   (colours, the z-scale, keyframes) instead of duplicating them into @theme.
+   v4 reads it through this bridge. */
+@config "../tailwind.config.ts";
+
+/* shadcn/ui theme tokens.
+   Mapped onto the existing AWWA palette rather than shadcn's default slate,
+   so Radix primitives inherit the neon look instead of fighting it.
+   Dark-only: :root and .dark carry identical values. */
+:root,
+.dark {
+  --radius: 0.75rem;
+
+  --background: #05070e;
+  --foreground: #ffffff;
+  --card: #0d111a;
+  --card-foreground: #ffffff;
+  --popover: #0b0f18;
+  --popover-foreground: #ffffff;
+  --primary: #00f2fe;
+  --primary-foreground: #05070e;
+  --secondary: #131a26;
+  --secondary-foreground: #cbd5e1;
+  --muted: #131a26;
+  --muted-foreground: #94a3b8;
+  --accent: #8b5cf6;
+  --accent-foreground: #ffffff;
+  --destructive: #ec4899;
+  --destructive-foreground: #ffffff;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #00f2fe;
+}
+
+/* Expose the tokens to Tailwind v4 so `bg-background`, `text-muted-foreground`,
+   `rounded-lg` etc. resolve. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Spacing scale — every section/card uses these, no ad-hoc values */
+  --section-y: 7rem;
+  --card-p: 1.75rem;
+}
+
+/* Arabic switches the sans stack to Cairo (it carries Latin glyphs too).
+   Cairo needs more vertical room than Geist, so leading is opened up. */
+[dir="rtl"] {
+  --font-sans: "Cairo Variable", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --leading-tight: 1.45;
+  --leading-body: 1.95;
+}
+
+[dir="rtl"] h1 { line-height: 1.3 !important; }
+[dir="rtl"] h2 { line-height: 1.35 !important; }
+[dir="rtl"] h3,
+[dir="rtl"] h4 { line-height: 1.45 !important; }
+[dir="rtl"] p,
+[dir="rtl"] li,
+[dir="rtl"] blockquote { line-height: var(--leading-body); }
+/* Cairo renders visually heavier — step weights down one notch. */
+[dir="rtl"] .font-black { font-weight: 800; }
+[dir="rtl"] .font-extrabold { font-weight: 700; }
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+    background-color: #05070e;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    @apply bg-base text-ink-mid antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-neon-cyan/25 text-white;
+  }
+
+  /* Headings are pure white and heavy — maximum contrast. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-extrabold text-ink-hi;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4 {
+    letter-spacing: 0;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  .tabular,
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-neon-cyan ring-offset-2 ring-offset-base;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  /* ---------------- Cards ---------------- */
+  /* Single source of truth: #0D111A @ 88% + blur, hairline #1E293B border. */
+  .surface,
+  .glass-card {
+    /* bg raised 60 -> 88 and blur md -> xl: the animated shader backdrop
+       showed straight through the old value and left card text washed out
+       and hard to read. */
+    @apply relative rounded-2xl border border-line bg-surface/88 backdrop-blur-xl;
+    box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.04);
+  }
+
+  .glass-card {
+    @apply rounded-3xl transition-colors duration-300;
+  }
+
+  /* Neon glow border on hover */
+  .glow-hover {
+    @apply transition-all duration-300;
+  }
+  .glow-hover:hover {
+    @apply border-neon-cyan/45;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+      0 0 0 1px rgb(0 242 254 / 0.16),
+      0 22px 60px -28px rgb(0 242 254 / 0.42);
+  }
+
+  .glow-border {
+    @apply relative overflow-hidden rounded-3xl border border-line;
+  }
+
+  /* ---------------- Buttons ---------------- */
+  .btn {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200;
+  }
+
+  .btn-primary {
+    /* Tailwind v4 cannot @apply another custom component class, so the base
+       button rules are repeated here instead of `@apply btn`. */
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200
+           overflow-hidden text-white;
+    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 30%, #8b5cf6 70%, #d946ef 100%);
+    background-size: 180% auto;
+    animation: gradient-pan 5s ease-in-out infinite;
+    box-shadow: 0 10px 38px -10px rgb(0 242 254 / 0.75);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 16px 52px -10px rgb(217 70 239 / 0.85);
+  }
+  /* Shimmering sweep across the CTA */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.35) 50%, transparent 80%);
+    transform: translateX(-120%);
+    animation: sweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .btn-ghost {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
+           text-sm font-semibold tracking-tight transition-colors duration-200
+           border border-line-strong bg-white/[0.02] text-ink-mid;
+  }
+  .btn-ghost:hover {
+    @apply border-neon-cyan/50 bg-neon-cyan/[0.06] text-white;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white/[0.03]
+           px-3 py-1 text-xs font-medium tracking-tight text-ink-low;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-white/[0.03] px-4 py-3 text-sm text-ink-hi
+           outline-none transition placeholder:text-ink-faint
+           focus:border-neon-cyan/60 focus:ring-2 focus:ring-neon-cyan/20;
+  }
+
+  /* ---------------- Backgrounds ---------------- */
+  /* Cyber grid that crawls and pulses through the neon palette, so it never
+     sits as a flat static mesh. `--grid-hue` is animated by grid-hue below. */
+  .cyber-grid {
+    --grid-hue: 0 242 254;
+    background-image:
+      linear-gradient(to right, rgb(var(--grid-hue) / 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--grid-hue) / 0.14) 1px, transparent 1px);
+    background-size: 56px 56px;
+    animation:
+      grid-crawl 14s linear infinite,
+      grid-hue 24s ease-in-out infinite;
+  }
+
+  /* Neon bloom riding over the grid — a soft light that sweeps the plane. */
+  .cyber-grid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(38rem 26rem at 50% 40%, rgb(var(--grid-hue) / 0.16), transparent 70%);
+    animation: grid-bloom 11s ease-in-out infinite;
+  }
+
+  /* Deep radial mesh — subtle, sits in the darkness, never silver. */
+  .mesh-deep {
+    background-image:
+      radial-gradient(60rem 40rem at 12% -5%, rgb(0 242 254 / 0.16), transparent 60%),
+      radial-gradient(50rem 35rem at 88% 0%, rgb(139 92 246 / 0.17), transparent 62%),
+      radial-gradient(45rem 32rem at 70% 85%, rgb(217 70 239 / 0.12), transparent 60%);
+  }
+
+  /* ---------------- Hero console ---------------- */
+  /* Tilted holographic console occupying the visual column. */
+  .console-tilt {
+    transform: perspective(1600px) rotateY(var(--tilt, -13deg)) rotateX(6deg);
+    transform-style: preserve-3d;
+  }
+  [dir="rtl"] .console-tilt {
+    --tilt: 13deg;
+  }
+
+  .console-shell {
+    @apply relative overflow-hidden rounded-3xl border border-neon-cyan/25 bg-surface/80 backdrop-blur-xl;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.07),
+      0 0 0 1px rgb(0 242 254 / 0.1),
+      0 40px 90px -40px rgb(0 242 254 / 0.5),
+      0 30px 80px -50px rgb(236 72 153 / 0.45);
+  }
+
+  /* Scanline texture over the console face. */
+  .console-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 3px,
+      rgb(0 242 254 / 0.045) 3px 4px
+    );
+  }
+
+  .console-row {
+    @apply flex items-center justify-between gap-3 rounded-xl border border-line/80 bg-white/[0.025] px-3 py-2.5
+           transition-colors duration-300;
+  }
+  .console-row:hover {
+    @apply border-neon-cyan/40 bg-neon-cyan/[0.05];
+  }
+
+  /* Pulsing status dot with an expanding halo. */
+  .live-dot {
+    @apply relative inline-flex h-2 w-2 shrink-0 rounded-full;
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: inherit;
+    animation: ping-soft 1.9s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Counter that keeps living after the count-up finishes. The digits are
+     final and exact; only the light moves. */
+  /* Composed with .text-gradient's own gradient-pan, so both run: the hue
+     keeps travelling AND the glow keeps pulsing. */
+  .counter-live {
+    animation:
+      gradient-pan 6s ease-in-out infinite,
+      counter-breathe 3.4s ease-in-out infinite;
+  }
+
+  /* ---------------- RGB halo field ---------------- */
+  /* Soft red/green/blue orbs that drift forever behind the content. They are
+     wide and heavily blurred, so they read as ambient light, not as shapes. */
+  .rgb-halo {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+  }
+  .halo-r {
+    background: radial-gradient(circle, rgb(236 72 153 / 0.5), transparent 70%);
+  }
+  .halo-g {
+    background: radial-gradient(circle, rgb(16 185 129 / 0.42), transparent 70%);
+  }
+  .halo-b {
+    background: radial-gradient(circle, rgb(0 210 255 / 0.5), transparent 70%);
+  }
+  .halo-v {
+    background: radial-gradient(circle, rgb(139 92 246 / 0.45), transparent 70%);
+  }
+
+  /* Slow conic RGB wash — the "calm" layer that stops the palette going flat. */
+  .rgb-wash {
+    position: absolute;
+    inset: -30%;
+    pointer-events: none;
+    opacity: 0.22;
+    filter: blur(120px);
+    background: conic-gradient(
+      from 0deg,
+      rgb(0 242 254 / 0.55),
+      rgb(139 92 246 / 0.5),
+      rgb(236 72 153 / 0.5),
+      rgb(16 185 129 / 0.45),
+      rgb(0 242 254 / 0.55)
+    );
+    animation: wash-spin 46s linear infinite;
+  }
+
+  /* Slow vertical light sweep — a "scanning" pass over whole sections. */
+  .beam-sweep {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .beam-sweep::before {
+    content: "";
+    position: absolute;
+    inset-inline: -20%;
+    height: 45%;
+    top: -45%;
+    background: linear-gradient(to bottom, transparent, rgb(0 242 254 / 0.055), transparent);
+    animation: beam-fall 13s linear infinite;
+  }
+
+  /* Faint drifting starfield for phones, where WebGL is switched off. */
+  .starfield {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, rgb(255 255 255 / 0.55), transparent),
+      radial-gradient(1px 1px at 68% 14%, rgb(0 242 254 / 0.5), transparent),
+      radial-gradient(1px 1px at 34% 71%, rgb(236 72 153 / 0.45), transparent),
+      radial-gradient(1px 1px at 84% 63%, rgb(255 255 255 / 0.4), transparent),
+      radial-gradient(1px 1px at 52% 41%, rgb(16 185 129 / 0.4), transparent),
+      radial-gradient(1px 1px at 22% 88%, rgb(139 92 246 / 0.45), transparent);
+    background-size: 340px 340px;
+    animation: star-drift 90s linear infinite;
+  }
+
+  /* ---------------- Living light ---------------- */
+  .aurora {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  .aurora-cyan {
+    background: radial-gradient(circle, rgb(0 242 254 / 0.55), transparent 70%);
+  }
+  .aurora-magenta {
+    background: radial-gradient(circle, rgb(217 70 239 / 0.5), transparent 70%);
+  }
+  .aurora-purple {
+    background: radial-gradient(circle, rgb(139 92 246 / 0.5), transparent 70%);
+  }
+  .aurora-emerald {
+    background: radial-gradient(circle, rgb(16 185 129 / 0.42), transparent 70%);
+  }
+
+  /* Continuously rotating neon border (always on, not hover-only) */
+  .neon-border {
+    position: relative;
+  }
+  .neon-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      transparent 0deg,
+      #00f2fe 60deg,
+      #8b5cf6 120deg,
+      #d946ef 170deg,
+      transparent 240deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.55;
+    animation: rotate-angle 6s linear infinite;
+    pointer-events: none;
+  }
+  .neon-border:hover::before {
+    opacity: 1;
+  }
+
+  /* Readability plate behind copy that sits over the 3D stage */
+  .text-plate {
+    position: relative;
+  }
+  .text-plate::before {
+    content: "";
+    position: absolute;
+    inset: -12% -14%;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, rgb(7 9 14 / 0.92) 35%, rgb(7 9 14 / 0.55) 62%, transparent 78%);
+    pointer-events: none;
+  }
+
+  .noise::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------------- Text ---------------- */
+  .text-gradient {
+    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 35%, #8b5cf6 70%, #d946ef 100%);
+    background-size: 200% auto;
+    animation: gradient-pan 6s ease-in-out infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-gradient-hero {
+    background: linear-gradient(100deg, #ffffff 0%, #00f2fe 32%, #00d2ff 50%, #8b5cf6 74%, #d946ef 100%);
+    background-size: 220% auto;
+    animation: gradient-pan 7s ease-in-out infinite;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------------- Page chrome (ported design pass) ---------------- */
+  /* Scroll depth bar. transform-origin follows the reading direction so the
+     bar grows from the side the user starts reading on. */
+  .scroll-progress {
+    position: fixed;
+    z-index: 61;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, #00f2fe, #8b5cf6, #d946ef);
+    box-shadow: 0 0 18px rgb(0 242 254 / 0.8);
+    transform-origin: left center;
+  }
+  [dir="rtl"] .scroll-progress {
+    transform-origin: right center;
+  }
+
+  .cursor-glow {
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 360px;
+    height: 360px;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0.17;
+    background: radial-gradient(circle, rgb(0 242 254 / 0.32), rgb(139 92 246 / 0.07) 42%, transparent 72%);
+    filter: blur(8px);
+    mix-blend-mode: screen;
+  }
+
+  /* CSS stand-in for the WebGL orb: shown while the canvas loads and kept as
+     the permanent visual on devices where 3D is switched off. */
+  .css-energy-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(190px, 27vw, 390px);
+    aspect-ratio: 1;
+    border: 1px solid rgb(0 242 254 / 0.48);
+    border-radius: 38% 62% 54% 46%;
+    background:
+      radial-gradient(circle at 38% 30%, rgb(255 255 255 / 0.24), transparent 8%),
+      radial-gradient(circle, rgb(17 72 88 / 0.82), #070d16 53%, rgb(8 10 20 / 0.92) 68%);
+    box-shadow:
+      inset -24px -20px 70px rgb(139 92 246 / 0.26),
+      inset 18px 12px 45px rgb(0 242 254 / 0.18),
+      0 0 70px rgb(0 242 254 / 0.12),
+      0 0 140px rgb(139 92 246 / 0.14);
+    /* Centring uses the `translate` property (not `transform`) because
+       core-float animates that same property — setting both would stack and
+       offset the orb twice. */
+    translate: -50% -50%;
+    animation:
+      core-morph 9s ease-in-out infinite,
+      core-float 5s ease-in-out infinite;
+  }
+  .css-energy-core::before,
+  .css-energy-core::after {
+    position: absolute;
+    inset: -27%;
+    content: "";
+    border: 1px solid rgb(0 242 254 / 0.42);
+    border-radius: 50%;
+    transform: rotateX(66deg) rotateZ(12deg);
+    animation: orbit-spin 8s linear infinite;
+  }
+  .css-energy-core::after {
+    inset: -40%;
+    border-color: rgb(139 92 246 / 0.3);
+    transform: rotateY(70deg) rotateZ(35deg);
+    animation-direction: reverse;
+    animation-duration: 12s;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    @apply text-[10px] font-semibold uppercase tracking-[0.28em] text-neon-cyan;
+  }
+
+  .lede {
+    @apply text-ink-low;
+  }
+}
+
+@layer utilities {
+  .perspective {
+    perspective: 1200px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  /* Logical transform origin — flips correctly under RTL */
+  .origin-inline-start {
+    transform-origin: left center;
+  }
+  [dir="rtl"] .origin-inline-start {
+    transform-origin: right center;
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Registered so the grid hue CROSSFADES. An unregistered custom property
+   animates in discrete jumps, which would make the grid flicker between
+   colours instead of gliding through them. */
+@property --grid-hue {
+  syntax: "<number>+";
+  initial-value: 0 242 254;
+  inherits: true;
+}
+
+/* Referenced directly by .text-gradient / .btn-primary, so it must live here:
+   Tailwind only emits config keyframes for `animate-*` utilities it finds. */
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes rotate-angle {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Referenced from raw CSS only (.counter-live / .rgb-wash), so they must be
+   declared here — Tailwind only emits config keyframes for scanned
+   `animate-*` utilities. */
+@keyframes counter-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgb(0 242 254 / 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgb(217 70 239 / 0.65));
+  }
+}
+
+@keyframes wash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Grid crawl + neon hue cycle + bloom. Raw-CSS refs, so declared here. */
+@keyframes grid-crawl {
+  to {
+    background-position:
+      56px 56px,
+      56px 56px;
+  }
+}
+
+@keyframes grid-hue {
+  0%,
+  100% {
+    --grid-hue: 0 242 254;
+  }
+  25% {
+    --grid-hue: 139 92 246;
+  }
+  50% {
+    --grid-hue: 236 72 153;
+  }
+  75% {
+    --grid-hue: 16 185 129;
+  }
+}
+
+@keyframes grid-bloom {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(6%, 4%, 0) scale(1.15);
+  }
+}
+
+@keyframes beam-fall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(340%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-drift {
+  to {
+    background-position:
+      340px 340px,
+      -340px 340px,
+      340px -340px,
+      -340px -340px,
+      340px 340px,
+      -340px 340px;
+  }
+}
+
+/* Used by .live-dot::after in raw CSS — must be declared here, not in the
+   Tailwind config, since no `animate-ping-soft` class is ever scanned. */
+/* Ported with the .css-energy-core fallback. */
+@keyframes core-morph {
+  0%,
+  100% {
+    border-radius: 38% 62% 54% 46%;
+  }
+  33% {
+    border-radius: 56% 44% 38% 62%;
+  }
+  66% {
+    border-radius: 44% 56% 62% 38%;
+  }
+}
+
+@keyframes core-float {
+  0%,
+  100% {
+    translate: -50% -50%;
+  }
+  50% {
+    translate: -50% calc(-50% - 14px);
+  }
+}
+
+@keyframes orbit-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes sweep {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+/* Directional glyphs (arrows, quotes) mirror under RTL */
+[dir="rtl"] .flip-x {
+  transform: scaleX(-1);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #07090e;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
