@@ -234,13 +234,15 @@ export function RegisterForm() {
         <FieldError message={state.fieldErrors?.name} />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="space-y-5">
         <div>
           <Label htmlFor="reg-email" className="mb-1.5 block text-xs font-semibold text-ink-low">
             {t.auth.email}
           </Label>
           <EmailField id="reg-email" serverError={state.fieldErrors?.email} />
         </div>
+        {/* Its own full-width row: the country button plus the number need more
+            horizontal space than half a grid column gives them. */}
         <div>
           <Label htmlFor="phone" className="mb-1.5 block text-xs font-semibold text-ink-low">
             {t.auth.phone}
@@ -301,3 +303,4 @@ export function RegisterForm() {
     </form>
   );
 }
+

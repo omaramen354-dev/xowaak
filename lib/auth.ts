@@ -15,6 +15,7 @@ import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db";
 import { accounts, sessions, users, verificationTokens } from "@/lib/db/schema";
 import type { AppRole } from "@/lib/db/schema";
+import { requireEmailVerification } from "@/lib/auth/policy";
 
 declare module "next-auth" {
   interface Session {
@@ -73,7 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Second gate: `loginAction` already reports this with a resend button,
         // but the provider must refuse on its own so no other entry point can
         // mint a session for an unconfirmed address.
-        if (!record.emailVerified) return null;
+        if (requireEmailVerification && !record.emailVerified) return null;
 
         return {
           id: record.id,
@@ -111,3 +112,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+

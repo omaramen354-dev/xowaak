@@ -121,14 +121,23 @@ export function PhoneField({
       <input type="hidden" name={countryName} value={iso} />
       <input type="hidden" name={name} value={result.e164 ?? ""} />
 
-      <div className="flex gap-2" dir="ltr">
+      {/* Country selector and number share one bordered box, so the number
+          keeps a usable width even inside a narrow grid column. */}
+      <div
+        className={cn(
+          "flex w-full items-stretch overflow-hidden rounded-xl border border-line bg-white/[0.03] transition",
+          "focus-within:border-neon-cyan/60 focus-within:ring-2 focus-within:ring-neon-cyan/20",
+          error && "border-rose-500/60",
+        )}
+        dir="ltr"
+      >
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-label={strings.country}
-          className="field flex shrink-0 items-center gap-1.5 px-3 text-sm tabular-nums"
+          className="flex shrink-0 items-center gap-1.5 border-e border-line px-3 py-3 text-sm tabular-nums text-ink-hi outline-none hover:bg-white/[0.05]"
         >
           <span aria-hidden className="text-base leading-none">
             {country.flag}
@@ -137,14 +146,17 @@ export function PhoneField({
           <ChevronDown className="size-3.5 opacity-60" />
         </button>
 
-        <Input
+        <input
           id={id}
           type="tel"
           inputMode="numeric"
           autoComplete="tel-national"
-          className="field flex-1"
+          // `min-w-0` is essential: without it the flex item refuses to shrink
+          // below its intrinsic width and collapses the typing area.
+          className="w-full min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-ink-hi outline-none placeholder:text-ink-faint"
           dir="ltr"
-          placeholder={strings.placeholder}
+          maxLength={country.max}
+          placeholder={"0".repeat(country.max)}
           value={national}
           required={required}
           aria-invalid={Boolean(error)}
@@ -158,6 +170,13 @@ export function PhoneField({
             }
           }}
         />
+
+        <span
+          className="shrink-0 self-center pe-3 text-xs tabular-nums text-ink-low"
+          aria-hidden
+        >
+          {national.length}/{country.max}
+        </span>
       </div>
 
       {open ? (
@@ -216,3 +235,4 @@ export function PhoneField({
     </div>
   );
 }
+
