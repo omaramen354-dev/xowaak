@@ -20,7 +20,6 @@ const nextConfig = {
    * Builds are redirected to .next-build via BUILD_DIST=1 (see package.json).
    */
 distDir: process.env.BUILD_DIST && !process.env.VERCEL ? ".next-build" : ".next",
-
   turbopack: {
     resolveAlias: {
       "@/*": "./*",
