@@ -6,6 +6,7 @@ import { z } from "zod";
 import { db, isDatabaseConfigured } from "@/lib/db";
 import { leads } from "@/lib/db/schema";
 import { requireRole } from "@/lib/db/access";
+import { validateEmail } from "@/lib/validation/contact";
 
 export interface LeadState {
   ok: boolean;
@@ -15,7 +16,21 @@ export interface LeadState {
 
 const leadSchema = z.object({
   name: z.string().trim().min(2, "Please enter your name."),
-  email: z.string().trim().toLowerCase().email("Enter a valid email address."),
+  // Same ASCII-only rule as signup: a browser `type="email"` check is bypassable.
+  email: z
+    .string()
+    .transform((raw) => raw.trim().toLowerCase())
+    .superRefine((value, ctx) => {
+      const result = validateEmail(value);
+      if (result.ok) return;
+      ctx.addIssue({
+        code: "custom",
+        message:
+          result.code === "nonAscii"
+            ? "Use Latin letters only — Arabic characters are not allowed in an email address."
+            : "Enter a valid email address.",
+      });
+    }),
   company: z.string().trim().optional(),
   phone: z.string().trim().optional(),
   locale: z.string().default("ar"),
