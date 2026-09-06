@@ -46,15 +46,16 @@ export function Hero() {
             so the copy reads on top of it rather than beside it. */}
         <div className="relative">
           {/* ---------- Orb — z-stage (20), behind the copy ----------
-              Sized off the copy block itself (inset-0 + a scale-up) instead of
-              a fixed square, so it ENCLOSES the badge, headline, paragraph and
-              buttons rather than sitting as a disc above them. min-h matches
-              the copy column so the orb is always at least as tall as the
-              text it wraps. */}
+              Must ENCLOSE the whole copy block, not sit inside it.
+
+              The shader sizes the disc off min(width, height), so the SHORTER
+              side sets the diameter and any extra width is wasted. The canvas
+              is therefore kept square and driven by the larger of the two
+              axes: 130% of the copy height, floor 820px, cap 1150px. */}
           <div
             aria-hidden
             className="pointer-events-none absolute left-1/2 top-1/2 z-stage
-                       h-[min(150%,940px)] w-[min(150%,940px)] min-h-[620px] min-w-[620px]
+                       aspect-square h-[130%] min-h-[820px] max-h-[1150px]
                        -translate-x-1/2 -translate-y-1/2"
           >
             <Orb hoverIntensity={0.5} rotateOnHover hue={0} forceHoverState={false} />

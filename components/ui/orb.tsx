@@ -2,6 +2,7 @@
 
 import { Mesh, Program, Renderer, Triangle, Vec3 } from "ogl";
 import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 /**
  * Orb — react-bits (@react-bits/Orb-JS-CSS), ported to TypeScript.
@@ -336,7 +337,10 @@ export function Orb({
     // Mount once; live values come from propsRef.
   }, []);
 
-  return <div ref={ctnDom} aria-hidden className={className} />;
+  // h-full w-full by default: the container measures itself with
+  // clientWidth/clientHeight, and a bare <div> collapses to zero height, so
+  // the canvas would render at 0 and the orb would look tiny or vanish.
+  return <div ref={ctnDom} aria-hidden className={cn("h-full w-full", className)} />;
 }
 
 export default Orb;
