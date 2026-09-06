@@ -70,6 +70,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!record?.passwordHash) return null;
         const ok = await bcrypt.compare(parsed.data.password, record.passwordHash);
         if (!ok) return null;
+        // Second gate: `loginAction` already reports this with a resend button,
+        // but the provider must refuse on its own so no other entry point can
+        // mint a session for an unconfirmed address.
+        if (!record.emailVerified) return null;
 
         return {
           id: record.id,
