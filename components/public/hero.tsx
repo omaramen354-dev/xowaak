@@ -8,7 +8,7 @@ import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import { Shuffle } from "@/components/ui/shuffle";
+import { AnimatedHeading } from "@/components/ui/animated-heading";
 
 // react-bits Orb — client-only and code-split so it never blocks first paint.
 // Sits BEHIND the hero copy as a glow, not beside it.
@@ -45,17 +45,23 @@ export function Hero() {
         {/* Single centred column. The Orb is a backdrop behind the words,
             so the copy reads on top of it rather than beside it. */}
         <div className="relative">
-          {/* ---------- Orb — z-stage (20), behind the copy ---------- */}
+          {/* ---------- Orb — z-stage (20), behind the copy ----------
+              Sized off the copy block itself (inset-0 + a scale-up) instead of
+              a fixed square, so it ENCLOSES the badge, headline, paragraph and
+              buttons rather than sitting as a disc above them. min-h matches
+              the copy column so the orb is always at least as tall as the
+              text it wraps. */}
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 z-stage aspect-square w-[min(120vw,860px)]
-                       -translate-x-1/2 -translate-y-1/2 opacity-90"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-stage
+                       h-[min(150%,940px)] w-[min(150%,940px)] min-h-[620px] min-w-[620px]
+                       -translate-x-1/2 -translate-y-1/2"
           >
             <Orb hoverIntensity={0.5} rotateOnHover hue={0} forceHoverState={false} />
           </div>
 
           {/* ================= COPY — z-copy (30), centred ================= */}
-          <div className="relative z-copy flex min-h-[540px] flex-col items-center justify-center text-center">
+          <div className="relative z-copy flex min-h-[600px] flex-col items-center justify-center px-4 text-center">
             <motion.span
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -68,25 +74,16 @@ export function Hero() {
               {t.hero.badge}
             </motion.span>
 
-            {/* Shuffle rebuilds the text as per-character spans, which severs
-                Arabic letter joining — the component detects RTL and renders
-                plain text there, so the headline stays correct in all 7
-                locales. */}
-            <Shuffle
+            {/* Word-level reveal: safe for Arabic letter joining, so unlike
+                Shuffle it animates in all 7 locales rather than falling back
+                to static text under RTL. */}
+            <AnimatedHeading
               key={t.hero.title}
-              tag="h1"
+              as="h1"
               text={t.hero.title}
-              shuffleDirection="right"
-              duration={0.35}
-              animationMode="evenodd"
-              shuffleTimes={1}
-              ease="power3.out"
-              stagger={0.03}
-              threshold={0.1}
-              triggerOnce
-              triggerOnHover
-              respectReducedMotion
-              className="mt-7 text-4xl font-black text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
+              delay={0.15}
+              stagger={0.075}
+              className="mt-7 text-4xl font-black leading-[1.12] text-white sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
             />
 
             <motion.p
