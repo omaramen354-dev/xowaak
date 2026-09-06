@@ -6,6 +6,8 @@ import { fontVariables } from "@/lib/fonts";
 import { CursorGlow, ScrollProgress } from "@/components/ui/chrome";
 import { AuroraBackdrop } from "@/components/ui/aurora-backdrop";
 import { getDir, isLocale, locales } from "@/lib/i18n";
+import { getViewer } from "@/lib/db/access";
+import { isDatabaseConfigured } from "@/lib/db";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -29,6 +31,9 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  // Resolved server-side so the header shows the right auth state immediately.
+  const signedIn = isDatabaseConfigured ? (await getViewer()) !== null : false;
+
   return (
     <html lang={locale} dir={getDir(locale)} className={fontVariables} suppressHydrationWarning>
       <body className="bg-base text-ink-mid">
@@ -42,7 +47,7 @@ export default async function LocaleLayout({
         <Providers locale={locale}>
           {/* relative + z-content keeps every page above the fixed 3D field. */}
           <div className="relative z-content flex min-h-screen flex-col">
-            <SiteHeader />
+            <SiteHeader signedIn={signedIn} />
             <main className="flex-1">{children}</main>
             <SiteFooter />
           </div>

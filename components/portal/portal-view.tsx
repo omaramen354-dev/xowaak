@@ -29,7 +29,7 @@ import {
   projectMilestones,
   projects,
 } from "@/lib/mock-data";
-import type { Feedback, FeedbackCategory, FileCategory, ProjectStage } from "@/lib/supabase/types";
+import type { Feedback, FeedbackCategory, FileCategory, ProjectStage } from "@/lib/demo-types";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -45,7 +45,7 @@ const fileIcons: Record<FileCategory, typeof FileText> = {
   invoice: Receipt,
 };
 
-/** The signed-in demo client. In production this comes from Supabase auth + RLS. */
+/** The demo client shown when no database is connected. */
 const CLIENT_ID = "u-101";
 
 export function PortalView() {

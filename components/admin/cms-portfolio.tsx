@@ -12,7 +12,7 @@ import {
   useContent,
   type ShowcaseProject,
 } from "@/lib/content-store";
-import type { ProjectStage, Visibility } from "@/lib/supabase/types";
+import type { ProjectStage, Visibility } from "@/lib/demo-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -196,7 +196,7 @@ export function CmsPortfolio() {
                 <Labeled label={t.admin.cms.tech}>
                   <Input
                     className="field font-mono text-xs"
-                    placeholder="Next.js, Supabase, Terraform"
+                    placeholder="Next.js, Neon, Terraform"
                     value={techInput}
                     onChange={(e) => setTechInput(e.target.value)}
                   />

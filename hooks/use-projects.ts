@@ -1,37 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { projects as mockProjects } from "@/lib/mock-data";
-import type { Project } from "@/lib/supabase/types";
+import type { Project } from "@/lib/demo-types";
 
 /**
- * Loads projects from Supabase when credentials exist, otherwise serves the
- * bundled demo dataset so the preview always renders a complete experience.
+ * Demo project dataset for the marketing pages.
+ *
+ * Live project data now comes from Neon via server components
+ * (`lib/db/queries.ts`), so this hook no longer performs any client-side
+ * fetching — it simply exposes the bundled portfolio content.
  */
-export function useProjects(): { data: Project[]; loading: boolean; source: "supabase" | "mock" } {
-  const [data, setData] = useState<Project[]>(mockProjects);
-  const [loading, setLoading] = useState(isSupabaseConfigured);
-
-  useEffect(() => {
-    if (!isSupabaseConfigured) return;
-    let cancelled = false;
-
-    (async () => {
-      const supabase = createClient();
-      const { data: rows, error } = await supabase
-        .from("projects")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (cancelled) return;
-      if (!error && rows && rows.length > 0) setData(rows as Project[]);
-      setLoading(false);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return { data, loading, source: isSupabaseConfigured ? "supabase" : "mock" };
+export function useProjects(): { data: Project[]; loading: boolean; source: "mock" } {
+  return { data: mockProjects, loading: false, source: "mock" };
 }

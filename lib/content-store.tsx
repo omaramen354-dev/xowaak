@@ -2,15 +2,15 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { projects as seedProjects } from "@/lib/mock-data";
-import type { Project, ProjectStage, Visibility } from "@/lib/supabase/types";
+import type { Project, ProjectStage, Visibility } from "@/lib/demo-types";
 
 /**
  * Central content store for everything the marketing site renders.
  *
  * The Admin CMS writes to it and the public showcase reads from it, so any edit
  * made in /admin is reflected instantly on /. State is persisted to
- * localStorage; when Supabase credentials exist the same shapes map 1:1 to the
- * `projects` table and the `site_stats` rows in supabase/schema.sql.
+ * localStorage; the same shapes map 1:1 to the `projects` table defined in
+ * lib/db/schema.ts.
  */
 
 export interface StatItem {

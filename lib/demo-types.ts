@@ -1,3 +1,8 @@
+/**
+ * Legacy demo record shapes, used only by `lib/mock-data.ts` to render the
+ * preview when no database is connected. The live schema lives in
+ * `lib/db/schema.ts` (Drizzle / Neon).
+ */
 export type AppRole = "super_admin" | "admin" | "pm" | "employee" | "client";
 export type ProjectStage = "planning" | "design" | "development" | "testing" | "review" | "completed";
 export type MilestoneStatus = "todo" | "in_progress" | "blocked" | "done";
@@ -82,26 +87,4 @@ export interface Message {
   sender_id: string;
   body: string;
   created_at: string;
-}
-
-/** Minimal typed surface consumed by the Supabase clients. */
-export interface Database {
-  public: {
-    Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> };
-      user_roles: { Row: UserRole; Insert: Partial<UserRole>; Update: Partial<UserRole> };
-      projects: { Row: Project; Insert: Partial<Project>; Update: Partial<Project> };
-      project_milestones: { Row: ProjectMilestone; Insert: Partial<ProjectMilestone>; Update: Partial<ProjectMilestone> };
-      project_files: { Row: ProjectFile; Insert: Partial<ProjectFile>; Update: Partial<ProjectFile> };
-      feedback: { Row: Feedback; Insert: Partial<Feedback>; Update: Partial<Feedback> };
-      messages: { Row: Message; Insert: Partial<Message>; Update: Partial<Message> };
-    };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: {
-      app_role: AppRole;
-      project_stage: ProjectStage;
-      milestone_status: MilestoneStatus;
-    };
-  };
 }

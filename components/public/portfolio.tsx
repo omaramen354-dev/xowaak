@@ -8,7 +8,7 @@ import { useI18n } from "@/components/providers";
 import { SectionHeading, ProgressBar, StatusBadge } from "@/components/ui/primitives";
 import { Reveal, TiltCard } from "@/components/ui/motion";
 import { useContent, type ShowcaseProject } from "@/lib/content-store";
-import type { Visibility } from "@/lib/supabase/types";
+import type { Visibility } from "@/lib/demo-types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 

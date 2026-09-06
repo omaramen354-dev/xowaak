@@ -3,14 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Hexagon, LayoutDashboard, Menu, UserCircle2 } from "lucide-react";
+import { Hexagon, LayoutDashboard, LogIn, Menu, UserCircle2 } from "lucide-react";
+import { signOutAction } from "@/app/actions/auth";
 import { useI18n } from "@/components/providers";
 import { LanguageSwitcher } from "@/components/ui/switchers";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+export interface SiteHeaderProps {
+  /** Resolved on the server so the correct auth links render on first paint. */
+  signedIn?: boolean;
+}
+
+export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
   const { locale, t } = useI18n();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -104,6 +110,21 @@ export function SiteHeader() {
               {t.nav.admin}
             </Link>
 </Button>
+            {signedIn ? (
+              <form action={signOutAction}>
+                <input type="hidden" name="locale" value={locale} />
+                <Button type="submit" variant="ghostNeon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
+                  {t.auth.signOut}
+                </Button>
+              </form>
+            ) : (
+              <Button asChild variant="neon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
+                <Link href={`${base}/login`}>
+                  <LogIn className="h-4 w-4 shrink-0" />
+                  {t.auth.signIn}
+                </Link>
+              </Button>
+            )}
           </div>
 
           <LanguageSwitcher />
@@ -131,6 +152,10 @@ export function SiteHeader() {
                   ...links,
                   { href: `${base}/portal`, label: t.nav.portal },
                   { href: `${base}/admin`, label: t.nav.admin },
+                  signedIn
+                    ? { href: `${base}/portal`, label: t.auth.dashboard }
+                    : { href: `${base}/login`, label: t.auth.signIn },
+                  ...(signedIn ? [] : [{ href: `${base}/register`, label: t.auth.signUp }]),
                 ].map((l) => (
                   <SheetClose asChild key={l.href}>
                     <Link

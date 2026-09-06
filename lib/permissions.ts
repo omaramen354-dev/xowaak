@@ -1,4 +1,4 @@
-import type { AppRole } from "./supabase/types";
+import type { AppRole } from "./demo-types";
 
 export type AdminModule = "dashboard" | "projects" | "tasks" | "team" | "clients" | "cmsStats" | "cmsPortfolio";
 

@@ -7,7 +7,7 @@ import type {
   ProjectFile,
   ProjectMilestone,
   UserRole,
-} from "./supabase/types";
+} from "./demo-types";
 
 export const profiles: Profile[] = [
   { id: "u-001", full_name: "Omar Al-Kaabi", email: "omar@aakwhx.com", avatar_url: null, company: "AAKWHX", title: "Founder / Super Admin", locale: "ar", created_at: "2016-04-02" },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     summary: "A HIPAA-aligned patient coordination platform unifying 14 clinics, with realtime triage queues and an AI intake assistant.",
     client_id: "u-101", pm_id: "u-003", stage: "development", progress: 62, visibility: "public",
     industry: "Healthcare", budget: 285000, currency: "EUR", start_date: "2025-03-03", deadline: "2026-01-30",
-    tech: ["Next.js", "Supabase", "OpenAI", "Terraform"], cover: "from-emerald-500/30 via-teal-500/20 to-cyan-500/30", created_at: "2025-02-18",
+    tech: ["Next.js", "Neon", "OpenAI", "Terraform"], cover: "from-emerald-500/30 via-teal-500/20 to-cyan-500/30", created_at: "2025-02-18",
   },
   {
     id: "p-002", slug: "northgate-fleet-erp", name: "Northgate Fleet ERP",
@@ -222,3 +222,124 @@ export function projectMessages(projectId: string): Message[] {
 }
 
 export const industries = Array.from(new Set(projects.map((p) => p.industry)));
+
+/* ------------------------------------------------------------------ *
+ * Neon fallbacks
+ *
+ * When DATABASE_URL is absent the query layer serves these instead, so the
+ * preview and the marketing pages keep rendering. They adapt the snake_case
+ * demo records above into the camelCase row shape Drizzle returns.
+ * ------------------------------------------------------------------ */
+import type {
+  AppRole as DbRole,
+  FeedbackRow,
+  MessageRow,
+  Milestone,
+  Project as DbProject,
+  ProjectFile as DbFile,
+} from "./db/schema";
+
+const asDate = (value: string | null | undefined): Date | null =>
+  value ? new Date(value) : null;
+
+function adaptProject(p: Project): DbProject {
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    summary: p.summary,
+    clientId: p.client_id,
+    pmId: p.pm_id,
+    stage: p.stage,
+    progress: p.progress,
+    visibility: p.visibility,
+    industry: p.industry,
+    budget: p.budget,
+    currency: p.currency,
+    startDate: asDate(p.start_date),
+    deadline: asDate(p.deadline),
+    estimatedHours: Math.max(0, Math.round(((100 - p.progress) / 100) * 320)),
+    hoursLogged: Math.round((p.progress / 100) * 320),
+    tech: p.tech,
+    cover: p.cover,
+    createdAt: new Date(p.created_at),
+    updatedAt: new Date(p.created_at),
+  };
+}
+
+function adaptMilestone(m: ProjectMilestone): Milestone {
+  return {
+    id: m.id,
+    projectId: m.project_id,
+    title: m.title,
+    stage: m.stage,
+    status: m.status,
+    assigneeId: m.assignee_id,
+    dueDate: asDate(m.due_date),
+    estimatedHours: m.status === "done" ? 0 : 24,
+    orderIndex: m.order_index,
+    createdAt: new Date(),
+  };
+}
+
+function adaptFile(f: ProjectFile): DbFile {
+  const kind =
+    f.category === "design" ? ("image" as const) : ("document" as const);
+  return {
+    id: f.id,
+    projectId: f.project_id,
+    name: f.name,
+    category: f.category,
+    kind,
+    url: `/files/${f.storage_path}`,
+    thumbnailUrl: null,
+    sizeKb: f.size_kb,
+    version: f.version,
+    visibleToClient: true,
+    uploadedBy: f.uploaded_by,
+    createdAt: new Date(f.created_at),
+  };
+}
+
+function adaptFeedback(f: Feedback): FeedbackRow {
+  return {
+    id: f.id,
+    projectId: f.project_id,
+    authorId: f.author_id,
+    category: f.category,
+    body: f.body,
+    resolved: f.resolved,
+    createdAt: new Date(f.created_at),
+  };
+}
+
+function adaptMessage(m: Message): MessageRow {
+  return {
+    id: m.id,
+    projectId: m.project_id,
+    senderId: m.sender_id,
+    body: m.body,
+    createdAt: new Date(m.created_at),
+  };
+}
+
+export function publicProjectsFallback(): DbProject[] {
+  return projects.filter((p) => p.visibility === "public").map(adaptProject);
+}
+
+export function viewerProjectsFallback(role: DbRole): DbProject[] {
+  const visible =
+    role === "client" ? projects.filter((p) => p.client_id === "u-101") : projects;
+  return visible.map(adaptProject);
+}
+
+export function projectDetailFallback(projectId: string) {
+  const found = getProject(projectId) ?? projects[0];
+  return {
+    project: adaptProject(found),
+    milestones: projectMilestones(found.id).map(adaptMilestone),
+    files: projectFiles(found.id).map(adaptFile),
+    feedback: projectFeedback(found.id).map(adaptFeedback),
+    messages: projectMessages(found.id).map(adaptMessage),
+  };
+}

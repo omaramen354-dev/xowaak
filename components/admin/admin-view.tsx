@@ -23,7 +23,7 @@ import { CmsStats } from "@/components/admin/cms-stats";
 import { CmsPortfolio } from "@/components/admin/cms-portfolio";
 import { Reveal } from "@/components/ui/motion";
 import { getProfile, getRole, kpis, profiles, projects, tasks, userRoles } from "@/lib/mock-data";
-import type { AppRole } from "@/lib/supabase/types";
+import type { AppRole } from "@/lib/demo-types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

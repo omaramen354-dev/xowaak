@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import clsx from "clsx";
-import { CheckCircle2, Clock, Wallet } from "lucide-react";
+import { CheckCircle2, Clock, Loader2, Wallet } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { estimate, formatEUR, type FeatureKey, type ProjectType, type Speed } from "@/lib/pricing";
+import { submitLeadAction, type LeadState } from "@/app/actions/leads";
 import { Button } from "@/components/ui/button";
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -22,7 +23,10 @@ export function QuoteWizard() {
   const [features, setFeatures] = useState<FeatureKey[]>(["auth", "i18n"]);
   const [speed, setSpeed] = useState<Speed>("standard");
   const [form, setForm] = useState({ name: "", email: "", company: "", notes: "" });
-  const [submitted, setSubmitted] = useState(false);
+  const [state, formAction, pending] = useActionState<LeadState, FormData>(submitLeadAction, {
+    ok: false,
+    message: "",
+  });
 
   const result = useMemo(() => estimate(type, features, speed), [type, features, speed]);
 
@@ -108,18 +112,22 @@ export function QuoteWizard() {
               </div>
             </div>
 
-            <form
-              className="glass-card space-y-4 p-6"
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
-            >
+            {/* The calculator's output travels with the contact details so the
+                sales team sees the exact scope the visitor configured. */}
+            <form action={formAction} className="glass-card space-y-4 p-6">
+              <input type="hidden" name="locale" value={locale} />
+              <input type="hidden" name="projectType" value={type} />
+              <input type="hidden" name="services" value={features.join(",")} />
+              <input type="hidden" name="budgetEstimate" value={result.low} />
+              <input type="hidden" name="timelineWeeks" value={result.weeks} />
+              <input type="hidden" name="currency" value="EUR" />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="block">
                   <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.name}</Label>
                   <Input
                     required
+                    name="name"
+                    dir="auto"
                     className="field"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -130,6 +138,8 @@ export function QuoteWizard() {
                   <Input
                     required
                     type="email"
+                    name="email"
+                    dir="ltr"
                     className="field"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -139,6 +149,8 @@ export function QuoteWizard() {
               <div className="block">
                 <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.company}</Label>
                 <Input
+                  name="company"
+                  dir="auto"
                   className="field"
                   value={form.company}
                   onChange={(e) => setForm({ ...form, company: e.target.value })}
@@ -148,15 +160,28 @@ export function QuoteWizard() {
                 <Label className="mb-1.5 block text-xs font-semibold text-ink-low">{t.quote.fields.notes}</Label>
                 <Textarea
                   rows={4}
+                  name="message"
+                  dir="auto"
                   className="field resize-none"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
                 />
               </div>
-              <Button type="submit" variant="neon" className="w-full">
-                {t.quote.submit}
+              <Button type="submit" variant="neon" disabled={pending} className="w-full gap-2">
+                {pending ? <Loader2 className="size-4 animate-spin" /> : null}
+                {pending ? t.auth.submitting : t.quote.submit}
               </Button>
-              {submitted && <Alert variant="success">{t.quote.success}</Alert>}
+              {state.message ? (
+                state.ok ? (
+                  <Alert variant="success" role="alert">
+                    <AlertDescription>{t.quote.success}</AlertDescription>
+                  </Alert>
+                ) : (
+                  <Alert role="alert" className="border-rose-500/40 bg-rose-500/10">
+                    <AlertDescription className="text-rose-200">{state.message}</AlertDescription>
+                  </Alert>
+                )
+              ) : null}
             </form>
           </div>
 
