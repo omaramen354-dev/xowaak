@@ -9,6 +9,12 @@ import { cn } from "@/lib/utils";
  * shadcn Dialog. Replaces the hand-rolled modals in portfolio.tsx and
  * cms-portfolio.tsx, which had no focus trap, no restore-focus on close and
  * no aria wiring — Radix provides all three.
+ *
+ * RTL fix: previous version used `start-1/2` (logical) with
+ * `transform: translate(-50%, -50%)` (physical). In RTL, `start` resolves to
+ * `right`, so `right:50%` + `translateX(-50%)` pushed the dialog to the corner
+ * instead of centering. Now uses physical `left-1/2` + `-translate-x-1/2`
+ * which centers correctly in both LTR and RTL.
  */
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -42,14 +48,13 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed start-1/2 top-1/2 z-overlay w-[calc(100%-2rem)] max-w-2xl -translate-y-1/2",
+          "fixed left-1/2 top-1/2 z-overlay w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2",
           "max-h-[90vh] overflow-y-auto rounded-3xl border border-line bg-surface/95 p-6 shadow-card backdrop-blur-xl",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
           "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
           className,
         )}
-        style={{ transform: "translate(-50%, -50%)" }}
         {...props}
       >
         {children}

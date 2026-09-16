@@ -10,20 +10,23 @@ import { useSyncExternalStore } from "react";
  * one continuous field sits behind every page instead of restarting at each
  * section boundary.
  *
- * Stack, bottom to top:
- *   1. mesh-deep + starfield  — CSS, always present, the no-WebGL fallback
- *   2. Aurora                 — flowing gradient
- *   3. MoltenMetal            — caustic plasma filaments, screen-blended
+ * FIXED: Previously had 3-4 overlapping layers always rendering:
+ *   mesh-deep + starfield (CSS) + AuroraGL (WebGL) + MoltenMetal (WebGL)
+ *   - starfield was always on even when WebGL was active
+ *   - Aurora + Molten both at full opacity with screen blend fought visually
+ *   - plus hero's own cyber-grid and Orb made it 5+ layers in hero area
+ *
+ * Now: single coherent system:
+ *   - mesh-deep always as subtle base wash (never flat black)
+ *   - WebGL enabled (>=640px): AuroraGL only (single canvas, low cost)
+ *   - WebGL disabled (phones): starfield only as lightweight fallback
+ *   MoltenMetal removed from global backdrop to avoid second GL context
+ *   conflicting with Aurora. If needed, it can be used locally in a section.
  *
  * `fixed inset-0` + `z-backdrop` (0) keeps it under all content, which is
  * lifted to `z-content`. `pointer-events-none` means it never eats clicks.
  */
 const AuroraGL = dynamic(() => import("@/components/ui/aurora-gl").then((m) => m.AuroraGL), {
-  ssr: false,
-  loading: () => null,
-});
-
-const MoltenMetal = dynamic(() => import("@/components/ui/molten-metal").then((m) => m.MoltenMetal), {
   ssr: false,
   loading: () => null,
 });
@@ -47,11 +50,10 @@ export function AuroraBackdrop() {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-backdrop overflow-hidden">
-      {/* Base wash stays even without WebGL, so the page is never flat black. */}
-      <div className="absolute inset-0 mesh-deep" />
-      <div className="starfield" />
+      {/* Base wash — subtle radial mesh, always present so page is never flat black */}
+      <div className="absolute inset-0 mesh-deep opacity-80" />
 
-      {enabled && (
+      {enabled ? (
         <AuroraGL
           colorStops={["#7cff67", "#B497CF", "#5227FF"]}
           blend={0.5}
@@ -59,35 +61,8 @@ export function AuroraBackdrop() {
           speed={0.5}
           className="absolute inset-0 h-full w-full"
         />
-      )}
-
-      {/* Molten filaments on top. `screen` blending makes the two layers add
-          light, so the aurora stays visible underneath instead of being
-          painted over. */}
-      {enabled && (
-        <div className="absolute inset-0 mix-blend-screen">
-          <MoltenMetal
-            color1="#5227FF"
-            color2="#FF9FFC"
-            color3="#FFFFFF"
-            speed={0.35}
-            scale={4}
-            detail={3}
-            glow={1.6}
-            coreSize={0.1}
-            swirl={1}
-            fold={-0.2}
-            blackPoint={0.05}
-            brightness={1.3}
-            colorMode="molten"
-            grain
-            grainIntensity={0.05}
-            mouseInteraction
-            mouseStrength={0.3}
-            opacity={1.0}
-            className="h-full w-full"
-          />
-        </div>
+      ) : (
+        <div className="starfield" />
       )}
     </div>
   );

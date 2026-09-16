@@ -21,9 +21,13 @@ const Orb = dynamic(() => import("@/components/ui/orb").then((m) => m.Orb), {
  * Hero — centred single column over a full-bleed Orb.
  *
  * Layer contract (see AGENTS.md):
- *   z-backdrop (0)  cyber grid, pointer-events-none
- *   z-stage    (20) the react-bits Orb, pointer-events-none
+ *   z-backdrop (0)  global AuroraBackdrop (mesh-deep + AuroraGL), pointer-events-none
+ *   z-stage    (10) the react-bits Orb, pointer-events-none
  *   z-copy     (30) all text, badge and CTAs — reads ON TOP of the Orb
+ *
+ * FIXED: Removed local cyber-grid which was duplicating the global backdrop
+ * and creating 3 conflicting background layers (global mesh + local grid + Orb)
+ * in the same viewport. Now only global backdrop + Orb.
  *
  * The Orb is aria-hidden and non-interactive, so putting the copy above it
  * costs nothing in accessibility. The console that used to sit here now
@@ -35,17 +39,11 @@ export function Hero() {
 
   return (
     <section className="relative isolate overflow-hidden noise">
-      {/* ---------- LAYER 0 — ambient depth only ---------- */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,black,transparent)]"
-      />
-
       <div className="container-x relative section-y">
         {/* Single centred column. The Orb is a backdrop behind the words,
             so the copy reads on top of it rather than beside it. */}
         <div className="relative">
-          {/* ---------- Orb — z-stage (20), centred ON THE COPY ----------
+          {/* ---------- Orb — z-stage (10), centred ON THE COPY ----------
               Anchored to this wrapper, NOT the <section>: the section also
               contains the stats grid and the pipeline strip, so centring on
               it put the orb far below the headline. Sized in vw and pulled to

@@ -6,7 +6,6 @@ import { ArrowRight, Quote } from "lucide-react";
 import { useI18n } from "@/components/providers";
 import { SectionHeading } from "@/components/ui/primitives";
 import { Reveal, StaggerGroup, StaggerItem, TiltCard } from "@/components/ui/motion";
-import { ParticleField } from "@/components/ui/backgrounds";
 import { testimonials } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 
@@ -75,10 +74,12 @@ export function CallToAction() {
     <section className="pb-28">
       <div className="container-x">
         <Reveal>
+          {/* FIXED: Previously had 3 conflicting background layers:
+              ParticleField (canvas) + cyber-grid + aurora blur.
+              Now single subtle aurora glow only — global AuroraBackdrop
+              already provides depth, so local layers just add noise. */}
           <div className="glow-border neon-border noise relative overflow-hidden bg-gradient-to-br from-neon-cyan/[0.12] via-neon-indigo/[0.08] to-neon-magenta/[0.12] p-12 text-center sm:p-20">
-            <ParticleField density={45} className="opacity-70" />
-            <div className="absolute inset-0 cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
-            <div className="aurora aurora-cyan animate-pulse-glow absolute -bottom-24 start-1/2 h-72 w-[600px] -translate-x-1/2 blur-[120px]" />
+            <div className="aurora aurora-cyan animate-pulse-glow absolute -bottom-24 left-1/2 h-72 w-[600px] -translate-x-1/2 blur-[120px]" />
 
             <h2 className="relative text-3xl sm:text-5xl">
               <span className="text-gradient-hero">{t.quote.title}</span>
@@ -88,11 +89,11 @@ export function CallToAction() {
             </p>
             <div className="relative mt-9 flex justify-center">
               <Button asChild variant="neon" className="group !px-7 !py-3.5 !text-base">
-<Link href={`/${locale}/quote`}>
-                <span className="relative z-10">{t.hero.ctaPrimary}</span>
-                <ArrowRight className="relative z-10 h-4 w-4 shrink-0 flip-x transition-transform group-hover:translate-x-1" />
-              </Link>
-</Button>
+                <Link href={`/${locale}/quote`}>
+                  <span className="relative z-10">{t.hero.ctaPrimary}</span>
+                  <ArrowRight className="relative z-10 h-4 w-4 shrink-0 flip-x transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
             </div>
           </div>
         </Reveal>

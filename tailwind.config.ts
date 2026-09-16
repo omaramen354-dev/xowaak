@@ -38,7 +38,7 @@ const config: Config = {
       },
       zIndex: {
         backdrop: "0",
-        stage: "20",
+        stage: "10",
         content: "20",
         copy: "30",
         overlay: "60",
