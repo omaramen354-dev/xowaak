@@ -101,15 +101,15 @@ xowaak/
 
 ### Colour tokens
 ```
-base      #05070E     page background
-elevated  #080C15     raised sections
-surface   #0D111A     cards
-line      #1E293B     hairline borders
-line-strong #334155
+base      #050608     page background
+elevated  #0A0B0E     raised sections
+surface   #101216     cards
+line      #232630     hairline borders
+line-strong #383D47
 
-neon.cyan #00F2FE   neon.teal #06B6D4   neon.sky  #00D2FF
-neon.blue #4FACFE   neon.indigo/purple #8B5CF6
-neon.magenta #D946EF neon.pink #EC4899  neon.emerald #10B981
+Monochrome white-neon (names keep their old roles):
+neon.cyan/magenta #FFFFFF   neon.sky #E8ECF0   neon.blue/pink #DDE2E8
+neon.indigo/purple #AEB6BF  neon.emerald #6FE39C (status only)
 
 ink.hi    #FFFFFF   21:1     headings
 ink.mid   #CBD5E1   14.3:1   body

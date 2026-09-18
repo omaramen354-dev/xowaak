@@ -140,10 +140,11 @@ scoped to its own grid cell. Do not collapse this back to a single stacking cont
 
 ## Palette
 
-`neon-cyan #00F2FE` · `neon-sky #00D2FF` · `neon-blue #4FACFE` · `neon-indigo #8B5CF6`
-`neon-purple #8B5CF6` · `neon-magenta #D946EF` · `neon-emerald #10B981`
-Base `#07090E` · surface `#0D111A` · line `#1E293B`
-Text contrast vs base: hi 21:1, mid 14.3:1, low 8.9:1 (WCAG AAA).
+Monochrome since the white-neon pass: `neon-cyan #FFFFFF` · `neon-sky #E8ECF0` ·
+`neon-blue #DDE2E8` · `neon-indigo #AEB6BF` · `neon-purple #AEB6BF` ·
+`neon-magenta #FFFFFF` · `neon-emerald #6FE39C` (status green only)
+Base `#050608` · surface `#101216` · line `#232630`
+The token NAMES keep their old roles — never introduce new RGB accents.
 
 ## i18n
 

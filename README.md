@@ -31,13 +31,13 @@ codebase; every colour comes from a token in `tailwind.config.ts`.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `base` | `#07090E` | page background (pure deep black) |
-| `surface` | `#0D111A` | cards, at 60% + `backdrop-blur-md` |
-| `line` / `line-strong` | `#1E293B` / `#334155` | hairline borders |
-| `ink-hi` | `#FFFFFF` | headings, extrabold — 21:1 contrast |
-| `ink-mid` | `#CBD5E1` | body — 14.3:1 |
-| `ink-low` | `#94A3B8` | secondary — 8.9:1 |
-| `neon-cyan → neon-purple` | `#00F2FE · #4FACFE · #6366F1 · #A855F7` | accents, gradients, glows |
+| `base` | `#050608` | page background (deep monochrome black) |
+| `surface` | `#101216` | cards, at 60% + `backdrop-blur-md` |
+| `line` / `line-strong` | `#232630` / `#383D47` | hairline borders |
+| `ink-hi` | `#FFFFFF` | headings, extrabold |
+| `ink-mid` | `#CBD5E1` | body |
+| `ink-low` | `#94A3B8` | secondary |
+| `neon-cyan → neon-purple` | `#FFFFFF · #E8ECF0 · #DDE2E8 · #AEB6BF` | white neon: accents, gradients, glows |
 
 Depth comes only from `.mesh-deep` (deep radial gradients living inside the black) and
 `.cyber-grid` — never from silver or light-grey fills.
