@@ -7,11 +7,9 @@ const config: Config = {
     extend: {
       colors: {
         /* ---- Strict dark palette ---- */
-        base: "#05070E", // page background — near-black with a cool (navy) cast,
-        // NOT pure #000. Deliberate: the shader backdrops are additive, and a
-        // true black makes their dark ends look like flat dead patches.
-        elevated: "#080C15", // raised sections
-        surface: "#0D111A", // cards
+        base: "#08090B", // page background — neutral near-black (grey/black stage)
+        elevated: "#0D0E11", // raised sections
+        surface: "#14151A", // cards — neutral grey
         line: "#1E293B", // hairline borders
         "line-strong": "#334155",
 

@@ -94,14 +94,14 @@ export function Hero() {
                 text={t.hero.title}
                 delay={0.15}
                 stagger={0.075}
-                className="text-plate mt-7 text-4xl font-black leading-[1.12] text-white sm:text-5xl lg:text-6xl xl:text-[4.4rem]"
+                className="mt-7 text-4xl font-black leading-[1.12] text-white sm:text-5xl lg:text-6xl xl:text-[4.4rem]"
               />
 
               <motion.p
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2 }}
-                className="text-plate mt-6 max-w-xl text-base leading-relaxed text-ink-mid sm:text-lg"
+                className="mt-6 max-w-xl text-base leading-relaxed text-ink-mid sm:text-lg"
               >
                 {t.hero.subtitle}
               </motion.p>

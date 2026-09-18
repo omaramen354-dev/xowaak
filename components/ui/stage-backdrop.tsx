@@ -52,6 +52,8 @@ export function StageBackdrop() {
 
       {/* Floor band — horizon sits at its top edge, the grid tips away below. */}
       <div className="absolute inset-x-0 bottom-0 top-[62%]">
+        {/* Distant sun arc — only its top sliver rises over the horizon. */}
+        <div className="horizon-glow" />
         <div className="horizon-line" />
         <div className="floor-grid" />
         {!reduced && <div className="floor-sheen" />}
