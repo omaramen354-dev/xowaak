@@ -8,15 +8,19 @@ import { useRef } from "react";
  *
  * Replaces the old ogl-based rig (hero-core-gl + aurora-gl + molten-metal)
  * that ran three full-screen shader loops and made the site laggy on phones.
- * Everything here is GPU-composited CSS (transform/opacity/box-shadow only)
- * so it animates on the compositor thread and never blocks the main thread.
+ * Everything here is GPU-composited CSS (transform/opacity only) so it
+ * animates on the compositor thread and never blocks the main thread.
+ *
+ * The centrepiece is a precision "reactor": a dark glass lens with a luminous
+ * rim and a beating heart of light, wrapped in three thin gyroscopic rings —
+ * geometry is rasterised once, then only transforms move.
  *
  * Layers, cheapest first:
- *   1. pulsing glow halo            — one animated box-shadow-ish glow
- *   2. css-energy-core              — morphing orb (existing utility, now primary)
- *   3. three tilted orbit rings     — pure rotate, staggered speeds
- *   4. four orbiting energy sparks  — counter-rotating wrappers, transform-only
- *   5. scroll parallax + spin       — framer-motion mapping scrollYProgress
+ *   1. pulsing halo            — opacity/scale breathing under a static blur
+ *   2. reactor                 — lens + heart + three 3D gyro rings
+ *   3. three tilted orbit rings — faint circles, staggered speeds
+ *   4. four orbiting sparks    — counter-rotating wrappers, transform-only
+ *   5. scroll parallax + spin  — framer-motion mapping scrollYProgress
  *
  * Honours prefers-reduced-motion by freezing the parallax.
  */
@@ -39,18 +43,24 @@ export function HeroVisual() {
       style={reduce ? undefined : { y, rotate, opacity }}
       className="pointer-events-none relative mx-auto h-[min(78vw,420px)] w-[min(78vw,420px)] select-none"
     >
-      {/* ---------- Pulsing halo behind the orb ---------- */}
+      {/* ---------- Breathing halo behind the reactor ---------- */}
       <div className="hero-glow absolute inset-[8%]" />
 
-      {/* ---------- The morphing energy core ---------- */}
-      <div className="css-energy-core" />
+      {/* ---------- The reactor ---------- */}
+      <div className="reactor">
+        <span className="reactor-gyro reactor-gyro-a" />
+        <span className="reactor-gyro reactor-gyro-b" />
+        <span className="reactor-gyro reactor-gyro-c" />
+        <div className="reactor-lens" />
+        <div className="reactor-heart" />
+      </div>
 
       {/* ---------- Tilted orbit rings ---------- */}
       <span className="hero-ring hero-ring-a" />
       <span className="hero-ring hero-ring-b" />
       <span className="hero-ring hero-ring-c" />
 
-      {/* ---------- Orbiting energy sparks (counter-rotating wrappers) ---------- */}
+      {/* ---------- Orbiting sparks (counter-rotating wrappers) ---------- */}
       <span className="hero-spark hero-spark-1" />
       <span className="hero-spark hero-spark-2" />
       <span className="hero-spark hero-spark-3" />

@@ -10,6 +10,7 @@ import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components
 import { Button } from "@/components/ui/button";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { HeroVisual } from "@/components/public/hero-visual";
+import { StageBackdrop } from "@/components/ui/stage-backdrop";
 
 /**
  * Hero — cinematic, interactive.
@@ -41,9 +42,15 @@ export function Hero() {
   return (
     <section ref={sectionRef} className="relative isolate overflow-hidden noise">
       {/* ---------- LAYER 0 — ambient depth ---------- */}
+      {/* ---------- Cinematic stage rig — light shaft, aurora curtains,
+              glowing horizon, perspective floor, dust ---------- */}
+      <div className="absolute inset-0 z-backdrop">
+        <StageBackdrop />
+      </div>
+      {/* Faint tech grid riding over the stage — static mask, no crawl on top. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-30 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_35%,black,transparent)]"
+        className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-20 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_35%,black,transparent)]"
       />
       {/* HUD frame corners — the "targeting reticle" look */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-backdrop hidden md:block">
