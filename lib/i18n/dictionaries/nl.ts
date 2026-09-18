@@ -12,6 +12,7 @@ const nl: Dictionary = {
   },
   hero: {
     badge: "Full-stack productstudio · Sinds 2016",
+    systemOnline: "SYSTEEM ONLINE",
     title: "Wij bouwen de systemen die uw concurrenten gaan kopiëren.",
     subtitle: "AAKWHX is een hightech agency dat platformen, AI-systemen en premium interfaces levert voor teams die geen genoegen nemen met middelmatige software.",
     ctaPrimary: "Start een project", ctaSecondary: "Bekijk ons werk",
@@ -42,8 +43,10 @@ const nl: Dictionary = {
       { title: "Merk & UI-systemen", desc: "Designtalen, motion systems en toegankelijke componentbibliotheken in 7 talen.", tags: ["Designsysteem", "Motion", "a11y"] },
       { title: "Security & compliance", desc: "Threat modelling, pentesting, AVG- en ISO-conforme datagovernance.", tags: ["AVG", "Pentest", "RLS"] },
     ],
+    stageLabel: "CAPACITEIT",
+    requestCta: "Deze dienst aanvragen",
   },
-  portfolio: { title: "Geselecteerd werk", subtitle: "Filter op sector. Private trajecten tonen we geanonimiseerd onder NDA.", filters: { industry: "Sector", visibility: "Zichtbaarheid" } },
+  portfolio: { title: "Geselecteerd werk", subtitle: "Filter op sector. Private trajecten tonen we geanonimiseerd onder NDA.", filters: { industry: "Sector", visibility: "Zichtbaarheid" }, searchPlaceholder: "Zoek projecten, techniek, sectoren…", projectsLabel: "projecten" },
   process: {
     title: "Zo leveren wij", subtitle: "Een transparante pijplijn van vijf fases, live zichtbaar in uw klantportaal.",
     steps: [
@@ -158,7 +161,12 @@ const nl: Dictionary = {
     milestonesDone: "mijlpalen afgerond",
     noProjects: "Er is nog geen project aan je account gekoppeld. Ons team regelt dit binnenkort.",
   },
-  footer: { rights: "Alle rechten voorbehouden.", built: "Ontworpen en gebouwd door AAKWHX.", offices: "Amsterdam · Istanboel · Riyad" },
+  footer: { rights: "Alle rechten voorbehouden.", built: "Ontworpen en gebouwd door AAKWHX.", offices: "Amsterdam · Istanboel · Riyad",
+    newsletterTitle: "Veldnotities", newsletterPlaceholder: "jouw@email.com", newsletterCta: "Abonneren", newsletterDone: "Geabonneerd — welkom aan boord." },
+  stack: {
+    title: "Aangedreven door een moderne stack",
+    subtitle: "De technologie waarop wij bouwen — produktie-getest in elk traject.",
+  },
   emails: {
     verify: {
       subject: "Bevestig je AAKWHX-account",

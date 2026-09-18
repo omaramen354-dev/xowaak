@@ -12,6 +12,7 @@ const de: Dictionary = {
   },
   hero: {
     badge: "Full-Stack-Produktstudio · seit 2016",
+    systemOnline: "SYSTEM ONLINE",
     title: "Wir bauen die Systeme, die Ihre Wettbewerber kopieren werden.",
     subtitle: "AAKWHX ist eine High-Tech-Agentur für Plattformen, KI-Systeme und markenstarke Interfaces — für Teams, die keine durchschnittliche Software akzeptieren.",
     ctaPrimary: "Projekt starten", ctaSecondary: "Arbeiten ansehen",
@@ -42,8 +43,10 @@ const de: Dictionary = {
       { title: "Marke & UI-Systeme", desc: "Designsprachen, Motion Systems und barrierefreie Komponentenbibliotheken in 7 Sprachen.", tags: ["Designsystem", "Motion", "a11y"] },
       { title: "Security & Compliance", desc: "Threat Modeling, Penetrationstests, DSGVO- und ISO-konforme Data Governance.", tags: ["DSGVO", "Pentest", "RLS"] },
     ],
+    stageLabel: "FÄHIGKEIT",
+    requestCta: "Diese Leistung anfragen",
   },
-  portfolio: { title: "Ausgewählte Arbeiten", subtitle: "Nach Branche filtern. Private Projekte zeigen wir anonymisiert unter NDA.", filters: { industry: "Branche", visibility: "Sichtbarkeit" } },
+  portfolio: { title: "Ausgewählte Arbeiten", subtitle: "Nach Branche filtern. Private Projekte zeigen wir anonymisiert unter NDA.", filters: { industry: "Branche", visibility: "Sichtbarkeit" }, searchPlaceholder: "Projekte, Technologien, Branchen suchen…", projectsLabel: "Projekte" },
   process: {
     title: "So liefern wir", subtitle: "Eine transparente Pipeline aus fünf Phasen — live sichtbar in Ihrem Kundenportal.",
     steps: [
@@ -158,7 +161,12 @@ const de: Dictionary = {
     milestonesDone: "Meilensteine abgeschlossen",
     noProjects: "Ihrem Konto wurde noch kein Projekt zugewiesen. Unser Team richtet es in Kürze ein.",
   },
-  footer: { rights: "Alle Rechte vorbehalten.", built: "Gestaltet und entwickelt von AAKWHX.", offices: "Amsterdam · Istanbul · Riad" },
+  footer: { rights: "Alle Rechte vorbehalten.", built: "Gestaltet und entwickelt von AAKWHX.", offices: "Amsterdam · Istanbul · Riad",
+    newsletterTitle: "Feldnotizen", newsletterPlaceholder: "ihre@email.com", newsletterCta: "Abonnieren", newsletterDone: "Abonniert — willkommen an Bord." },
+  stack: {
+    title: "Angetrieben von einem modernen Stack",
+    subtitle: "Die Technologien, auf die wir setzen — erprobt in Produktion bei jedem Projekt.",
+  },
   emails: {
     verify: {
       subject: "Bestätige dein AAKWHX-Konto",

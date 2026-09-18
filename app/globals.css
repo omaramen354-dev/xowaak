@@ -90,15 +90,41 @@
 [dir="rtl"] p,
 [dir="rtl"] li,
 [dir="rtl"] blockquote { line-height: var(--leading-body); }
-/* Cairo renders visually heavier — step weights down one notch. */
+
+/* Cairo renders visually heavier and its terminals collide at small sizes,
+   so weights step down one notch and body text gets a touch more room.
+   `font-synthesis: none` stops the browser from faking bold Cairo, which
+   looked smeared on Android. */
 [dir="rtl"] .font-black { font-weight: 800; }
 [dir="rtl"] .font-extrabold { font-weight: 700; }
+[dir="rtl"] .font-bold { font-weight: 650; }
+[dir="rtl"] .font-semibold { font-weight: 600; }
+[dir="rtl"] body { font-synthesis: none; }
+
+/* Cairo's natively tight tracking reads cramped below ~14px (chips, meta
+   labels, table cells); a hair of letter-spacing restores legibility.
+   Headings keep letter-spacing 0 — set in @layer base below. */
+[dir="rtl"] .chip,
+[dir="rtl"] .mono-label,
+[dir="rtl"] text-xs,
+[dir="rtl"] .text-xs,
+[dir="rtl"] .text-\[10px\],
+[dir="rtl"] .text-\[11px\] {
+  letter-spacing: 0.01em;
+}
 
 @layer base {
   html {
     scroll-behavior: smooth;
     color-scheme: dark;
     background-color: #05070e;
+  }
+
+  /* Between sections the shader backdrop showed through the rounding seams
+     as a 1px light gap. Overlapping by 1px and compensating with the same
+     margin closes the seam without visual offset. */
+  main > section + section {
+    margin-top: -1px;
   }
 
   body {
@@ -247,6 +273,15 @@
       grid-hue 24s ease-in-out infinite;
   }
 
+  /* Phones: repainting a crawling full-screen grid every frame is one of the
+     most expensive things on the page. Keep the hue cycle (cheap, it only
+     touches a custom property used by the gradients) and drop the crawl. */
+  @media (max-width: 639px) {
+    .cyber-grid {
+      animation: grid-hue 24s ease-in-out infinite;
+    }
+  }
+
   /* Neon bloom riding over the grid — a soft light that sweeps the plane. */
   .cyber-grid::after {
     content: "";
@@ -384,6 +419,15 @@
     top: -45%;
     background: linear-gradient(to bottom, transparent, rgb(0 242 254 / 0.055), transparent);
     animation: beam-fall 13s linear infinite;
+  }
+
+  /* Respect reduced motion inside raw-CSS animations too: the global
+     `prefers-reduced-motion` override already collapses durations, but
+     parking the sweep entirely avoids an invisible always-running timer. */
+  @media (prefers-reduced-motion: reduce) {
+    .beam-sweep::before {
+      animation: none;
+    }
   }
 
   /* Faint drifting starfield for phones, where WebGL is switched off. */
@@ -577,6 +621,25 @@
     @apply text-[10px] font-semibold uppercase tracking-[0.28em] text-neon-cyan;
   }
 
+  /* ---------------- Tech marquee ---------------- */
+  /* Edge fade so chips dissolve instead of clipping. */
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  /* Dual-direction infinite scroll. The track is a doubled list, so a
+     -50% translate loops seamlessly. */
+  .marquee-track,
+  .marquee-reverse {
+    animation: marquee 46s linear infinite;
+    will-change: transform;
+  }
+  .marquee-reverse {
+    animation-direction: reverse;
+    animation-duration: 54s;
+  }
+
   .lede {
     @apply text-ink-low;
   }
@@ -765,6 +828,12 @@
   }
   100% {
     transform: translateX(220%);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
   }
 }
 

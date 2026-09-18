@@ -60,7 +60,10 @@ export function AnimatedHeading({
       aria-label={text}
     >
       {words.map((word, i) => (
-        <span key={`${word}-${i}`} className="inline-block overflow-hidden align-bottom" aria-hidden>
+        // The clip window needs generous bottom padding: Arabic descenders
+        // (ي ج ح خ س ش) and the dots of ب/ت reach well below the baseline, and
+        // a tight overflow-hidden box sheared them off mid-animation.
+        <span key={`${word}-${i}`} className="inline-block overflow-hidden align-bottom pb-[0.35em] -mb-[0.35em]" aria-hidden>
           <motion.span
             className="inline-block"
             variants={{

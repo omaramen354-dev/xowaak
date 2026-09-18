@@ -12,6 +12,7 @@ const es: Dictionary = {
   },
   hero: {
     badge: "Estudio de producto full-stack · desde 2016",
+    systemOnline: "SISTEMA EN LÍNEA",
     title: "Construimos los sistemas que tu competencia copiará.",
     subtitle: "AAKWHX es una agencia de alta tecnología que entrega plataformas, sistemas de IA e interfaces de nivel premium para equipos que no aceptan software mediocre.",
     ctaPrimary: "Iniciar un proyecto", ctaSecondary: "Ver nuestro trabajo",
@@ -42,8 +43,10 @@ const es: Dictionary = {
       { title: "Marca y sistemas de UI", desc: "Lenguajes de diseño, sistemas de motion y librerías accesibles en 7 idiomas.", tags: ["Design system", "Motion", "a11y"] },
       { title: "Seguridad y cumplimiento", desc: "Modelado de amenazas, pentesting y gobernanza de datos conforme a RGPD e ISO.", tags: ["RGPD", "Pentest", "RLS"] },
     ],
+    stageLabel: "CAPACIDAD",
+    requestCta: "Solicitar este servicio",
   },
-  portfolio: { title: "Trabajos seleccionados", subtitle: "Filtra por sector. Los proyectos privados se muestran anonimizados bajo NDA.", filters: { industry: "Sector", visibility: "Visibilidad" } },
+  portfolio: { title: "Trabajos seleccionados", subtitle: "Filtra por sector. Los proyectos privados se muestran anonimizados bajo NDA.", filters: { industry: "Sector", visibility: "Visibilidad" }, searchPlaceholder: "Busca proyectos, tecnologías, sectores…", projectsLabel: "proyectos" },
   process: {
     title: "Cómo entregamos", subtitle: "Un pipeline transparente de cinco fases, reflejado en vivo en tu portal de cliente.",
     steps: [
@@ -158,7 +161,12 @@ const es: Dictionary = {
     milestonesDone: "hitos completados",
     noProjects: "Aún no hay ningún proyecto asignado a tu cuenta. Nuestro equipo lo configurará pronto.",
   },
-  footer: { rights: "Todos los derechos reservados.", built: "Diseñado y desarrollado por AAKWHX.", offices: "Ámsterdam · Estambul · Riad" },
+  footer: { rights: "Todos los derechos reservados.", built: "Diseñado y desarrollado por AAKWHX.", offices: "Ámsterdam · Estambul · Riad",
+    newsletterTitle: "Notas de campo", newsletterPlaceholder: "tu@email.com", newsletterCta: "Suscribirse", newsletterDone: "Suscrito — bienvenido a bordo." },
+  stack: {
+    title: "Impulsado por un stack moderno",
+    subtitle: "Las tecnologías en las que confiamos — probadas en producción en cada proyecto.",
+  },
   emails: {
     verify: {
       subject: "Confirma tu cuenta de AAKWHX",
