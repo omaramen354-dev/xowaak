@@ -7,23 +7,28 @@ const config: Config = {
     extend: {
       colors: {
         /* ---- Strict dark palette ---- */
-        base: "#08090B", // page background — neutral near-black (grey/black stage)
-        elevated: "#0D0E11", // raised sections
-        surface: "#14151A", // cards — neutral grey
-        line: "#1E293B", // hairline borders
-        "line-strong": "#334155",
+        base: "#050608", // page background — deeper black
+        elevated: "#0A0B0E", // raised sections
+        surface: "#101216", // cards — dark neutral grey
+        line: "#232630", // hairline borders
+        "line-strong": "#383D47",
 
-        /* ---- Vibrant neon accents ---- */
+        /* ---- Monochrome neon (was RGB) ----
+           Every hue slot now maps to white/grey at that role's relative
+           strength, so the whole UI flips to a single white channel while
+           keeping its old contrast hierarchy: cyan/magenta are the strong
+           accents, indigo/purple the soft secondary, emerald stays green
+           (status semantics) but desaturated. */
         neon: {
-          cyan: "#00F2FE",
-          teal: "#06B6D4",
-          sky: "#00D2FF",
-          blue: "#4FACFE",
-          indigo: "#8B5CF6",
-          purple: "#8B5CF6",
-          magenta: "#D946EF",
-          pink: "#EC4899",
-          emerald: "#10B981",
+          cyan: "#FFFFFF",
+          teal: "#F2F4F6",
+          sky: "#E8ECF0",
+          blue: "#DDE2E8",
+          indigo: "#AEB6BF",
+          purple: "#AEB6BF",
+          magenta: "#FFFFFF",
+          pink: "#DDE2E8",
+          emerald: "#6FE39C",
         },
 
         /* ---- Text ramp (WCAG-checked on #07090E) ---- */
@@ -46,9 +51,9 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        "glow-cyan": "0 0 34px -8px rgba(0, 242, 254, 0.75)",
-        "glow-magenta": "0 0 34px -8px rgba(217, 70, 239, 0.75)",
-        "glow-purple": "0 0 34px -8px rgba(139, 92, 246, 0.75)",
+        "glow-cyan": "0 0 30px -8px rgba(255, 255, 255, 0.5)",
+        "glow-magenta": "0 0 30px -8px rgba(255, 255, 255, 0.4)",
+        "glow-purple": "0 0 30px -8px rgba(255, 255, 255, 0.3)",
         card: "0 24px 70px -35px rgba(0, 0, 0, 1)",
       },
       keyframes: {
@@ -75,8 +80,8 @@ const config: Config = {
         "spin-slow": { to: { transform: "rotate(360deg)" } },
         "float-y": { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-5px)" } },
         "icon-pulse": {
-          "0%,100%": { transform: "scale(1)", filter: "drop-shadow(0 0 0 rgba(0,242,254,0))" },
-          "50%": { transform: "scale(1.09)", filter: "drop-shadow(0 0 7px rgba(0,242,254,0.85))" },
+          "0%,100%": { transform: "scale(1)", filter: "drop-shadow(0 0 0 rgba(255,255,255,0))" },
+          "50%": { transform: "scale(1.09)", filter: "drop-shadow(0 0 7px rgba(255,255,255,0.7))" },
         },
         "gradient-pan": { "0%,100%": { backgroundPosition: "0% 50%" }, "50%": { backgroundPosition: "100% 50%" } },
         /* Console panel bobbing — slow, never distracting. */
