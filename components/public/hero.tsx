@@ -128,7 +128,7 @@ export function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.9 }}
-                className="mono-label pointer-events-none absolute bottom-2 start-1/2 flex -translate-x-1/2 items-center gap-2 !text-ink-faint"
+                className="mono-label pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 !text-ink-faint"
               >
                 <span className="live-dot bg-neon-cyan" />
                 <span dir="ltr">AAKWHX.SYS — {t.hero.systemOnline}</span>

@@ -42,14 +42,20 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed start-1/2 top-1/2 z-overlay w-[calc(100%-2rem)] max-w-2xl -translate-y-1/2",
+          // Centred with physical `left-1/2` + translate utilities. The old
+          // version mixed logical `start-1/2` (which becomes right:50% under
+          // RTL) with a hardcoded `transform: translate(-50%,-50%)` — under
+          // RTL that pushed the panel a full width to the left (into the
+          // corner on desktop, fully off-screen on phones), and the v4
+          // `translate` property stacked with that inline `transform`.
+          // Same fix applied to the hero ticker, CTA halo and footer halo.
+          "fixed left-1/2 top-1/2 z-overlay w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2",
           "max-h-[90vh] overflow-y-auto rounded-3xl border border-line bg-surface/95 p-6 shadow-card backdrop-blur-xl",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
           "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
           className,
         )}
-        style={{ transform: "translate(-50%, -50%)" }}
         {...props}
       >
         {children}
