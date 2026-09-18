@@ -167,8 +167,10 @@ export function AuroraGL({
       premultipliedAlpha: true,
       antialias: true,
       // Clamped: the aurora is a soft blur, so full DPR on a 3x phone screen
-      // costs a lot of fill rate and buys nothing visible.
-      dpr: Math.min(window.devicePixelRatio || 1, 1.5),
+      // costs a lot of fill rate and buys nothing visible. Phones (<= 640px)
+      // go coarser still — the shader now runs on every viewport, and this is
+      // what keeps it cheap enough to leave enabled there.
+      dpr: Math.min(window.devicePixelRatio || 1, window.innerWidth < 640 ? 1 : 1.5),
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);

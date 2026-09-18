@@ -12,6 +12,7 @@ const tr: Dictionary = {
   },
   hero: {
     badge: "Full-stack ürün stüdyosu · 2016'dan beri",
+    systemOnline: "SİSTEM ÇEVRİMİÇİ",
     title: "Rakiplerinizin kopyalayacağı sistemleri kuruyoruz.",
     subtitle: "AAKWHX; ortalama yazılımı kabul etmeyen ekipler için platformlar, yapay zekâ sistemleri ve marka kalitesinde arayüzler üreten ileri teknoloji ajansıdır.",
     ctaPrimary: "Projeye başla", ctaSecondary: "İşlerimizi incele",
@@ -42,8 +43,10 @@ const tr: Dictionary = {
       { title: "Marka & Arayüz Sistemleri", desc: "Tasarım dilleri, hareket sistemleri ve 7 dilde erişilebilir bileşen kütüphaneleri.", tags: ["Tasarım sistemi", "Motion", "a11y"] },
       { title: "Güvenlik & Uyumluluk", desc: "Tehdit modelleme, sızma testi, KVKK/GDPR ve ISO uyumlu veri yönetişimi.", tags: ["GDPR", "Pentest", "RLS"] },
     ],
+    stageLabel: "YETENEK",
+    requestCta: "Bu hizmeti talep et",
   },
-  portfolio: { title: "Seçili işler", subtitle: "Sektöre göre filtreleyin. Özel projeler NDA kapsamında anonim özetlerle gösterilir.", filters: { industry: "Sektör", visibility: "Görünürlük" } },
+  portfolio: { title: "Seçili işler", subtitle: "Sektöre göre filtreleyin. Özel projeler NDA kapsamında anonim özetlerle gösterilir.", filters: { industry: "Sektör", visibility: "Görünürlük" }, searchPlaceholder: "Proje, teknoloji, sektör ara…", projectsLabel: "proje" },
   process: {
     title: "Nasıl teslim ediyoruz", subtitle: "Müşteri portalınıza canlı yansıyan, şeffaf beş aşamalı bir hat.",
     steps: [
@@ -158,7 +161,12 @@ const tr: Dictionary = {
     milestonesDone: "kilometre taşı tamamlandı",
     noProjects: "Hesabınıza henüz bir proje atanmadı. Ekibimiz kısa süre içinde ayarlayacak.",
   },
-  footer: { rights: "Tüm hakları saklıdır.", built: "AAKWHX tarafından tasarlandı ve geliştirildi.", offices: "Amsterdam · İstanbul · Riyad" },
+  footer: { rights: "Tüm hakları saklıdır.", built: "AAKWHX tarafından tasarlandı ve geliştirildi.", offices: "Amsterdam · İstanbul · Riyad",
+    newsletterTitle: "Saha notları", newsletterPlaceholder: "senin@email.com", newsletterCta: "Abone ol", newsletterDone: "Abone olundu — aramıza hoş geldin." },
+  stack: {
+    title: "Modern bir teknoloji yığınıyla çalışıyoruz",
+    subtitle: "Üzerine kurduğumuz teknolojiler — her projede üretimde test edildi.",
+  },
   emails: {
     verify: {
       subject: "AAKWHX hesabınızı doğrulayın",

@@ -41,6 +41,7 @@ const en = {
   },
   hero: {
     badge: "Full-stack product studio · Est. 2016",
+    systemOnline: "SYSTEM ONLINE",
     title: "We build the systems your competitors will copy.",
     subtitle:
       "AAKWHX is a high-tech agency delivering platforms, AI systems and brand-grade interfaces for teams that refuse to ship average software.",
@@ -73,11 +74,15 @@ const en = {
       { title: "Brand & UI Systems", desc: "Design languages, motion systems and accessible component libraries in 7 languages.", tags: ["Design System", "Motion", "a11y"] },
       { title: "Security & Compliance", desc: "Threat modelling, penetration testing, GDPR and ISO-aligned data governance.", tags: ["GDPR", "Pentest", "RLS"] },
     ],
+    stageLabel: "CAPABILITY",
+    requestCta: "Request this service",
   },
   portfolio: {
     title: "Selected work",
     subtitle: "Filter by industry. Private engagements are shown as anonymised summaries under NDA.",
     filters: { industry: "Industry", visibility: "Visibility" },
+    searchPlaceholder: "Search projects, tech, industries…",
+    projectsLabel: "projects",
   },
   process: {
     title: "How we deliver",
@@ -240,6 +245,14 @@ const en = {
     rights: "All rights reserved.",
     built: "Designed and engineered by AAKWHX.",
     offices: "Amsterdam · Istanbul · Riyadh",
+    newsletterTitle: "Field notes",
+    newsletterPlaceholder: "your@email.com",
+    newsletterCta: "Subscribe",
+    newsletterDone: "Subscribed — welcome aboard.",
+  },
+  stack: {
+    title: "Powered by a modern stack",
+    subtitle: "The technologies we bet on — battle-tested in production across every engagement.",
   },
   emails: {
     verify: {

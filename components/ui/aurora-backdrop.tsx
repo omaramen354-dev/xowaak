@@ -12,8 +12,9 @@ import { useSyncExternalStore } from "react";
  *
  * Stack, bottom to top:
  *   1. mesh-deep + starfield  — CSS, always present, the no-WebGL fallback
- *   2. Aurora                 — flowing gradient
- *   3. MoltenMetal            — caustic plasma filaments, screen-blended
+ *   2. Aurora                 — flowing gradient (ALL viewports, lighter on phones)
+ *   3. MoltenMetal            — caustic plasma filaments, screen-blended (desktop only)
+ *   4. Drifting aurora orbs   — cheap CSS light, keeps phones from going flat
  *
  * `fixed inset-0` + `z-backdrop` (0) keeps it under all content, which is
  * lifted to `z-content`. `pointer-events-none` means it never eats clicks.
@@ -34,16 +35,29 @@ function subscribe(callback: () => void) {
 }
 
 /**
- * Very small screens skip the WebGL layers entirely — the CSS mesh and
- * starfield already carry the look, and two GL contexts are not worth the
- * battery on a phone.
+ * Devices under 640px used to skip the WebGL layers entirely, which meant the
+ * animated backdrop was invisible on phones — only the flat CSS mesh showed.
+ * Now the single cheap aurora shader runs everywhere; only the second
+ * (heavier, screen-blended) plasma layer stays desktop-only.
  */
 function snapshot() {
   return window.innerWidth >= 640;
 }
 
+/** True when the OS asks for reduced motion — freeze everything animated. */
+function subscribeMotion(callback: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function motionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function AuroraBackdrop() {
-  const enabled = useSyncExternalStore(subscribe, snapshot, () => false);
+  const isDesktop = useSyncExternalStore(subscribe, snapshot, () => false);
+  const reduced = useSyncExternalStore(subscribeMotion, motionSnapshot, () => false);
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-backdrop overflow-hidden">
@@ -51,7 +65,9 @@ export function AuroraBackdrop() {
       <div className="absolute inset-0 mesh-deep" />
       <div className="starfield" />
 
-      {enabled && (
+      {/* The aurora is one light shader — it now runs on phones too, with
+          lower amplitude/speed and a coarser DPR inside AuroraGL itself. */}
+      {!reduced && (
         <AuroraGL
           colorStops={["#7cff67", "#B497CF", "#5227FF"]}
           blend={0.5}
@@ -61,10 +77,10 @@ export function AuroraBackdrop() {
         />
       )}
 
-      {/* Molten filaments on top. `screen` blending makes the two layers add
-          light, so the aurora stays visible underneath instead of being
-          painted over. */}
-      {enabled && (
+      {/* Molten filaments on top — desktop only (two full-screen shaders on a
+          phone is where the old build gave up and shipped none). `screen`
+          blending makes the layers add light instead of painting over. */}
+      {isDesktop && !reduced && (
         <div className="absolute inset-0 mix-blend-screen">
           <MoltenMetal
             color1="#5227FF"
@@ -88,6 +104,15 @@ export function AuroraBackdrop() {
             className="h-full w-full"
           />
         </div>
+      )}
+
+      {/* Phones skip MoltenMetal, so two slow CSS orbs carry the RGB drift
+          instead — negligible cost, keeps the field alive while scrolling. */}
+      {!isDesktop && !reduced && (
+        <>
+          <div className="aurora aurora-cyan animate-drift-a absolute -top-32 -start-24 h-80 w-80 blur-[90px]" />
+          <div className="aurora aurora-purple animate-drift-b absolute -bottom-40 -end-28 h-96 w-96 blur-[110px]" />
+        </>
       )}
     </div>
   );

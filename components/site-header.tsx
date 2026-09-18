@@ -41,7 +41,6 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-
   const base = `/${locale}`;
   const links = [
     { href: `${base}#services`, label: t.nav.services },
@@ -72,10 +71,17 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
       />
 
       <div className="container-x flex h-16 items-center gap-4">
-        {/* Brand — logical margin so it hugs the inline start in both directions */}
-        <Link href={base} className="flex shrink-0 items-center gap-2.5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-neon-cyan via-neon-blue to-neon-indigo text-white shadow-glow-cyan">
-            <Hexagon className="h-5 w-5" strokeWidth={2.5} />
+        {/* Brand — spinning-orbit hexagon mark */}
+        <Link href={base} className="group flex shrink-0 items-center gap-2.5">
+          <span className="relative grid h-9 w-9 shrink-0 place-items-center">
+            {/* Orbiting ring: only spins on hover, so it stays calm by default */}
+            <span
+              aria-hidden
+              className="absolute inset-0 rounded-xl border border-neon-cyan/0 transition-all duration-500 group-hover:rotate-90 group-hover:border-neon-cyan/40"
+            />
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-neon-cyan via-neon-blue to-neon-indigo text-white shadow-glow-cyan transition-transform duration-300 group-hover:scale-105">
+              <Hexagon className="h-5 w-5" strokeWidth={2.5} />
+            </span>
           </span>
           <span className="leading-tight">
             <span className="block text-sm font-black tracking-widest text-ink-hi">AAKWHX</span>
@@ -83,15 +89,19 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
           </span>
         </Link>
 
-        {/* Nav takes the free space; ms-auto on the actions block keeps spacing symmetric in RTL */}
+        {/* Nav — animated underline sweep on hover */}
         <nav className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-ink-low transition-colors hover:bg-white/[0.05] hover:text-white"
+              className="group/link relative whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-ink-low transition-colors hover:bg-white/[0.05] hover:text-white"
             >
               {l.label}
+              <span
+                aria-hidden
+                className="absolute inset-x-3 bottom-1 h-px origin-inline-start scale-x-0 bg-gradient-to-r from-neon-cyan to-neon-magenta transition-transform duration-300 group-hover/link:scale-x-100"
+              />
             </Link>
           ))}
         </nav>
@@ -99,17 +109,17 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
         <div className="ms-auto flex shrink-0 items-center gap-2">
           <div className="hidden items-center gap-2 md:flex">
             <Button asChild variant="ghostNeon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
-<Link href={`${base}/portal`}>
-              <UserCircle2 className="h-4 w-4 shrink-0" />
-              {t.nav.portal}
-            </Link>
-</Button>
+              <Link href={`${base}/portal`}>
+                <UserCircle2 className="h-4 w-4 shrink-0" />
+                {t.nav.portal}
+              </Link>
+            </Button>
             <Button asChild variant="ghostNeon" className="whitespace-nowrap !px-3 !py-2 !text-xs">
-<Link href={`${base}/admin`}>
-              <LayoutDashboard className="h-4 w-4 shrink-0" />
-              {t.nav.admin}
-            </Link>
-</Button>
+              <Link href={`${base}/admin`}>
+                <LayoutDashboard className="h-4 w-4 shrink-0" />
+                {t.nav.admin}
+              </Link>
+            </Button>
             {signedIn ? (
               <form action={signOutAction}>
                 <input type="hidden" name="locale" value={locale} />
@@ -129,8 +139,7 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
 
           <LanguageSwitcher />
 
-          {/* Radix Sheet: focus trap, scroll lock, Escape and focus restore,
-              none of which the previous conditional <div> had. */}
+          {/* Radix Sheet: focus trap, scroll lock, Escape and focus restore. */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button
@@ -171,7 +180,6 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
           </Sheet>
         </div>
       </div>
-
     </header>
   );
 }

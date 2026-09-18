@@ -12,6 +12,7 @@ const fr: Dictionary = {
   },
   hero: {
     badge: "Studio produit full-stack · depuis 2016",
+    systemOnline: "SYSTÈME EN LIGNE",
     title: "Nous construisons les systèmes que vos concurrents copieront.",
     subtitle: "AAKWHX est une agence high-tech qui livre des plateformes, des systèmes d'IA et des interfaces haut de gamme pour les équipes qui refusent le logiciel moyen.",
     ctaPrimary: "Démarrer un projet", ctaSecondary: "Voir nos réalisations",
@@ -42,8 +43,10 @@ const fr: Dictionary = {
       { title: "Marque & systèmes UI", desc: "Langages de design, systèmes de motion et bibliothèques accessibles en 7 langues.", tags: ["Design system", "Motion", "a11y"] },
       { title: "Sécurité & conformité", desc: "Modélisation des menaces, tests d'intrusion, gouvernance RGPD et ISO.", tags: ["RGPD", "Pentest", "RLS"] },
     ],
+    stageLabel: "CAPACITÉ",
+    requestCta: "Demander ce service",
   },
-  portfolio: { title: "Réalisations sélectionnées", subtitle: "Filtrez par secteur. Les missions privées sont présentées de façon anonymisée sous NDA.", filters: { industry: "Secteur", visibility: "Visibilité" } },
+  portfolio: { title: "Réalisations sélectionnées", subtitle: "Filtrez par secteur. Les missions privées sont présentées de façon anonymisée sous NDA.", filters: { industry: "Secteur", visibility: "Visibilité" }, searchPlaceholder: "Rechercher projets, technologies, secteurs…", projectsLabel: "projets" },
   process: {
     title: "Notre livraison", subtitle: "Un pipeline transparent en cinq étapes, reflété en direct dans votre espace client.",
     steps: [
@@ -158,7 +161,12 @@ const fr: Dictionary = {
     milestonesDone: "jalons terminés",
     noProjects: "Aucun projet n'est encore associé à votre compte. Notre équipe s'en occupe bientôt.",
   },
-  footer: { rights: "Tous droits réservés.", built: "Conçu et développé par AAKWHX.", offices: "Amsterdam · Istanbul · Riyad" },
+  footer: { rights: "Tous droits réservés.", built: "Conçu et développé par AAKWHX.", offices: "Amsterdam · Istanbul · Riyad",
+    newsletterTitle: "Notes de terrain", newsletterPlaceholder: "votre@email.com", newsletterCta: "S'abonner", newsletterDone: "Abonnement confirmé — bienvenue à bord." },
+  stack: {
+    title: "Propulsé par un stack moderne",
+    subtitle: "Les technologies sur lesquelles nous misons — éprouvées en production sur chaque mission.",
+  },
   emails: {
     verify: {
       subject: "Confirmez votre compte AAKWHX",
