@@ -189,7 +189,7 @@ export function TiltCard({
             background: useTransform(
               [glowX, glowY],
               ([gx, gy]) =>
-                `radial-gradient(340px circle at ${gx} ${gy}, rgba(0,242,254,0.12), transparent 65%)`,
+                `radial-gradient(340px circle at ${gx} ${gy}, rgba(255,255,255,0.09), transparent 65%)`,
             ),
           }}
         />
@@ -240,7 +240,7 @@ export function Spotlight({ className }: { className?: string }) {
              `transform` here (x/y), so the offset must not live in it. */
           marginLeft: -280,
           marginTop: -280,
-          background: "radial-gradient(280px circle, rgba(0,242,254,0.08), transparent 62%)",
+          background: "radial-gradient(280px circle, rgba(255,255,255,0.06), transparent 62%)",
         }}
       />
     </motion.div>

@@ -82,7 +82,7 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
         style={{ scaleX: progress }}
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-inline-start
                    bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-magenta
-                   shadow-[0_0_12px_rgba(0,242,254,0.8)]"
+                   shadow-[0_0_12px_rgba(255,255,255,0.5)]"
       />
 
       <div className="container-x flex h-16 items-center gap-4">
@@ -94,7 +94,7 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
               aria-hidden
               className="absolute inset-0 rounded-xl border border-neon-cyan/0 transition-all duration-500 group-hover:rotate-90 group-hover:border-neon-cyan/40"
             />
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-neon-cyan via-neon-blue to-neon-indigo text-white shadow-glow-cyan transition-transform duration-300 group-hover:scale-105">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-white via-white to-slate-300 text-black shadow-glow-cyan transition-transform duration-300 group-hover:scale-105">
               <Hexagon className="h-5 w-5" strokeWidth={2.5} />
             </span>
           </span>

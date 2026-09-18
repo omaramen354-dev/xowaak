@@ -28,7 +28,7 @@ export function SiteFooter() {
         {/* Brand + newsletter */}
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-neon-cyan via-neon-blue to-neon-indigo text-white shadow-glow-cyan">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-white via-white to-slate-300 text-black shadow-glow-cyan">
               <Hexagon className="h-5 w-5" strokeWidth={2.5} />
             </span>
             <span className="text-sm font-black tracking-widest">AAKWHX</span>

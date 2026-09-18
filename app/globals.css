@@ -23,19 +23,19 @@
   --card-foreground: #ffffff;
   --popover: #0b0f18;
   --popover-foreground: #ffffff;
-  --primary: #00f2fe;
-  --primary-foreground: #05070e;
-  --secondary: #131a26;
+  --primary: #ffffff;
+  --primary-foreground: #050608;
+  --secondary: #14171d;
   --secondary-foreground: #cbd5e1;
-  --muted: #131a26;
+  --muted: #14171d;
   --muted-foreground: #94a3b8;
-  --accent: #8b5cf6;
-  --accent-foreground: #ffffff;
-  --destructive: #ec4899;
+  --accent: #e8ecf0;
+  --accent-foreground: #050608;
+  --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #00f2fe;
+  --border: #232630;
+  --input: #232630;
+  --ring: #ffffff;
 }
 
 /* Expose the tokens to Tailwind v4 so `bg-background`, `text-muted-foreground`,
@@ -197,11 +197,11 @@
     @apply transition-all duration-300;
   }
   .glow-hover:hover {
-    @apply border-neon-cyan/45;
+    @apply border-white/45;
     box-shadow:
       inset 0 1px 0 0 rgb(255 255 255 / 0.06),
-      0 0 0 1px rgb(0 242 254 / 0.16),
-      0 22px 60px -28px rgb(0 242 254 / 0.42);
+      0 0 0 1px rgb(255 255 255 / 0.14),
+      0 22px 60px -28px rgb(255 255 255 / 0.3);
   }
 
   .glow-border {
@@ -220,20 +220,21 @@
     @apply relative inline-flex select-none items-center justify-center gap-2 rounded-xl px-5 py-3
            text-sm font-semibold tracking-tight transition-colors duration-200
            overflow-hidden text-white;
-    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 30%, #8b5cf6 70%, #d946ef 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #e8ecf0 40%, #c9d1da 100%);
     background-size: 180% auto;
     animation: gradient-pan 5s ease-in-out infinite;
-    box-shadow: 0 10px 38px -10px rgb(0 242 254 / 0.75);
+    box-shadow: 0 10px 38px -10px rgb(255 255 255 / 0.4);
+    color: #050608;
   }
   .btn-primary:hover {
-    box-shadow: 0 16px 52px -10px rgb(217 70 239 / 0.85);
+    box-shadow: 0 16px 52px -10px rgb(255 255 255 / 0.55);
   }
   /* Shimmering sweep across the CTA */
   .btn-primary::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.35) 50%, transparent 80%);
+    background: linear-gradient(100deg, transparent 20%, rgb(5 6 8 / 0.12) 50%, transparent 80%);
     transform: translateX(-120%);
     animation: sweep 3.2s ease-in-out infinite;
     pointer-events: none;
@@ -431,12 +432,12 @@
   }
 
   .console-shell {
-    @apply relative overflow-hidden rounded-3xl border border-neon-cyan/25 bg-surface/80 backdrop-blur-xl;
+    @apply relative overflow-hidden rounded-3xl border border-white/25 bg-surface/80 backdrop-blur-xl;
     box-shadow:
       inset 0 1px 0 0 rgb(255 255 255 / 0.07),
-      0 0 0 1px rgb(0 242 254 / 0.1),
-      0 40px 90px -40px rgb(0 242 254 / 0.5),
-      0 30px 80px -50px rgb(236 72 153 / 0.45);
+      0 0 0 1px rgb(255 255 255 / 0.1),
+      0 40px 90px -40px rgb(255 255 255 / 0.28),
+      0 30px 80px -50px rgb(255 255 255 / 0.18);
   }
 
   /* Scanline texture over the console face. */
@@ -448,7 +449,7 @@
     background: repeating-linear-gradient(
       to bottom,
       transparent 0 3px,
-      rgb(0 242 254 / 0.045) 3px 4px
+      rgb(255 255 255 / 0.04) 3px 4px
     );
   }
 
@@ -457,7 +458,7 @@
            transition-colors duration-300;
   }
   .console-row:hover {
-    @apply border-neon-cyan/40 bg-neon-cyan/[0.05];
+    @apply border-white/40 bg-white/[0.05];
   }
 
   /* Pulsing status dot with an expanding halo. */
@@ -494,32 +495,32 @@
     will-change: transform, opacity;
   }
   .halo-r {
-    background: radial-gradient(circle, rgb(236 72 153 / 0.5), transparent 70%);
+    background: radial-gradient(circle, rgb(255 255 255 / 0.4), transparent 70%);
   }
   .halo-g {
-    background: radial-gradient(circle, rgb(16 185 129 / 0.42), transparent 70%);
+    background: radial-gradient(circle, rgb(255 255 255 / 0.32), transparent 70%);
   }
   .halo-b {
-    background: radial-gradient(circle, rgb(0 210 255 / 0.5), transparent 70%);
+    background: radial-gradient(circle, rgb(255 255 255 / 0.38), transparent 70%);
   }
   .halo-v {
-    background: radial-gradient(circle, rgb(139 92 246 / 0.45), transparent 70%);
+    background: radial-gradient(circle, rgb(255 255 255 / 0.34), transparent 70%);
   }
 
-  /* Slow conic RGB wash — the "calm" layer that stops the palette going flat. */
+  /* Slow conic white wash — the "calm" layer that stops the palette going flat. */
   .rgb-wash {
     position: absolute;
     inset: -30%;
     pointer-events: none;
-    opacity: 0.22;
+    opacity: 0.14;
     filter: blur(120px);
     background: conic-gradient(
       from 0deg,
-      rgb(0 242 254 / 0.55),
-      rgb(139 92 246 / 0.5),
-      rgb(236 72 153 / 0.5),
-      rgb(16 185 129 / 0.45),
-      rgb(0 242 254 / 0.55)
+      rgb(255 255 255 / 0.4),
+      rgb(255 255 255 / 0.18),
+      rgb(255 255 255 / 0.34),
+      rgb(255 255 255 / 0.16),
+      rgb(255 255 255 / 0.4)
     );
     animation: wash-spin 46s linear infinite;
   }
@@ -537,7 +538,7 @@
     inset-inline: -20%;
     height: 45%;
     top: -45%;
-    background: linear-gradient(to bottom, transparent, rgb(0 242 254 / 0.055), transparent);
+    background: linear-gradient(to bottom, transparent, rgb(255 255 255 / 0.04), transparent);
     animation: beam-fall 13s linear infinite;
   }
 
@@ -605,9 +606,8 @@
     background: conic-gradient(
       from var(--angle, 0deg),
       transparent 0deg,
-      #00f2fe 60deg,
-      #8b5cf6 120deg,
-      #d946ef 170deg,
+      rgb(255 255 255 / 0.9) 70deg,
+      rgb(255 255 255 / 0.35) 150deg,
       transparent 240deg
     );
     -webkit-mask:
@@ -634,7 +634,7 @@
 
   /* ---------------- Text ---------------- */
   .text-gradient {
-    background: linear-gradient(100deg, #00f2fe 0%, #00d2ff 35%, #8b5cf6 70%, #d946ef 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #dfe5ec 45%, #aab3bd 100%);
     background-size: 200% auto;
     animation: gradient-pan 6s ease-in-out infinite;
     -webkit-background-clip: text;
@@ -643,7 +643,7 @@
   }
 
   .text-gradient-hero {
-    background: linear-gradient(100deg, #ffffff 0%, #00f2fe 32%, #00d2ff 50%, #8b5cf6 74%, #d946ef 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #f0f3f6 35%, #c3cbd4 65%, #8f99a5 100%);
     background-size: 220% auto;
     animation: gradient-pan 7s ease-in-out infinite;
     -webkit-background-clip: text;
@@ -661,8 +661,8 @@
     inset-inline: 0;
     height: 2px;
     pointer-events: none;
-    background: linear-gradient(90deg, #00f2fe, #8b5cf6, #d946ef);
-    box-shadow: 0 0 18px rgb(0 242 254 / 0.8);
+    background: linear-gradient(90deg, #ffffff, #c3cbd4);
+    box-shadow: 0 0 14px rgb(255 255 255 / 0.45);
     transform-origin: left center;
   }
   [dir="rtl"] .scroll-progress {
@@ -678,8 +678,8 @@
     height: 360px;
     pointer-events: none;
     border-radius: 50%;
-    opacity: 0.17;
-    background: radial-gradient(circle, rgb(0 242 254 / 0.32), rgb(139 92 246 / 0.07) 42%, transparent 72%);
+    opacity: 0.14;
+    background: radial-gradient(circle, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.06) 42%, transparent 72%);
     filter: blur(8px);
     mix-blend-mode: screen;
   }
@@ -859,10 +859,10 @@
 @keyframes counter-breathe {
   0%,
   100% {
-    filter: drop-shadow(0 0 6px rgb(0 242 254 / 0.35));
+    filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.22));
   }
   50% {
-    filter: drop-shadow(0 0 18px rgb(217 70 239 / 0.65));
+    filter: drop-shadow(0 0 16px rgb(255 255 255 / 0.4));
   }
 }
 

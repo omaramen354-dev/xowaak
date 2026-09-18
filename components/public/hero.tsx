@@ -52,7 +52,7 @@ export function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-backdrop cyber-grid opacity-20 [mask-image:radial-gradient(ellipse_75%_65%_at_50%_35%,black,transparent)]"
       />
-      {/* HUD frame corners — the "targeting reticle" look */}
+      {/* HUD frame corners — the targeting-reticle look */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-backdrop hidden md:block">
         <span className="absolute start-8 top-24 h-10 w-10 border-s-2 border-t-2 border-neon-cyan/40" />
         <span className="absolute end-8 top-24 h-10 w-10 border-e-2 border-t-2 border-neon-cyan/40" />
