@@ -282,14 +282,135 @@
     }
   }
 
-  /* Neon bloom riding over the grid — a soft light that sweeps the plane. */
+  /* Neon bloom riding over the grid — nearly imperceptible. */
   .cyber-grid::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: radial-gradient(38rem 26rem at 50% 40%, rgb(var(--grid-hue) / 0.16), transparent 70%);
+    background: radial-gradient(38rem 26rem at 50% 40%, rgb(var(--grid-hue) / 0.05), transparent 70%);
     animation: grid-bloom 11s ease-in-out infinite;
+  }
+
+  /* ---------------- Stage backdrop (hero) ----------------
+     A cinematic light rig: a shaft of light from above the fold, silk aurora
+     curtains, a glowing horizon, a perspective floor grid and floating dust.
+     Every animated piece moves on transform/opacity only; all blurs are
+     static, so the whole rig costs one rasterisation and then composites. */
+
+  /* Single column of light falling from above the viewport — now barely
+     there: a whisper of light you feel rather than see. */
+  .light-shaft {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: conic-gradient(
+      at 50% -18%,
+      transparent 43%,
+      rgb(0 242 254 / 0.028) 46.5%,
+      rgb(139 92 246 / 0.038) 50%,
+      rgb(217 70 239 / 0.028) 53.5%,
+      transparent 57%
+    );
+    filter: blur(30px);
+  }
+
+  /* Razor-thin neon horizon where the stage meets the floor. Anchored to
+     the top of its positioning parent (the floor band in StageBackdrop). */
+  .horizon-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(92%, 1180px);
+    height: 1px;
+    translate: -50% 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(0 242 254 / 0.17) 22%,
+      rgb(139 92 246 / 0.2) 50%,
+      rgb(217 70 239 / 0.17) 78%,
+      transparent
+    );
+    box-shadow:
+      0 0 10px rgb(0 242 254 / 0.11),
+      0 0 36px rgb(139 92 246 / 0.07);
+  }
+
+  /* Perspective floor — a grid plane tipping away to the horizon.
+     transform-origin top + rotateX gives the retro-floor convergence. */
+  .floor-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgb(0 242 254 / 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(0 242 254 / 0.045) 1px, transparent 1px);
+    background-size: 76px 58px;
+    background-position: top center;
+    transform: perspective(520px) rotateX(63deg) scale(1.75);
+    transform-origin: 50% 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 24%, black 78%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 24%, black 78%, transparent);
+    opacity: 0.3;
+  }
+
+  /* A pulse of light racing from the horizon toward the viewer — barely
+     perceptible, on a long slow cycle. */
+  .floor-sheen {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 34%;
+    background: linear-gradient(to bottom, transparent, rgb(0 242 254 / 0.028), transparent);
+    animation: sheen-run 20s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  /* Silk aurora curtains — skewed gradient sheets under a heavy static blur.
+     Cinematic whisper level: present in peripheral vision, never competing
+     with the copy. */
+  .aurora-ribbon {
+    position: absolute;
+    width: 58%;
+    height: 46%;
+    pointer-events: none;
+    border-radius: 100%;
+    filter: blur(72px);
+    opacity: 0.17;
+    mix-blend-mode: screen;
+    will-change: transform, opacity;
+  }
+  .aurora-ribbon-a {
+    inset-inline-start: -12%;
+    top: 6%;
+    background: linear-gradient(105deg, transparent 8%, rgb(0 242 254 / 0.13) 38%, rgb(139 92 246 / 0.08) 62%, transparent 92%);
+    animation: ribbon-sway-a 32s ease-in-out infinite alternate;
+  }
+  .aurora-ribbon-b {
+    inset-inline-end: -14%;
+    top: 2%;
+    background: linear-gradient(75deg, transparent 10%, rgb(217 70 239 / 0.1) 42%, rgb(0 242 254 / 0.07) 68%, transparent 90%);
+    animation: ribbon-sway-b 38s ease-in-out infinite alternate;
+  }
+
+  /* Slow-drifting luminous dust — the faintest motes. */
+  .dust {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 9999px;
+    background: rgb(0 242 254 / 0.24);
+    box-shadow: 0 0 4px rgb(0 242 254 / 0.2);
+    animation: dust-float var(--dust-t, 18s) ease-in-out var(--dust-d, 0s) infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  /* Cinematic edge falloff — keeps corners dark so the stage stays focused. */
+  .stage-vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 30%, transparent 55%, rgb(5 7 14 / 0.55) 100%);
   }
 
   /* Deep radial mesh — subtle, sits in the darkness, never silver. */
@@ -519,16 +640,18 @@
     opacity: 1;
   }
 
-  /* Readability plate behind copy that sits over the 3D stage */
+  /* Readability plate behind copy that sits over the stage. A tight ellipse
+     hugging the text block — the old full-width rectangle read as a grey band
+     cutting the backdrop in two. */
   .text-plate {
     position: relative;
   }
   .text-plate::before {
     content: "";
     position: absolute;
-    inset: -12% -14%;
+    inset: -16% -4%;
     z-index: -1;
-    background: radial-gradient(ellipse at center, rgb(7 9 14 / 0.92) 35%, rgb(7 9 14 / 0.55) 62%, transparent 78%);
+    background: radial-gradient(58% 88% at 50% 50%, rgb(5 7 14 / 0.88) 42%, rgb(5 7 14 / 0.45) 68%, transparent 88%);
     pointer-events: none;
   }
 
@@ -593,67 +716,105 @@
     mix-blend-mode: screen;
   }
 
-  /* CSS stand-in for the WebGL orb: shown while the canvas loads and kept as
-     the permanent visual on devices where 3D is switched off. */
-  .css-energy-core {
+  /* ---------------- Reactor core (CSS-only centrepiece) ----------------
+     A precision "singularity reactor": a luminous ring stack around a dark
+     lens, instead of the old morphing blob. Geometry is static (rasterised
+     once); only transforms and the pulse animations move. Ethereal build:
+     hairline rims, low-lumen heart, slow breathing. */
+  .reactor {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: clamp(190px, 27vw, 390px);
+    width: clamp(200px, 26vw, 380px);
     aspect-ratio: 1;
-    border: 1px solid rgb(0 242 254 / 0.48);
-    border-radius: 38% 62% 54% 46%;
-    background:
-      radial-gradient(circle at 38% 30%, rgb(255 255 255 / 0.24), transparent 8%),
-      radial-gradient(circle, rgb(17 72 88 / 0.82), #070d16 53%, rgb(8 10 20 / 0.92) 68%);
-    box-shadow:
-      inset -24px -20px 70px rgb(139 92 246 / 0.26),
-      inset 18px 12px 45px rgb(0 242 254 / 0.18),
-      0 0 70px rgb(0 242 254 / 0.12),
-      0 0 140px rgb(139 92 246 / 0.14);
-    /* Centring uses the `translate` property (not `transform`) because
-       core-float animates that same property — setting both would stack and
-       offset the orb twice. */
     translate: -50% -50%;
-    animation:
-      core-morph 9s ease-in-out infinite,
-      core-float 5s ease-in-out infinite;
+    animation: reactor-float 9s ease-in-out infinite;
   }
-  .css-energy-core::before,
-  .css-energy-core::after {
+
+  /* The lens — a dark glass disc with a hairline luminous rim. */
+  .reactor-lens {
     position: absolute;
-    inset: -27%;
-    content: "";
-    border: 1px solid rgb(0 242 254 / 0.42);
-    border-radius: 50%;
-    transform: rotateX(66deg) rotateZ(12deg);
-    animation: orbit-spin 8s linear infinite;
+    inset: 12%;
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 38% 32%, rgb(0 242 254 / 0.12), transparent 40%),
+      radial-gradient(circle, #0a1220 0%, #070d16 58%, #05070e 100%);
+    border: 1px solid rgb(0 242 254 / 0.2);
+    box-shadow:
+      inset 0 0 34px rgb(0 242 254 / 0.06),
+      inset 0 -14px 32px rgb(139 92 246 / 0.07),
+      0 0 22px rgb(0 242 254 / 0.07);
+    animation: lens-breathe 8s ease-in-out infinite;
   }
-  .css-energy-core::after {
-    inset: -40%;
-    border-color: rgb(139 92 246 / 0.3);
-    transform: rotateY(70deg) rotateZ(35deg);
-    animation-direction: reverse;
-    animation-duration: 12s;
+
+  /* The singularity dot at the centre — a low-lumen ember, not a flare. */
+  .reactor-heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, #ffffff 0%, rgb(0 242 254 / 0.7) 42%, transparent 72%);
+    box-shadow:
+      0 0 12px rgb(0 242 254 / 0.4),
+      0 0 32px rgb(0 242 254 / 0.14);
+    animation: heart-breathe 5s ease-in-out infinite;
+  }
+
+  /* Static fine rings engraved on the lens. */
+  .reactor-lens::before {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border-radius: 9999px;
+    border: 1px solid rgb(0 242 254 / 0.08);
+  }
+  .reactor-lens::after {
+    content: "";
+    position: absolute;
+    inset: 28%;
+    border-radius: 9999px;
+    border: 1px dashed rgb(139 92 246 / 0.12);
+  }
+
+  /* Three hairline arcs orbiting in 3D — the reactor's gyroscope. */
+  .reactor-gyro {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 1px solid rgb(0 242 254 / 0.16);
+    animation: gyro-spin-a 22s linear infinite;
+  }
+  .reactor-gyro-b {
+    inset: 6%;
+    border-color: rgb(139 92 246 / 0.13);
+    animation: gyro-spin-b 30s linear infinite;
+  }
+  .reactor-gyro-c {
+    inset: 12%;
+    border-color: rgb(217 70 239 / 0.09);
+    border-style: dashed;
+    animation: gyro-spin-c 40s linear infinite;
   }
 
   /* ---------------- Hero light-stage (CSS-only, no WebGL) ---------------- */
-  /* Pulsing halo behind the energy core. The blur is applied statically; the
-     animation moves opacity/scale only, so it never leaves the compositor. */
+  /* Soft halo breathing behind the reactor — one more notch down: barely a
+     presence, just enough to lift the core off the backdrop. */
   .hero-glow {
     position: absolute;
     border-radius: 9999px;
     background:
-      radial-gradient(circle at 42% 38%, rgb(0 242 254 / 0.32), transparent 58%),
-      radial-gradient(circle at 60% 62%, rgb(139 92 246 / 0.3), transparent 60%),
-      radial-gradient(circle, rgb(217 70 239 / 0.16), transparent 72%);
+      radial-gradient(circle at 42% 38%, rgb(0 242 254 / 0.1), transparent 54%),
+      radial-gradient(circle at 60% 62%, rgb(139 92 246 / 0.085), transparent 56%),
+      radial-gradient(circle, rgb(217 70 239 / 0.045), transparent 68%);
     filter: blur(52px);
-    animation: hero-halo 6s ease-in-out infinite;
+    animation: hero-halo 8s ease-in-out infinite;
     will-change: transform, opacity;
   }
 
-  /* Tilted orbit rings around the core. Pure 3D transforms — rasterised once,
-     then spun on the GPU every frame. */
+  /* Thin gyroscope rings around the reactor — ghost-faint now. */
   .hero-ring {
     position: absolute;
     top: 50%;
@@ -663,73 +824,65 @@
     will-change: transform;
   }
   .hero-ring-a {
-    width: 118%;
+    width: 116%;
     aspect-ratio: 1;
-    border: 1px solid rgb(0 242 254 / 0.35);
-    box-shadow:
-      0 0 24px rgb(0 242 254 / 0.12),
-      inset 0 0 24px rgb(0 242 254 / 0.08);
-    animation: ring-spin-a 16s linear infinite;
+    border: 1px solid rgb(0 242 254 / 0.1);
+    animation: ring-spin-a 20s linear infinite;
   }
   .hero-ring-b {
-    width: 138%;
+    width: 134%;
     aspect-ratio: 1;
-    border: 1px solid rgb(139 92 246 / 0.3);
-    box-shadow:
-      0 0 24px rgb(139 92 246 / 0.12),
-      inset 0 0 24px rgb(139 92 246 / 0.08);
-    animation: ring-spin-b 26s linear infinite;
+    border: 1px solid rgb(139 92 246 / 0.08);
+    animation: ring-spin-b 30s linear infinite;
   }
   .hero-ring-c {
-    width: 160%;
+    width: 154%;
     aspect-ratio: 1;
-    border: 1px dashed rgb(217 70 239 / 0.22);
-    animation: ring-spin-c 34s linear infinite;
+    border: 1px dashed rgb(217 70 239 / 0.06);
+    animation: ring-spin-c 38s linear infinite;
   }
 
-  /* Orbiting energy sparks. Each travels a circle via rotate+translate around
-     the (centred) pivot and counter-rotates so its glow stays upright.
-     Transform-only, composited, and phase-shifted with negative delays. */
+  /* Orbiting sparks — tiny faint embers, the last moving light. */
   .hero-spark {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 9px;
-    height: 9px;
-    margin: -4.5px 0 0 -4.5px;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
     border-radius: 9999px;
-    background: radial-gradient(circle, #fff 0%, rgb(0 242 254 / 0.95) 40%, transparent 72%);
+    background: radial-gradient(circle, #fff 0%, rgb(0 242 254 / 0.6) 40%, transparent 70%);
     box-shadow:
-      0 0 12px rgb(0 242 254 / 0.9),
-      0 0 28px rgb(0 242 254 / 0.45);
+      0 0 6px rgb(0 242 254 / 0.3),
+      0 0 14px rgb(0 242 254 / 0.12);
     animation: spark-orbit var(--orbit-t, 12s) linear infinite;
     will-change: transform;
   }
   .hero-spark-1 {
-    --orbit-r: min(37vw, 198px);
-    --orbit-t: 11s;
+    --orbit-r: min(36vw, 192px);
+    --orbit-t: 15s;
   }
   .hero-spark-2 {
-    --orbit-r: min(43vw, 228px);
-    --orbit-t: 17s;
-    background: radial-gradient(circle, #fff 0%, rgb(217 70 239 / 0.95) 40%, transparent 72%);
+    --orbit-r: min(42vw, 222px);
+    --orbit-t: 22s;
+    background: radial-gradient(circle, #fff 0%, rgb(217 70 239 / 0.6) 40%, transparent 70%);
     box-shadow:
-      0 0 12px rgb(217 70 239 / 0.9),
-      0 0 28px rgb(217 70 239 / 0.45);
+      0 0 6px rgb(217 70 239 / 0.3),
+      0 0 14px rgb(217 70 239 / 0.12);
   }
   .hero-spark-3 {
-    --orbit-r: min(33vw, 176px);
-    --orbit-t: 14s;
-    animation-delay: -5s;
-    background: radial-gradient(circle, #fff 0%, rgb(139 92 246 / 0.95) 40%, transparent 72%);
+    --orbit-r: min(32vw, 170px);
+    --orbit-t: 18s;
+    animation-delay: -7s;
+    background: radial-gradient(circle, #fff 0%, rgb(139 92 246 / 0.6) 40%, transparent 70%);
     box-shadow:
-      0 0 12px rgb(139 92 246 / 0.9),
-      0 0 28px rgb(139 92 246 / 0.45);
+      0 0 6px rgb(139 92 246 / 0.3),
+      0 0 14px rgb(139 92 246 / 0.12);
   }
   .hero-spark-4 {
-    --orbit-r: min(46vw, 244px);
-    --orbit-t: 21s;
-    animation-delay: -9s;
+    --orbit-r: min(45vw, 238px);
+    --orbit-t: 26s;
+    animation-delay: -13s;
   }
 
   .mono-label {
@@ -892,35 +1045,6 @@
 
 /* Used by .live-dot::after in raw CSS — must be declared here, not in the
    Tailwind config, since no `animate-ping-soft` class is ever scanned. */
-/* Ported with the .css-energy-core fallback. */
-@keyframes core-morph {
-  0%,
-  100% {
-    border-radius: 38% 62% 54% 46%;
-  }
-  33% {
-    border-radius: 56% 44% 38% 62%;
-  }
-  66% {
-    border-radius: 44% 56% 62% 38%;
-  }
-}
-
-@keyframes core-float {
-  0%,
-  100% {
-    translate: -50% -50%;
-  }
-  50% {
-    translate: -50% calc(-50% - 14px);
-  }
-}
-
-@keyframes orbit-spin {
-  to {
-    rotate: 360deg;
-  }
-}
 
 /* Hero light-stage — referenced only from raw CSS, so declared here. */
 @keyframes hero-halo {
@@ -991,6 +1115,124 @@
   }
   to {
     transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* Reactor core — referenced only from raw CSS, so declared here. */
+@keyframes reactor-float {
+  0%,
+  100% {
+    translate: -50% -50%;
+  }
+  50% {
+    translate: -50% calc(-50% - 10px);
+  }
+}
+
+@keyframes lens-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 26px rgb(0 242 254 / 0.04),
+      inset 0 -10px 26px rgb(139 92 246 / 0.05),
+      0 0 16px rgb(0 242 254 / 0.05);
+    opacity: 0.9;
+  }
+  50% {
+    box-shadow:
+      inset 0 0 42px rgb(0 242 254 / 0.08),
+      inset 0 -16px 36px rgb(139 92 246 / 0.1),
+      0 0 30px rgb(0 242 254 / 0.1);
+    opacity: 1;
+  }
+}
+
+@keyframes heart-breathe {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+@keyframes gyro-spin-a {
+  from {
+    transform: rotateX(68deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(68deg) rotateZ(360deg);
+  }
+}
+
+@keyframes gyro-spin-b {
+  from {
+    transform: rotateX(66deg) rotateY(14deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(66deg) rotateY(14deg) rotateZ(-360deg);
+  }
+}
+
+@keyframes gyro-spin-c {
+  from {
+    transform: rotateX(72deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(72deg) rotateZ(-360deg);
+  }
+}
+
+/* Stage backdrop — referenced only from raw CSS, so declared here. */
+@keyframes ribbon-sway-a {
+  from {
+    transform: rotate(-11deg) skewX(-8deg) translate3d(-2%, -1%, 0) scale(1);
+  }
+  to {
+    transform: rotate(-7deg) skewX(-5deg) translate3d(3%, 2%, 0) scale(1.06);
+  }
+}
+
+@keyframes ribbon-sway-b {
+  from {
+    transform: rotate(9deg) skewX(10deg) translate3d(2%, 1%, 0) scale(1.02);
+  }
+  to {
+    transform: rotate(5deg) skewX(6deg) translate3d(-3%, -2%, 0) scale(1);
+  }
+}
+
+@keyframes sheen-run {
+  0% {
+    transform: translateY(-60%);
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(320%);
+    opacity: 0;
+  }
+}
+
+@keyframes dust-float {
+  from {
+    transform: translate3d(0, 10px, 0);
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  to {
+    transform: translate3d(12px, -28px, 0);
+    opacity: 0.2;
   }
 }
 
