@@ -7,11 +7,11 @@ const config: Config = {
     extend: {
       colors: {
         /* ---- Strict dark palette ---- */
-        base: "#050608", // page background — deeper black
-        elevated: "#0A0B0E", // raised sections
-        surface: "#101216", // cards — dark neutral grey
-        line: "#232630", // hairline borders
-        "line-strong": "#383D47",
+        base: "#000000", // page background — true black
+        elevated: "#070809", // raised sections
+        surface: "#0B0C0E", // cards — darkest neutral grey
+        line: "#1A1D23", // hairline borders
+        "line-strong": "#2E333C",
 
         /* ---- Monochrome neon (was RGB) ----
            Every hue slot now maps to white/grey at that role's relative

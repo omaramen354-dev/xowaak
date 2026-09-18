@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { HeroVisual } from "@/components/public/hero-visual";
 import { StageBackdrop } from "@/components/ui/stage-backdrop";
+import { LineForms } from "@/components/ui/line-forms";
 
 /**
  * Hero — cinematic, interactive.
@@ -46,6 +47,7 @@ export function Hero() {
               glowing horizon, perspective floor, dust ---------- */}
       <div className="absolute inset-0 z-backdrop">
         <StageBackdrop />
+        <LineForms />
       </div>
       {/* Faint tech grid riding over the stage — static mask, no crawl on top. */}
       <div
