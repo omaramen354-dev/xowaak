@@ -45,11 +45,13 @@ export function Reveal({
   as?: "div" | "section" | "li" | "article" | "span";
 }) {
   const Component = motion[as] as typeof motion.div;
+  /* Re-animates both ways: reveals when the block scrolls in (either
+     direction) and folds back when it leaves the viewport. */
   return (
     <Component
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: false, amount: 0.25 }}
       variants={fadeUp}
       transition={{ delay }}
       className={className}
@@ -64,7 +66,7 @@ export function StaggerGroup({ children, className }: { children: React.ReactNod
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: false, amount: 0.2 }}
       variants={staggerParent}
       className={className}
     >

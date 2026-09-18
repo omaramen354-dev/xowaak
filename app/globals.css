@@ -24,17 +24,17 @@
   --popover: #0b0f18;
   --popover-foreground: #ffffff;
   --primary: #ffffff;
-  --primary-foreground: #050608;
+  --primary-foreground: #000000;
   --secondary: #14171d;
   --secondary-foreground: #cbd5e1;
   --muted: #14171d;
   --muted-foreground: #94a3b8;
   --accent: #e8ecf0;
-  --accent-foreground: #050608;
+  --accent-foreground: #000000;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
-  --border: #232630;
-  --input: #232630;
+  --border: #1a1d23;
+  --input: #1a1d23;
   --ring: #ffffff;
 }
 
@@ -224,7 +224,7 @@
     background-size: 180% auto;
     animation: gradient-pan 5s ease-in-out infinite;
     box-shadow: 0 10px 38px -10px rgb(255 255 255 / 0.4);
-    color: #050608;
+    color: #000000;
   }
   .btn-primary:hover {
     box-shadow: 0 16px 52px -10px rgb(255 255 255 / 0.55);
@@ -234,7 +234,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(100deg, transparent 20%, rgb(5 6 8 / 0.12) 50%, transparent 80%);
+    background: linear-gradient(100deg, transparent 20%, rgb(0 0 0 / 0.12) 50%, transparent 80%);
     transform: translateX(-120%);
     animation: sweep 3.2s ease-in-out infinite;
     pointer-events: none;
@@ -968,6 +968,41 @@
   }
   to {
     transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* LineForms — phased glow for the big line clusters. Opacity only, so each
+   static ring stack just lights up and dims on the compositor. */
+@keyframes form-breathe-a {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  38% {
+    opacity: 1;
+  }
+}
+
+@keyframes form-breathe-b {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.16;
+  }
+  78% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes form-breathe-c {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.95;
   }
 }
 
