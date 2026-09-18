@@ -138,7 +138,8 @@ ink.faint #64748B   4.9:1    meta
 Config: `float fade-up shimmer drift-a drift-b pulse-glow spin-slow float-y
 icon-pulse gradient-pan bob blink-soft scan-y bar-idle`
 Raw CSS: `gradient-pan rotate-angle sweep ping-soft counter-breathe wash-spin
-beam-fall star-drift grid-crawl grid-hue grid-bloom`
+beam-fall star-drift grid-crawl grid-hue grid-bloom aurora-breathe hero-halo
+ring-spin-a ring-spin-b ring-spin-c spark-orbit`
 
 ---
 
@@ -231,15 +232,20 @@ Env is optional — `.env.example` → `.env.local` with
 
 ## 9. Performance budget — do not regress
 
-- **First Load JS shared by all: 103 kB.** Both WebGL scenes are
-  `dynamic(..., { ssr: false })`, so three.js is never in the initial bundle.
-- `scene-mount.tsx` skips the global 3D field entirely for
-  `prefers-reduced-motion`, viewports < 768 px, and `hardwareConcurrency < 4`.
-  Phones fall back to CSS `starfield` + `beam-sweep` + animated `cyber-grid`.
-- Canvases are `pointer-events-none` + `aria-hidden` + `contain: strict`.
-  Because that also freezes R3F's `state.pointer`, cursor tilt is tracked on
-  `window` instead.
-- 31 static pages prerender.
+- **Zero WebGL.** The ogl-based scenes (`hero-core-gl`, `aurora-gl`,
+  `molten-metal`) and the console rig are gone from the bundle; `ogl` is no
+  longer a dependency. The hero centrepiece is `hero-visual.tsx` — a pure-CSS
+  light stage (`.css-energy-core`, `.hero-ring-*`, `.hero-spark-*`) that only
+  animates transform/opacity on the compositor. The page backdrop is
+  `aurora-backdrop.tsx` (`.aurora-field`, `.starfield`, three blurred orbs).
+- **Never animate `filter: blur()` or `background-position`.** Both force a
+  full repaint every frame — the exact failure mode that made the old shaders
+  laggy. Reveals (`fadeUp`), the services stage transition and `pulse-glow`
+  animate transform + opacity only. Blurs are applied as static classes.
+- `ParticleField` (canvas) runs an O(n²) constellation pass — capped at 45
+  particles, pauses off-screen, dies for reduced-motion.
+- First Load JS shared by all: ~103 kB (three.js never shipped anyway).
+- 29+ static pages prerender.
 
 ---
 

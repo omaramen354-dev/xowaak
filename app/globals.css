@@ -300,6 +300,24 @@
       radial-gradient(45rem 32rem at 70% 85%, rgb(217 70 239 / 0.12), transparent 60%);
   }
 
+  /* Drifting aurora field — the CSS replacement for the two old GLSL shaders.
+     Four soft gradient lights over the fixed backdrop. The gradients stay
+     static (no repaint); the whole field "breathes" on the compositor via
+     transform, and the three aurora orbs below carry the visible drift. */
+  .aurora-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.55;
+    background-image:
+      radial-gradient(44rem 30rem at 20% 10%, rgb(0 242 254 / 0.16), transparent 62%),
+      radial-gradient(40rem 28rem at 84% 6%, rgb(139 92 246 / 0.17), transparent 62%),
+      radial-gradient(38rem 30rem at 70% 80%, rgb(217 70 239 / 0.13), transparent 60%),
+      radial-gradient(32rem 24rem at 22% 86%, rgb(16 185 129 / 0.1), transparent 60%);
+    animation: aurora-breathe 26s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
   /* ---------------- Hero console ---------------- */
   /* Tilted holographic console occupying the visual column. */
   .console-tilt {
@@ -430,10 +448,12 @@
     }
   }
 
-  /* Faint drifting starfield for phones, where WebGL is switched off. */
+  /* Faint drifting starfield. Sized one tile (340px) larger than the viewport
+     and moved with `transform`, so the drift is composited instead of forcing
+     a full-screen repaint every frame (the old background-position version). */
   .starfield {
     position: absolute;
-    inset: 0;
+    inset: 0 -340px -340px 0;
     pointer-events: none;
     opacity: 0.5;
     background-image:
@@ -445,6 +465,7 @@
       radial-gradient(1px 1px at 22% 88%, rgb(139 92 246 / 0.45), transparent);
     background-size: 340px 340px;
     animation: star-drift 90s linear infinite;
+    will-change: transform;
   }
 
   /* ---------------- Living light ---------------- */
@@ -616,6 +637,101 @@
     animation-duration: 12s;
   }
 
+  /* ---------------- Hero light-stage (CSS-only, no WebGL) ---------------- */
+  /* Pulsing halo behind the energy core. The blur is applied statically; the
+     animation moves opacity/scale only, so it never leaves the compositor. */
+  .hero-glow {
+    position: absolute;
+    border-radius: 9999px;
+    background:
+      radial-gradient(circle at 42% 38%, rgb(0 242 254 / 0.32), transparent 58%),
+      radial-gradient(circle at 60% 62%, rgb(139 92 246 / 0.3), transparent 60%),
+      radial-gradient(circle, rgb(217 70 239 / 0.16), transparent 72%);
+    filter: blur(52px);
+    animation: hero-halo 6s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  /* Tilted orbit rings around the core. Pure 3D transforms — rasterised once,
+     then spun on the GPU every frame. */
+  .hero-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 9999px;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .hero-ring-a {
+    width: 118%;
+    aspect-ratio: 1;
+    border: 1px solid rgb(0 242 254 / 0.35);
+    box-shadow:
+      0 0 24px rgb(0 242 254 / 0.12),
+      inset 0 0 24px rgb(0 242 254 / 0.08);
+    animation: ring-spin-a 16s linear infinite;
+  }
+  .hero-ring-b {
+    width: 138%;
+    aspect-ratio: 1;
+    border: 1px solid rgb(139 92 246 / 0.3);
+    box-shadow:
+      0 0 24px rgb(139 92 246 / 0.12),
+      inset 0 0 24px rgb(139 92 246 / 0.08);
+    animation: ring-spin-b 26s linear infinite;
+  }
+  .hero-ring-c {
+    width: 160%;
+    aspect-ratio: 1;
+    border: 1px dashed rgb(217 70 239 / 0.22);
+    animation: ring-spin-c 34s linear infinite;
+  }
+
+  /* Orbiting energy sparks. Each travels a circle via rotate+translate around
+     the (centred) pivot and counter-rotates so its glow stays upright.
+     Transform-only, composited, and phase-shifted with negative delays. */
+  .hero-spark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
+    border-radius: 9999px;
+    background: radial-gradient(circle, #fff 0%, rgb(0 242 254 / 0.95) 40%, transparent 72%);
+    box-shadow:
+      0 0 12px rgb(0 242 254 / 0.9),
+      0 0 28px rgb(0 242 254 / 0.45);
+    animation: spark-orbit var(--orbit-t, 12s) linear infinite;
+    will-change: transform;
+  }
+  .hero-spark-1 {
+    --orbit-r: min(37vw, 198px);
+    --orbit-t: 11s;
+  }
+  .hero-spark-2 {
+    --orbit-r: min(43vw, 228px);
+    --orbit-t: 17s;
+    background: radial-gradient(circle, #fff 0%, rgb(217 70 239 / 0.95) 40%, transparent 72%);
+    box-shadow:
+      0 0 12px rgb(217 70 239 / 0.9),
+      0 0 28px rgb(217 70 239 / 0.45);
+  }
+  .hero-spark-3 {
+    --orbit-r: min(33vw, 176px);
+    --orbit-t: 14s;
+    animation-delay: -5s;
+    background: radial-gradient(circle, #fff 0%, rgb(139 92 246 / 0.95) 40%, transparent 72%);
+    box-shadow:
+      0 0 12px rgb(139 92 246 / 0.9),
+      0 0 28px rgb(139 92 246 / 0.45);
+  }
+  .hero-spark-4 {
+    --orbit-r: min(46vw, 244px);
+    --orbit-t: 21s;
+    animation-delay: -9s;
+  }
+
   .mono-label {
     font-family: var(--font-mono);
     @apply text-[10px] font-semibold uppercase tracking-[0.28em] text-neon-cyan;
@@ -766,14 +882,11 @@
 }
 
 @keyframes star-drift {
+  from {
+    transform: translate3d(-340px, -340px, 0);
+  }
   to {
-    background-position:
-      340px 340px,
-      -340px 340px,
-      340px -340px,
-      -340px -340px,
-      340px 340px,
-      -340px 340px;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -806,6 +919,78 @@
 @keyframes orbit-spin {
   to {
     rotate: 360deg;
+  }
+}
+
+/* Hero light-stage — referenced only from raw CSS, so declared here. */
+@keyframes hero-halo {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes ring-spin-a {
+  from {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(72deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(72deg) rotateZ(360deg);
+  }
+}
+
+@keyframes ring-spin-b {
+  from {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(66deg) rotateY(14deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(66deg) rotateY(14deg) rotateZ(-360deg);
+  }
+}
+
+@keyframes ring-spin-c {
+  from {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(74deg) rotateZ(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) perspective(900px) rotateX(74deg) rotateZ(-360deg);
+  }
+}
+
+@keyframes spark-orbit {
+  from {
+    transform: rotate(0turn) translateX(var(--orbit-r, 180px)) rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn) translateX(var(--orbit-r, 180px)) rotate(-1turn);
+  }
+}
+
+@keyframes aurora-pan {
+  0% {
+    background-position: 0% 0%, 100% 0%, 70% 100%, 10% 90%;
+  }
+  50% {
+    background-position: 45% 35%, 55% 45%, 30% 60%, 60% 30%;
+  }
+  100% {
+    background-position: 90% 70%, 10% 80%, 0% 20%, 90% 10%;
+  }
+}
+
+/* Composited breathing for the aurora field — scale/translate only, so the
+   gradient layer is rasterised once and never repaints. */
+@keyframes aurora-breathe {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
   }
 }
 

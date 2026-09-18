@@ -66,9 +66,13 @@ const config: Config = {
           "0%,100%": { transform: "translate3d(0,0,0) scale(1.05)" },
           "50%": { transform: "translate3d(-8%,7%,0) scale(0.9)" },
         },
+        /* Animating `filter: blur()` repaints a huge layer every frame — one of
+           the most expensive things on phones. The glow's blur is applied once
+           as a static class; the animation only moves opacity + scale, which
+           stay on the compositor. */
         "pulse-glow": {
-          "0%,100%": { opacity: "0.55", filter: "blur(90px)" },
-          "50%": { opacity: "0.9", filter: "blur(110px)" },
+          "0%,100%": { opacity: "0.55", transform: "scale(0.97)" },
+          "50%": { opacity: "0.9", transform: "scale(1.04)" },
         },
         "spin-slow": { to: { transform: "rotate(360deg)" } },
         "float-y": { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-5px)" } },

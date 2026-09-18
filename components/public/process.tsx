@@ -103,7 +103,9 @@ export function CallToAction() {
           <div className="glow-border neon-border noise relative overflow-hidden bg-gradient-to-br from-neon-cyan/[0.12] via-neon-indigo/[0.08] to-neon-magenta/[0.12] p-12 text-center sm:p-20">
             <ParticleField density={45} className="opacity-70" />
             <div className="absolute inset-0 cyber-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
-            <div className="aurora aurora-cyan animate-pulse-glow absolute -bottom-24 left-1/2 h-72 w-[600px] -translate-x-1/2 blur-[120px]" />
+            {/* pulse-glow animates transform, so centring uses inset/margin —
+                a -translate-x-1/2 here would be clobbered by the animation. */}
+            <div className="aurora aurora-cyan animate-pulse-glow absolute inset-x-0 -bottom-24 mx-auto h-72 w-[600px] blur-[120px]" />
 
             <h2 className="relative text-3xl sm:text-5xl">
               <span className="text-gradient-hero">{t.quote.title}</span>

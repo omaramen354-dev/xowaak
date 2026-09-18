@@ -9,7 +9,7 @@ import { useContent } from "@/lib/content-store";
 import { AnimatedCounter, Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { Button } from "@/components/ui/button";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
-import { HeroCore } from "@/components/public/hero-core";
+import { HeroVisual } from "@/components/public/hero-visual";
 
 /**
  * Hero — cinematic, interactive.
@@ -55,13 +55,13 @@ export function Hero() {
 
       <div className="container-x relative section-y">
         <div className="relative">
-          {/* ---------- 3D stage — z-stage (20), full-bleed behind the copy ---------- */}
+          {/* ---------- Light stage — CSS-only, GPU-composited ---------- */}
           <motion.div
             aria-hidden
             style={{ y: coreY, scale: coreScale, opacity: coreOpacity }}
-            className="pointer-events-none absolute left-1/2 top-1/2 z-stage aspect-square w-[min(120vw,1550px)] -translate-x-1/2 -translate-y-1/2"
+            className="pointer-events-none absolute left-1/2 top-1/2 z-stage flex aspect-square w-[min(120vw,1550px)] -translate-x-1/2 -translate-y-1/2 items-center justify-center"
           >
-            <HeroCore />
+            <HeroVisual />
           </motion.div>
 
           {/* ================= COPY — z-copy (30) ================= */}
