@@ -5,6 +5,7 @@ import {
   motion,
   useInView,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
   type Variants,
@@ -15,13 +16,15 @@ import clsx from "clsx";
 /* Scroll reveal                                                       */
 /* ------------------------------------------------------------------ */
 
+/* Transform + opacity only — animating `filter: blur()` forces a repaint of
+   every revealed card on the main thread, which is exactly the kind of jank we
+   just removed with the WebGL purge. Same visual idea, zero repaints. */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -200,25 +203,47 @@ export function TiltCard({
 /* Spotlight that follows the cursor across a section                  */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Spotlight that follows the cursor across a section. Implemented with motion
+ * values (no React re-renders on mousemove) and a spring for a silky trail.
+ * The gradient itself is static — the light moves via transform on a fixed-
+ * sized layer, which stays entirely on the compositor.
+ */
 export function Spotlight({ className }: { className?: string }) {
-  const [pos, setPos] = useState({ x: 50, y: 20 });
+  const reduced = useReducedMotion();
+  const x = useMotionValue(50);
+  const y = useMotionValue(20);
+  const springX = useSpring(x, { stiffness: 90, damping: 22, mass: 0.5 });
+  const springY = useSpring(y, { stiffness: 90, damping: 22, mass: 0.5 });
 
   useEffect(() => {
+    if (reduced) return;
     const onMove = (e: MouseEvent) => {
-      setPos({ x: (e.clientX / window.innerWidth) * 100, y: (e.clientY / window.innerHeight) * 100 });
+      x.set((e.clientX / window.innerWidth) * 100);
+      y.set((e.clientY / window.innerHeight) * 100);
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reduced, x, y]);
 
   return (
-    <div
+    <motion.div
       aria-hidden
-      className={clsx("pointer-events-none absolute inset-0 transition-[background] duration-300", className)}
-      style={{
-        background: `radial-gradient(700px circle at ${pos.x}% ${pos.y}%, rgba(0,242,254,0.07), transparent 55%)`,
-      }}
-    />
+      className={clsx("pointer-events-none absolute inset-0 overflow-hidden", className)}
+    >
+      <motion.div
+        className="absolute left-0 top-0 h-[560px] w-[560px] rounded-full"
+        style={{
+          x: springX,
+          y: springY,
+          /* Static centring offsets instead of translate — framer-motion owns
+             `transform` here (x/y), so the offset must not live in it. */
+          marginLeft: -280,
+          marginTop: -280,
+          background: "radial-gradient(280px circle, rgba(0,242,254,0.08), transparent 62%)",
+        }}
+      />
+    </motion.div>
   );
 }
 

@@ -11,7 +11,7 @@ const nextConfig = {
    * The sandbox preview is proxied from https://{port}-{sandboxId}.e2b.app,
    * so the dev server must accept that origin for /_next/* requests.
    */
-  allowedDevOrigins: ["*.e2b.app"],
+  allowedDevOrigins: ["*.e2b.app", "*.daytonaproxy01.net"],
 
   /**
    * `next build` and `next dev` must never share a .next directory: a build

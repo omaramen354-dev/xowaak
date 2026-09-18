@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { Hexagon, LayoutDashboard, LogIn, Menu, UserCircle2 } from "lucide-react";
 import { signOutAction } from "@/app/actions/auth";
 import { useI18n } from "@/components/providers";
@@ -21,6 +22,11 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  /* Reading-progress bar — runs entirely on the compositor (scaleX on a
+     GPU layer), so it costs nothing while scrolling. */
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 });
 
   /**
    * Close the mobile menu on navigation by DERIVING it during render rather
@@ -68,6 +74,15 @@ export function SiteHeader({ signedIn = false }: SiteHeaderProps) {
       <span
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-neon-cyan/45 to-transparent"
+      />
+
+      {/* Reading-progress line — neon gradient sweeping left→right (flips in RTL). */}
+      <motion.span
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-inline-start
+                   bg-gradient-to-r from-neon-cyan via-neon-blue to-neon-magenta
+                   shadow-[0_0_12px_rgba(0,242,254,0.8)]"
       />
 
       <div className="container-x flex h-16 items-center gap-4">

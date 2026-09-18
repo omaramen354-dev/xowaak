@@ -4,7 +4,7 @@ Read this before editing. It records constraints discovered the hard way.
 
 ## Stack
 
-Next.js 16.3.4 (App Router) · TypeScript 5.9 · Tailwind CSS 4 · Framer Motion · React Three Fiber
+Next.js 16.3.4 (App Router) · TypeScript 5.9 · Tailwind CSS 4 · Framer Motion
 Supabase-ready (runs on mock data without any credentials).
 
 ## Commands
@@ -113,6 +113,15 @@ The installed version does **not** export `Github`, `Linkedin`, or `Twitter`.
 ### 9. `origin-start` is not a Tailwind class
 
 Use the custom `.origin-inline-start` utility.
+
+### 10. No WebGL — the site is CSS-composited by design
+
+The ogl shader rigs (`hero-core-gl`, `aurora-gl`, `molten-metal`) were removed:
+three full-screen shader loops made the site laggy on phones. Do not reintroduce
+them or add three.js/ogl/R3F. The hero centrepiece is `components/public/hero-visual.tsx`
+(pure CSS, GPU-composited) and the backdrop is `components/ui/aurora-backdrop.tsx`.
+When adding animation, animate **transform/opacity only** — never `filter: blur()`
+or `background-position` (both repaint every frame). Blur is a static class.
 
 ## Layering contract
 
